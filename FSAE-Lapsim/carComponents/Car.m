@@ -3,7 +3,7 @@ classdef Car
     % equations adapted from Casanova Appendix
     
     properties
-        M 
+        M %mass
         W_b %wheelbase
         l_f %dist from cg to front axle
         l_r %dist from cg to rear axle
