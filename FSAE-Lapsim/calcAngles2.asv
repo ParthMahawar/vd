@@ -1,28 +1,9 @@
-clear; clc
-% run this from the same directory as setup_paths
-try 
-    setup_paths
-catch
-    error('run this from same directory as setup_paths. Should be one directory up');
-end
-
-% input car parameters
-car = testCar();
-car.k = 200*4.45*39.37; % N/m
-car.c = 10000; % N*s/m
-car.Ixx = 60;
-car.Iyy = 82;
-car.k_rf = 18000; % Nm/rad
-car.k_rr = 18000; % Nm/rad
-car.TSmpc = .003; %has to be multiple of TSdyn
-car.TSdyn = .0005;
-car.Jm = 0; car.Jw = 1;
-n = 8000; % number of timesteps
+function [angles, forces, nextFz] = calcAngles(car,x,y,forces)
 
 
 k_f = car.k;
 k_r = car.k;
-k_tf = car.k*10;
+k_tf = car.k;
 k_tr = k_tf;
 c_f = car.c;
 c_r = car.c;
@@ -85,7 +66,7 @@ k = [k11 k12 k13 -k_f -k_f -k_r -k_r;
     -k_r b_1*k_r -a_2*k_r 0 0 k_r+k_tr 0;
     -k_r -b_2*k_r -a_2*k_r 0 0 0 k_r+k_tr];
 
-F = [-car.M*9.81 500 0 0 0 0 0]';
+F = [-car.M*9.81 0 0 0 0 0 0]';
     
 x0 =[0 0 0 0 0 0 0]';
 xd0 = [0 0 0 0 0 0 0 ]';
@@ -104,11 +85,16 @@ body = x(:,1);
 phi = x(:,2);
 theta = x(:,3);
 
+
 function [yd, blah] = dydt(t,y,m,F,c,k) 
     x = y(1:7,1);
     xd = y(8:end,1);
     xdd = inv(m)*(F-c*xd-k*x);
     yd = [xd; xdd]; 
+end
+
+nextFz = diag([k_tf k_tf k_tr k_tr])*y(4:end);
+
 end
 
 
