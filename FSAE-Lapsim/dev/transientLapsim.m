@@ -9,10 +9,10 @@ end
 % input car parameters
 car = testCar();
 car.k = 200*4.45*39.37; % N/m
-car.c = 1000; % N*s/m
+car.c = 10000; % N*s/m
 car.Ixx = 60;
 car.Iyy = 82;
-car.k_rf = 18000; % Nm/rad
+car.k_rf = 0; % Nm/rad
 car.k_rr = 0; % Nm/rad
 car.TSmpc = .003; %has to be multiple of TSdyn
 car.TSdyn = .0005;
@@ -22,9 +22,9 @@ n = 8000; % number of timesteps
 % steering/throttle input
 steerDeg = 3;
 steer = deg2rad(steerDeg)*[zeros(1,n/8) ones(1,7*n/8)];
-time = 0:car.TSmpc:car.TSmpc*(n-1);
-steer = deg2rad(steerDeg)*sin((2*pi)*time);
-steer(1:3000) = 0;
+%time = 0:car.TSmpc:car.TSmpc*(n-1);
+%steer = deg2rad(steerDeg)*sin((2*pi)*time);
+%steer(1:3000) = 0;
 throttle = zeros(1,n);
 throttle = 0.1*ones(1,n);
 %throttle = [0*ones(1,n/2) 1*ones(1,n/4) -1*ones(1,n/4)];
@@ -65,6 +65,7 @@ yaw_angle = xArr(1,:);
 yaw_rate = xArr(2,:);
 long_vel = xArr(3,:);
 lat_vel = xArr(4,:);
+beta = rad2deg(atan(lat_vel./long_vel));
 
 bounce = yArr(1,:);
 phi = yArr(2,:);
@@ -72,9 +73,9 @@ theta = yArr(3,:);
 
 ic = 1000;
 figure(1);clf
-plot(xArr(5,:),-xArr(6,:));
+plot(xArr(5,:),xArr(6,:));
 hold on
-plot(xArr(5,ic),-xArr(6,ic),'o');
+plot(xArr(5,ic),xArr(6,ic),'o');
 title('XY Pos');grid
 xlabel('X Position');
 ylabel('Y Position');
@@ -116,11 +117,15 @@ figure(8); clf
 plot(time,yaw_rate)
 title('Yaw Rate')
 
-figure(9); clf
-plot(time,steer/max(abs(steer)))
-hold on
-plot(time,-phi/max(phi))
-plot(time,long_vel.*yaw_rate/max(long_vel.*yaw_rate))
-plot(time,yaw_rate/max(yaw_rate))
+% figure(9); clf
+% plot(time,steer/max(abs(steer)))
+% hold on
+% plot(time,-phi/max(phi))
+% plot(time,long_vel.*yaw_rate/max(long_vel.*yaw_rate))
+% plot(time,yaw_rate/max(yaw_rate))
+
+figure(10); clf
+plot(time,beta)
+title('Beta')
 
 

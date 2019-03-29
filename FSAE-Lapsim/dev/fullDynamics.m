@@ -8,12 +8,12 @@ xArr(:,1) = x0;
 dt = car.TSmpc;
 g = 9.81;
 
-% applied forces
+% applied forces (SAE coordinate system)
 FapTotal = cell(n,1); %applied forces at each step
 Fxyz = [0 0 0]; % applied force
 Rxyz = [0 0 car.h_g]; % position of applied force
-Fg = [0 0 -car.M*g]; % gravity
-Rg = [-car.l_f 0 car.h_g];
+Fg = [0 0 car.M*g]; % gravity
+Rg = [0 0 car.h_g];
 Fconstant = [Fg Rg]; 
 
 for i = 1:n

@@ -140,29 +140,6 @@ classdef Car
             Fy = [F_y1; F_y2; F_y3; F_y4];
         end
         
-        function [Fx,Fy, F_xw] = tireForceTransient(obj,steer_angle,alpha,kappa,Fz)
-            %tire forces, but in a more standard coordinate system
-            % forces in tire frame of reference
-            F_xw1 = obj.tire.F_x(alpha(1),kappa(1),Fz(1)); 
-            F_yw1 = obj.tire.F_y(alpha(1),kappa(1),Fz(1));
-            F_xw2 = obj.tire.F_x(alpha(2),kappa(2),Fz(2));
-            F_yw2 = obj.tire.F_y(alpha(2),kappa(2),Fz(2));
-            F_xw = [F_xw1; F_xw2];
-
-            % forces in vehicle frame of reference
-            F_x1 = F_xw1*cos(steer_angle)-F_yw1*sin(steer_angle);
-            F_y1 = F_xw1*sin(steer_angle)+F_yw1*cos(steer_angle);
-            F_x2 = F_xw2*cos(steer_angle)-F_yw2*sin(steer_angle);
-            F_y2 = F_xw2*sin(steer_angle)+F_yw2*cos(steer_angle);
-            
-            F_x3 = obj.tire.F_x(alpha(3),kappa(3),Fz(3));
-            F_y3 = obj.tire.F_y(alpha(3),kappa(3),Fz(3));
-            F_x4 = obj.tire.F_x(alpha(4),kappa(4),Fz(4));
-            F_y4 = obj.tire.F_y(alpha(4),kappa(4),Fz(4));
-            Fx = [F_x1; F_x2; F_x3; F_x4];
-            Fy = [F_y1; F_y2; F_y3; F_y4];
-        end
-        
         function [forces, Gr] = calcForces(obj,x,u,forces)
             % takes spring-damper forces, adds powertrain, aero, tireXY      
             throttle = u(2); %[-1,1] max braking to max throttle
@@ -210,10 +187,10 @@ classdef Car
             
             % calculate tire forces
             [Fx,Fy,Fxw] = tireForce(obj,steerAngle,alphaD,kappa,Fz);
-            Rtire = [obj.l_f obj.t_f/2 0;   %tire 1
-                     obj.l_f -obj.t_f/2 0;   %tire 2
-                     -obj.l_r obj.t_f/2 0;   %tire 3
-                     -obj.l_r -obj.t_f/2 0]; %tire 4
+            Rtire = [obj.l_f -obj.t_f/2 0;   %tire 1
+                     obj.l_f obj.t_f/2 0;   %tire 2
+                     -obj.l_r -obj.t_f/2 0;   %tire 3
+                     -obj.l_r obj.t_f/2 0]; %tire 4
             forces.alpha = alphaR;
 
             Ftires = [Fx Fy Fz Rtire];
@@ -254,28 +231,26 @@ classdef Car
             for i = 1:size(Ftires,1)
                 psiMoments = psiMoments + det([rTires(i,1:2);Ftires(i,1:2)]);
             end
-            
+                                    
             %total matrix of forces in vehicle axes (e1, e2)
             allForces = [FapTotal(:,1:2); Ftires(:,1:2)]; 
             
             % total acceleration vector
             sumA = sum(allForces,1)/obj.M;
-            
-            %equiv to multiply by inverse: vehicle->global
-            %rotate car velocity components in e1,e2 to E1, E2
-%             vGlobal = rotMat\[longVel; latVel];
+                        
             xdot = zeros(14,1); 
-            %long accel, lat accel. Vehicle coordinates
-            xdot(3) = sumA(1)-psid*latVel;
-            xdot(4) = sumA(2)+psid*longVel;
-            %X velocity, Y velocity. Global coordinates
-            xdot(5) = longVel*cos(psi)-latVel*sin(psi); 
-            xdot(6) = longVel*sin(psi)+latVel*cos(psi); 
             
             %yaw velocity
             xdot(1) = psid;
             xdot(2) = (1/obj.I_zz)*psiMoments;
             
+            %long accel, lat accel. Vehicle coordinates
+            xdot(3) = sumA(1)+psid*latVel;
+            xdot(4) = sumA(2)-psid*longVel;
+            %X velocity, Y velocity. Global coordinates
+            xdot(5) = longVel*cos(-psi)-latVel*sin(-psi); 
+            xdot(6) = longVel*sin(-psi)+latVel*cos(-psi); 
+                       
             %tires: angular velocity, acceleration, 1-4
             xdot(7) = x(8);
             xdot(8) = (T(1) - Fxw(1)*obj.R)/obj.Jw;
@@ -288,28 +263,6 @@ classdef Car
             xdot(14) = ((T(4)-Fx(4)*obj.R)*(obj.Jw+obj.Jm*(Gr/2)^2) - (T(3)-Fx(3)*obj.R)*obj.Jm*(Gr/2)^2)*(1/denom);
         end
         
-        function [Fz, Fzvirtual] = ssForces(obj,longVel,yawRate,T)
-            Fz_front_static = (obj.M*9.81*obj.l_r+obj.aero.lift(longVel)*obj.aero.D_f)/obj.W_b;
-            Fz_rear_static = (obj.M*9.81*obj.l_f+obj.aero.lift(longVel)*obj.aero.D_r)/obj.W_b;
-            
-            long_load_transfer = (sum(T))/obj.R*(obj.h_g/obj.W_b); %(F_x1+F_x2+F_x3+F_x4)*h_g/W_b approximated (neglecting wheel dynamics) since longitudinal forces are unknown
-
-            lat_load_transfer_front = (yawRate*longVel*obj.M)/obj.t_f*((obj.l_r*obj.h_rf)/obj.W_b+...
-                obj.R_sf*(obj.h_g-obj.h_rc));
-            lat_load_transfer_rear = (yawRate*longVel*obj.M)/obj.t_r*((obj.l_r*obj.h_rr)/obj.W_b+...
-                (1-obj.R_sf)*(obj.h_g-obj.h_rc));
-            
-            % wheel load constraint method from Kelly
-            Fzvirtual = zeros(1,4);
-            Fzvirtual(1) = 0.5*Fz_front_static-0.5*long_load_transfer+lat_load_transfer_front;
-            Fzvirtual(2) = 0.5*Fz_front_static-0.5*long_load_transfer-lat_load_transfer_front;
-            Fzvirtual(3) = 0.5*Fz_rear_static+0.5*long_load_transfer+lat_load_transfer_rear;
-            Fzvirtual(4) = 0.5*Fz_rear_static+0.5*long_load_transfer-lat_load_transfer_rear;
-
-            % smooth approximation of max function
-            epsilon = 10; %why 10
-            Fz = (Fzvirtual + sqrt(Fzvirtual.^2 + epsilon))./2;
-        end
         function plotGG(car)
             figure(123);clf;
             scatter3(car.ggPoints(:,1),car.ggPoints(:,2),car.ggPoints(:,3),'+')
