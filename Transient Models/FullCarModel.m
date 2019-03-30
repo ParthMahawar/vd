@@ -1,5 +1,5 @@
 %% Inputs
-weight_dist = 0.4; % rearwards
+weight_dist = 0.6; % rearwards
 m = 242.6718; % mass, kg
 L = 1.524; % wheelbase
 
@@ -31,13 +31,13 @@ step_steer = 3*pi/180; % rad
 sim FullCarModelSim
 close_system
 
-%figure
-%plot(beta.time,beta.signals.values)
-%title('Sideslip Angle Step Response')
-%figure
-%plot(r.time,r.signals.values)
-%title('Yaw Velocity Step Response')
-%figure
+figure
+plot(beta.time,beta.signals.values)
+title('Sideslip Angle Step Response')
+figure
+plot(r.time,r.signals.values)
+title('Yaw Velocity Step Response')
+figure
 plot(ay.time,ay.signals.values)
 hold on
 title('Lateral Acceleration Step Response')

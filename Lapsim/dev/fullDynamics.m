@@ -3,6 +3,7 @@ function outputs = fullDynamics(car,uArr,x0,n)
 % state vectors
 FzArr = zeros(4,n); % vertical forces on tires
 xArr = zeros(14,n); % state array
+xdotArr = zeros(14,n);
 yArr = zeros(14,n);
 xArr(:,1) = x0;
 dt = car.TSmpc;
@@ -47,6 +48,7 @@ for i = 2:n
     % applies forces.F to the car to produce xdot
     [xdot, forces5] = car.dynamics(x,forces4,Gr);
 
+    xdotArr(:,i) = xdot;
     %advance state
     xArr(:,i) = xArr(:,i-1) + dt*xdot; 
     
@@ -62,5 +64,6 @@ end
 
 outputs = struct();
 outputs.xArr = xArr;
+outputs.xdotArr = xdotArr;
 outputs.FzArr = FzArr;
 outputs.yArr = yArr;

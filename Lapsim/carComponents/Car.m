@@ -154,7 +154,7 @@ classdef Car
             forces.T = T;
             
             % aero
-            F_lift = [0 0 -obj.aero.lift(longVel)];
+            F_lift = [0 0 obj.aero.lift(longVel)];
             R_lift = [-obj.aero.D_f*obj.W_b 0 obj.h_g];
             F_drag = [-obj.aero.drag(longVel) 0 0];
             R_drag = [-obj.l_f 0 obj.h_g]; 
@@ -245,7 +245,7 @@ classdef Car
             xdot(2) = (1/obj.I_zz)*psiMoments;
             
             %long accel, lat accel. Vehicle coordinates
-            xdot(3) = sumA(1)+psid*latVel;
+            xdot(3) = 0; %sumA(1)+psid*latVel;
             xdot(4) = sumA(2)-psid*longVel;
             %X velocity, Y velocity. Global coordinates
             xdot(5) = longVel*cos(-psi)-latVel*sin(-psi); 

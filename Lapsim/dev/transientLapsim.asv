@@ -65,7 +65,7 @@ yaw_angle = xArr(1,:);
 yaw_rate = xArr(2,:);
 long_vel = xArr(3,:);
 lat_vel = xArr(4,:);
-lat_accel = long_vel.*yaw_rate-xdotArr(4,:);
+lat_accel = xdotArr(4,:);
 beta = rad2deg(atan(lat_vel./long_vel));
 
 bounce = yArr(1,:);
@@ -112,8 +112,6 @@ fprintf("theta: %0.2f\n",rad2deg(theta(end-10)));
 
 figure(7); clf
 plot(time,long_vel.*yaw_rate)
-hold on
-plot(time,lat_accel)
 title('Lateral Acceleration')
 
 figure(8); clf
@@ -124,7 +122,7 @@ figure(9); clf
 plot(time,steer/max(abs(steer)))
 hold on
 plot(time,-phi/max(phi))
-plot(time,lat_accel/max(lat_accel))
+plot(time,long_vel.*yaw_rate/max(long_vel.*yaw_rate))
 plot(time,yaw_rate/max(yaw_rate))
 legend('Steer','Roll','Lat Accel','Yaw Rate')
 
