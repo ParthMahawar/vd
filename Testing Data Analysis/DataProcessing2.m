@@ -3,7 +3,7 @@
 clear all;clc
 
 % import mat file from motec
-load('16in_slalom.mat');
+load('10_13_2018_AutocrossJake2.mat');
 
 % input variable names of channels 
 data = {Engine_RPM,G_Force_Lat,G_Force_Long,Ground_Speed_Left,Ground_Speed_Right...
@@ -53,7 +53,7 @@ wheelspeed_RL = data_resampled{8}.Data;
 steering_voltage = data_resampled{9}.Data;
 
 %% Save data
-save('16in_slalom_steering_processed.mat','engine_rpm','lat_accel','long_accel','wheelspeed_FL',...
+save('10_13_2018_AutocrossJake2_processed.mat','engine_rpm','lat_accel','long_accel','wheelspeed_FL',...
     'wheelspeed_FR','wheelspeed_RL','yaw_rate','steer_angle','time','steering_voltage');
 
 %% Plotting

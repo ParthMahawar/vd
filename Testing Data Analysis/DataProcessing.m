@@ -3,7 +3,7 @@
 clear all;clc
 
 % import mat file from motec
-load('16in_slalom.mat');
+load('18in_lowrideheight.mat');
 
 % input variable names of channels 
 data = {Engine_RPM,G_Force_Lat,G_Force_Long,GP_Volts_5,GP_Volts_6,...
@@ -57,7 +57,7 @@ steer_angle = data_resampled{11}.Data;
 wheelspeed_RL = data_resampled{12}.Data;
 
 %% Save data
-save('16in_slalom.mat','engine_rpm','lat_accel','long_accel',...
+save('18in_lowrideheight_4Hz.mat','engine_rpm','lat_accel','long_accel',...
     'shockpot_FR','shockpot_RR','shockpot_RL','shockpot_FL','wheelspeed_FL',...
     'wheelspeed_FR','wheelspeed_RL','yaw_rate','steer_angle','time');
 

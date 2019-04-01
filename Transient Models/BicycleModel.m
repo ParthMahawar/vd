@@ -83,9 +83,9 @@ bodeopt.Title.String = 'Normalized Frequency Response';
 bodeopt.Title.FontSize = 18;
 bodeopt.Xlabel.FontSize = 14;
 bodeopt.Ylabel.FontSize = 14;
-xlim([0 4]);
 
 bode(ay_delta,r_delta,beta_delta,bodeopt)
+xlim([0 4]);
 legend('Lateral Acceleration','Yaw Velocity','Sideslip Angle')
 
 figure

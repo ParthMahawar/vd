@@ -3,7 +3,9 @@
 clear all;clc
 
 % import mat file from motec
-load('18in_lowrideheight_processed.mat');
+%load('18in_lowrideheight_processed.mat');
+%load('16in_slalom_only.mat');
+load('10_13_2018_Autocross3_processed.mat');
 
 % input variable names of channels 
 data = {engine_rpm,lat_accel,long_accel,wheelspeed_FL,wheelspeed_FR,yaw_rate,steer_angle,time};
@@ -29,16 +31,18 @@ data = {engine_rpm,lat_accel,long_accel,wheelspeed_FL,wheelspeed_FR,yaw_rate,ste
 % (time > 390 & time < 397);
 
 % %18 in slalom (low ride height)
-indices = (time > 166 & time < 174);
+% indices = (time > 166 & time < 174);
 
 % %18 in skidpad (low ride height)
 % indices = (time > 195 & time < 215) |...
 %     (time > 235 & time < 265);
-
-for i = 1:numel(data)
-    variable = data{i};
-    data{i} = variable(indices);
-end
+% 
+% indices = time > 20 & time < 90;
+% 
+% for i = 1:numel(data)
+%     variable = data{i};
+%     data{i} = variable(indices);
+% end
 
 % rename variables
 engine_rpm = data{1};
@@ -59,21 +63,21 @@ time = data{8};
 %close all
 
 ax1 = subplot(4,1,1);
-plot(steer_angle)
+plot(time,steer_angle)
 hold on
 ylim([-inf inf])
 xlabel('Time(s)');
 ylabel('Steer Angle (deg)');
 
 ax2 = subplot(4,1,2);
-plot(lat_accel)
+plot(time,lat_accel)
 hold on
 xlabel('Time(s)');
 ylabel('Lateral Acceleration (g)');
 ylim([-inf inf])
 
 ax3 = subplot(4,1,3);
-plot(yaw_rate)
+plot(time,yaw_rate)
 hold on
 xlabel('Time(s)');
 ylabel('Yaw Rate (deg/s)');
@@ -89,7 +93,7 @@ ylim([-inf inf])
 % legend('FL','FR')
 
 ax4 = subplot(4,1,4);
-plot((wheelspeed_FL+wheelspeed_FR)/2)
+plot(time,(wheelspeed_FL+wheelspeed_FR)/2)
 hold on
 xlabel('Time(s)');
 ylabel('Velocity (mph)');
@@ -97,6 +101,10 @@ ylim([-inf inf])
 
 
 linkaxes([ax1,ax2,ax3,ax4],'x')
+%%
+plot(time,steer_angle/max(abs(steer_angle)))
+hold on
+plot(time,lat_accel/max(abs(lat_accel)))
 
 %%
 figure
@@ -127,16 +135,45 @@ ay_sys = tfest(data,2,2);
 
 data = iddata(yaw_rate,steer_angle,time(2)-time(1));
 r_sys = tfest(data,2,1);
+%% PSD
+Fs = 1/(time(2)-time(1));
 
-%%
-nfft = pow2(round(log2(length(steer_angle))));
-[sstxy,f] = tfestimate(steer_angle,lat_accel);
-plot(f,abs(sstxy))
+[pxx,f] = pwelch(steer_angle,[],[],[],Fs);
 
-%%
+plot(f,10*log10(pxx))
 
-[sstxy,f] = tfestimate(steer_angle,lat_accel);
-plot(f,abs(sstxy))
+xlabel('Frequency (Hz)')
+ylabel('PSD (dB/Hz)')
+
+%% Coherence
+Fs = 1/(time(2)-time(1));
+
+[cxy,fc] = mscohere(steer_angle,lat_accel,300,[],[],Fs);
+[cxy2,fc2] = mscohere(steer_angle,yaw_rate,300,[],[],Fs);
+
+plot(fc,cxy)
+hold on
+plot(fc2,cxy2)
+legend('Lat Accel','Yaw Rate')
+
+%% Frequency Response
+Fs = 1/(time(2)-time(1));
+
+[sstxy,f] = tfestimate(steer_angle,lat_accel,100,[],[],Fs);
+[sstxy2,f] = tfestimate(steer_angle,-yaw_rate,100,[],[],Fs);
+figure
+subplot(2,1,1)
+plot(f,abs(sstxy/sstxy(1)))
+hold on
+plot(f,abs(sstxy2/sstxy2(1)))
+xlim([0 2]);
+subplot(2,1,2)
+plot(f,180/pi*angle(sstxy/sstxy(1)))
+hold on
+plot(f,180/pi*angle(sstxy2/sstxy2(1)))
+xlim([0 2]);
+legend('Lateral Acceleration','Yaw Rate')
+
 
 %%
 % w = linspace(0,2*pi*5);
@@ -186,16 +223,6 @@ xlabel('Frequency (Hz)')
 ylabel('Magnitude')
 title('Lateral Acceleration')
 legend('16 in tires','18 in tires');
-
-%%
-Fs = 1/(time(2)-time(1));
-
-[pxx,f] = pwelch(yaw_rate);
-
-plot(f,10*log10(pxx))
-
-xlabel('Frequency (Hz)')
-ylabel('PSD (dB/Hz)')
 
 %%
 t = linspace(0, 5); % Time Vector

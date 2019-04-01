@@ -3,52 +3,42 @@
 clear all;clc
 
 % import mat file from motec
-load('ConstantRadius1_processed.mat');
+load('10_13_2018_Autocross1.mat');
 
 % input variable names of channels 
-data = {engine_rpm,lat_accel,long_accel,shockpot_FR,shockpot_RR,shockpot_RL,...
-    shockpot_FL,wheelspeed_FL,wheelspeed_FR,yaw_rate,steer_angle,time'};
+data = {Engine_RPM,G_Force_Lat,G_Force_Long,Ground_Speed_Left,Ground_Speed_Right...
+    Gyro_Yaw_Velocity,Steering_Angle,Drive_Speed_Left,GP_Volts_4};
 
-load('ConstantRadius2_processed.mat');
-data2 = {engine_rpm,lat_accel,long_accel,shockpot_FR,shockpot_RR,shockpot_RL,...
-    shockpot_FL,wheelspeed_FL,wheelspeed_FR,yaw_rate,steer_angle,time'};
+load('10_13_2018_Autocross3.mat');
+data2 = {Engine_RPM,G_Force_Lat,G_Force_Long,Ground_Speed_Left,Ground_Speed_Right...
+    Gyro_Yaw_Velocity,Steering_Angle,Drive_Speed_Left,GP_Volts_4};
 for i = 1:numel(data)
     data{i} = [data{i}; data2{i}];
 end
 
-load('ConstantRadius3_processed.mat');
-data2 = {engine_rpm,lat_accel,long_accel,shockpot_FR,shockpot_RR,shockpot_RL,...
-    shockpot_FL,wheelspeed_FL,wheelspeed_FR,yaw_rate,steer_angle,time'};
+load('10_13_2018_AutocrossJake2_processed.mat');
+data2 = {Engine_RPM,G_Force_Lat,G_Force_Long,Ground_Speed_Left,Ground_Speed_Right...
+    Gyro_Yaw_Velocity,Steering_Angle,Drive_Speed_Left,GP_Volts_4};
 for i = 1:numel(data)
     data{i} = [data{i}; data2{i}];
 end
 
-load('ConstantRadius4_processed.mat');
-data2 = {engine_rpm,lat_accel,long_accel,shockpot_FR,shockpot_RR,shockpot_RL,...
-    shockpot_FL,wheelspeed_FL,wheelspeed_FR,yaw_rate,steer_angle,time'};
-for i = 1:numel(data)
-    data{i} = [data{i}; data2{i}];
-end
-
-remove_indices = abs(wheelspeed_FL)<5;
-
-for i = 1:numel(data)
-    data{i}(remove_indices) = [];
-end
+% remove_indices = abs(wheelspeed_FL)<5;
+% 
+% for i = 1:numel(data)
+%     data{i}(remove_indices) = [];
+% end
 
 % rename variables
 engine_rpm = data{1};
 lat_accel = data{2};
 long_accel = data{3};
-shockpot_FR = data{4};
-shockpot_RR = data{5};
-shockpot_RL = data{6};
-shockpot_FL = data{7};
-wheelspeed_FL = data{8};
-wheelspeed_FR = data{9};
-yaw_rate = data{10};
-steer_angle = data{11};
-time = data{12};
+wheelspeed_FL = data{4};
+wheelspeed_FR = data{5};
+yaw_rate = data{6};
+steer_angle = data{7};
+wheelspeed_RL = data{8};
+steering_voltage = data{9};
 
 %% Plotting
 figure

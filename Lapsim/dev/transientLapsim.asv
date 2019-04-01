@@ -9,10 +9,10 @@ end
 % input car parameters
 car = testCar();
 car.k = 200*4.45*39.37; % N/m
-car.c = 1000; % N*s/m
+car.c = 10000; % N*s/m
 car.Ixx = 60;
 car.Iyy = 82;
-car.k_rf = 0; % Nm/rad
+car.k_rf = 10000; % Nm/rad
 car.k_rr = 0; % Nm/rad
 car.TSmpc = .003; %has to be multiple of TSdyn
 car.TSdyn = .0005;
@@ -22,9 +22,14 @@ n = 8000; % number of timesteps
 % steering/throttle input
 steerDeg = 3;
 steer = deg2rad(steerDeg)*[zeros(1,n/8) ones(1,7*n/8)];
+
 time = 0:car.TSmpc:car.TSmpc*(n-1);
-steer = deg2rad(steerDeg)*sin((2*pi)*time);
-steer(1:3000) = 0;
+steer = steer.*sin((2*pi)*time);
+%steer(1:3000) = 0;
+
+steer = chirp(time,0,time(end),2,'linear',-90);
+steer =  deg2rad(steerDeg)*[zeros(1,3000) steer(1:end-3000)];
+
 throttle = zeros(1,n);
 %throttle = 0.1*ones(1,n);
 %throttle = [0*ones(1,n/2) 1*ones(1,n/4) -1*ones(1,n/4)];
@@ -40,9 +45,9 @@ uArr = [steer; throttle];
 % 13: RR angular position 14: RR angular velocity
 
 x0 = zeros(14,1);
-v = 20; % initial velocity of 20 m/s
-x0(3) = 20; 
-x0([8 10 12 14]) = v/car.R; % wheel velocities
+v0 = 25; % initial velocity (m/s)
+x0(3) = v0; 
+x0([8 10 12 14]) = v0/car.R; % wheel velocities
 
 % main dynamics solver 
 % outputs data: struct containing time histories of states, 
@@ -65,7 +70,7 @@ yaw_angle = xArr(1,:);
 yaw_rate = xArr(2,:);
 long_vel = xArr(3,:);
 lat_vel = xArr(4,:);
-lat_accel = xdotArr(4,:);
+lat_accel = long_vel.*yaw_rate+xdotArr(4,:);
 beta = rad2deg(atan(lat_vel./long_vel));
 
 bounce = yArr(1,:);
@@ -112,6 +117,8 @@ fprintf("theta: %0.2f\n",rad2deg(theta(end-10)));
 
 figure(7); clf
 plot(time,long_vel.*yaw_rate)
+hold on
+plot(time,lat_accel)
 title('Lateral Acceleration')
 
 figure(8); clf
@@ -122,12 +129,87 @@ figure(9); clf
 plot(time,steer/max(abs(steer)))
 hold on
 plot(time,-phi/max(phi))
-plot(time,long_vel.*yaw_rate/max(long_vel.*yaw_rate))
+plot(time,lat_accel/max(lat_accel))
 plot(time,yaw_rate/max(yaw_rate))
-legend('Steer','Roll','Lat Accel','Yaw Rate')
+plot(time,-beta/max(beta))
+legend('Steer','Roll','Lat Accel','Yaw Rate','Sideslip Angle')
 
 figure(10); clf
 plot(time,beta)
 title('Beta')
 
+%% Transfer Function Estimation
 
+data = iddata(beta',steer',car.TSmpc);
+beta_sys = tfest(data,2,1);
+
+data = iddata(lat_accel',steer',car.TSmpc);
+ay_sys = tfest(data,2,2);
+
+data = iddata(yaw_rate',steer',car.TSmpc);
+r_sys = tfest(data,2,1);
+
+% Bode plot
+bodeopt = bodeoptions;
+bodeopt.MagScale = 'linear';
+bodeopt.MagUnits = 'abs';
+bodeopt.FreqScale = 'linear';
+bodeopt.FreqUnits = 'Hz';
+bodeopt.PhaseMatching = 'on';
+bodeopt.PhaseMatchingFreq = 0;
+bodeopt.PhaseMatchingValue = 0;
+
+% figure
+% bode(ay_sys/dcgain(ay_sys),r_sys/dcgain(r_sys),beta_sys/dcgain(beta_sys),bodeopt)
+% xlim([0 4]);
+% legend('Lateral Acceleration','Yaw Velocity','Sideslip Angle')
+% 
+% figure
+% bode(ay_sys,r_sys,beta_sys,bodeopt)
+% xlim([0 4]);
+% legend('Lateral Acceleration','Yaw Velocity','Sideslip Angle')
+%%
+load('FreqResponseData3.mat')
+sstxy_1 = sstxy;
+sstxy_2 = sstxy2;
+load('FreqResponseData4.mat')
+sstxy_1 = sstxy_1+sstxy;
+sstxy_2 = sstxy_2+sstxy;
+load('FreqResponseData5.mat')
+sstxy_1(1:100) = sstxy_1(1:100)+sstxy(1:100);
+sstxy_2(1:100) = sstxy_2(1:100)+sstxy(1:100);
+
+sstxy = sstxy_1/3;
+sstxy2 = sstxy_2/3;
+
+figure
+subplot(2,1,1)
+plot(time,steer/max(abs(steer)))
+hold on
+plot(time,lat_accel/max(lat_accel))
+plot(time,yaw_rate/max(yaw_rate))
+legend('Steer Angle','Lateral Acceleration','Yaw Rate','Location','Northwest')
+xlabel('Time (s)')
+ylabel('Normalized Values')
+
+subplot(2,1,2)
+
+[mag,phase,w] = bode(ay_sys,linspace(0,2*(2*pi),1000),bodeopt);
+plot(squeeze(w)/(2*pi), squeeze(phase)-360, 'k');
+[mag2,phase2,w2] = bode(r_sys,linspace(0,2*(2*pi),1000),bodeopt);
+hold on
+plot(squeeze(w)/(2*pi), squeeze(phase2), 'b');
+
+hold on
+
+hold on
+plot(f,180/pi*angle(sstxy/sstxy(1)),'k--')
+hold on
+plot(f,180/pi*angle(sstxy2/sstxy2(1)),'b--')
+xlim([0 2]);
+
+xlabel('Frequency (Hz)')
+ylabel('Phase (deg)')
+
+legend('Lateral Acceleration (Simulated)','Yaw Rate (Simulated)','Lat Acceleration (Measured)','Yaw Rate (Measured)','Location','Southwest')
+title('
