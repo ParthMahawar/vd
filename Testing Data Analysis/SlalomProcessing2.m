@@ -1,6 +1,7 @@
 %% Load Data
 
-clear all;clc
+clear all;
+clc
 
 % import mat file from motec
 %load('18in_lowrideheight_processed.mat');
@@ -59,29 +60,34 @@ time = data{8};
 % save('18in_lowrideheight_slalom_only.mat','engine_rpm','lat_accel','long_accel','wheelspeed_FL',...
 %     'wheelspeed_FR','wheelspeed_RL','yaw_rate','steer_angle','time');
 
-%% Plotting
+%% Plotting Steer Angle, Lat Accel, Yaw Rate, and Velocity
 %close all
 
+sgtitle('Time vs. Steer Angle, Lat Accel, Yaw Rate, & Velocity');
+
+% Plot Time vs. Steer Angle
 ax1 = subplot(4,1,1);
-plot(time,steer_angle)
+plot(time,steer_angle);
 hold on
-ylim([-inf inf])
+%ylim([-inf inf])
 xlabel('Time(s)');
 ylabel('Steer Angle (deg)');
 
+% Plot Time vs. Lat Accel
 ax2 = subplot(4,1,2);
-plot(time,lat_accel)
+plot(time,lat_accel);
 hold on
 xlabel('Time(s)');
 ylabel('Lateral Acceleration (g)');
-ylim([-inf inf])
+%ylim([-inf inf])
 
+% Plot Time vs. Yaw Rate
 ax3 = subplot(4,1,3);
-plot(time,yaw_rate)
+plot(time,yaw_rate);
 hold on
 xlabel('Time(s)');
 ylabel('Yaw Rate (deg/s)');
-ylim([-inf inf])
+%ylim([-inf inf])
 
 % ax4 = subplot(4,1,4);
 % plot(wheelspeed_FL)
@@ -92,28 +98,44 @@ ylim([-inf inf])
 % ylim([-inf inf])
 % legend('FL','FR')
 
+% Plot Time vs. Velocity
 ax4 = subplot(4,1,4);
-plot(time,(wheelspeed_FL+wheelspeed_FR)/2)
+plot(time,(wheelspeed_FL+wheelspeed_FR)/2);
 hold on
 xlabel('Time(s)');
 ylabel('Velocity (mph)');
-ylim([-inf inf])
+ylim([-inf 60])
 
+linkaxes([ax1,ax2,ax3,ax4],'x');
+set(gcf, 'Position',  [50, 50, 1400, 700]);
+hold off
 
-linkaxes([ax1,ax2,ax3,ax4],'x')
-%%
-plot(time,steer_angle/max(abs(steer_angle)))
-hold on
-plot(time,lat_accel/max(abs(lat_accel)))
-
-%%
+%% Normalized Steer Angle & Lat Accel Graphs
 figure
-scatter(lat_accel,steer_angle)
+hold on
+
+plot(time,steer_angle/max(abs(steer_angle)));
+hold on
+plot(time,lat_accel/max(abs(lat_accel)));
+
+xlabel('Time(s)');
+title('Time vs. Steer Angle/Lateral Acceleration (Normalized)');
+set(gcf, 'Position',  [50, 50, 1400, 700]);
+legend('Steer Angle (Normalized)', 'Lateral Acceleration (Normalized)');
+hold off
+
+
+%% 
+figure
+scatter(lat_accel,steer_angle);
 hold on
 
 ackermann = 1.524*(yaw_rate+40)./(wheelspeed_FL*0.447);
-scatter(-lat_accel,-steer_angle+ackermann)
+scatter(-lat_accel,-steer_angle+ackermann);
 ylim([-20 20]);
+xlabel('Lateral Acceleration');
+ylabel('Steering (+ Ackermann) Angle');
+hold off
 
 %% Calculations
 
@@ -136,6 +158,8 @@ ay_sys = tfest(data,2,2);
 data = iddata(yaw_rate,steer_angle,time(2)-time(1));
 r_sys = tfest(data,2,1);
 %% PSD
+figure 
+hold on
 Fs = 1/(time(2)-time(1));
 
 [pxx,f] = pwelch(steer_angle,[],[],[],Fs);
@@ -144,8 +168,9 @@ plot(f,10*log10(pxx))
 
 xlabel('Frequency (Hz)')
 ylabel('PSD (dB/Hz)')
-
+hold off
 %% Coherence
+figure
 Fs = 1/(time(2)-time(1));
 
 [cxy,fc] = mscohere(steer_angle,lat_accel,300,[],[],Fs);
@@ -155,25 +180,36 @@ plot(fc,cxy)
 hold on
 plot(fc2,cxy2)
 legend('Lat Accel','Yaw Rate')
-
+hold off
 %% Frequency Response
+figure 
+hold on
+sgtitle('Frequency Response of Lateral Acceleration and Yaw Rate');
 Fs = 1/(time(2)-time(1));
 
 [sstxy,f] = tfestimate(steer_angle,lat_accel,100,[],[],Fs);
 [sstxy2,f] = tfestimate(steer_angle,-yaw_rate,100,[],[],Fs);
-figure
 subplot(2,1,1)
+
 plot(f,abs(sstxy/sstxy(1)))
 hold on
 plot(f,abs(sstxy2/sstxy2(1)))
+title('Magnitude Response')
 xlim([0 2]);
+xlabel('Frequency');
+ylabel('Magnitude');
+legend('Lateral Acceleration','Yaw Rate','Location','southwest')
 subplot(2,1,2)
+
 plot(f,180/pi*angle(sstxy/sstxy(1)))
 hold on
 plot(f,180/pi*angle(sstxy2/sstxy2(1)))
+title('Phase Response')
 xlim([0 2]);
-legend('Lateral Acceleration','Yaw Rate')
-
+xlabel('Frequency');
+ylabel('Phase');
+legend('Lateral Acceleration','Yaw Rate','Location', 'northwest')
+hold off
 
 %%
 % w = linspace(0,2*pi*5);
@@ -203,28 +239,31 @@ bodeopt.Xlim = [0 4];
 
 figure
 bode(ay_sys,bodeopt)
+hold off
 
-%%
+%% FFT 
 Fs = 1/(time(2)-time(1));
 L = numel(lat_accel);
-f = Fs*(1:(L/2))/L;
+L2 = round(L/2);
+f = Fs*(1:L2)/L;
 fourier_transform = fft(lat_accel);
 
 %[~,x] = max(abs(fourier_transform(1:L/2)));
 %frequency = f(x)
-figure(1)
-findpeaks(abs(fourier_transform(1:L/2)))
+figure
+findpeaks(abs(fourier_transform(1:L2)))
 %[pks,locs] = findpeaks(abs(fourier_transform(1:L/2)))
 
-figure(2)
-plot(f,abs(fourier_transform(1:L/2)));
+figure
+plot(f,abs(fourier_transform(1:L2)));
 hold on
 xlabel('Frequency (Hz)')
 ylabel('Magnitude')
 title('Lateral Acceleration')
-legend('16 in tires','18 in tires');
+legend('FFT of Lat Accel');
+hold off
 
-%%
+%% System Response to Input Sinusoid
 t = linspace(0, 5); % Time Vector
 u = sin(10*t);        % Forcing Function
 y = lsim(r_sys, u, t);    % Calculate System Response
@@ -232,18 +271,20 @@ figure
 plot(t,u)
 hold on
 plot(t,y/5)
+hold off
 
-%%
+%% System Response to Steer Angle
 u = steer_angle;        % Forcing Function
 y = lsim(ay_sys, u, time);    % Calculate System Response
 figure
 plot(time,lat_accel)
 hold on
 plot(time,y)
-
+hold off
 %%
 figure
 plot(time,steer_angle)
 hold on
 plot(time,lat_accel*5)
+hold off
 
