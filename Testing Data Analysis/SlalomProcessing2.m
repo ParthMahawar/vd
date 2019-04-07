@@ -227,7 +227,7 @@ hold off
 % figure
 % bode(g,bodeopt)
 
-%%
+%% Bode Plot
 
 % Bode plot
 bodeopt = bodeoptions;
