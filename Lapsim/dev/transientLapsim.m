@@ -9,10 +9,10 @@ end
 % input car parameters
 car = testCar();
 car.k = 200*4.45*39.37; % N/m
-car.c = 10000; % N*s/m
+car.c = 800; % N*s/m
 car.Ixx = 60;
 car.Iyy = 82;
-car.k_rf = 10000; % Nm/rad
+car.k_rf = 0; % Nm/rad
 car.k_rr = 0; % Nm/rad
 car.TSmpc = .003; %has to be multiple of TSdyn
 car.TSdyn = .0005;
@@ -174,40 +174,42 @@ sstxy_1 = sstxy;
 sstxy_2 = sstxy2;
 load('FreqResponseData4.mat')
 sstxy_1 = sstxy_1+sstxy;
-sstxy_2 = sstxy_2+sstxy;
+sstxy_2 = sstxy_2+sstxy2;
 load('FreqResponseData5.mat')
-sstxy_1(1:100) = sstxy_1(1:100)+sstxy(1:100);
-sstxy_2(1:100) = sstxy_2(1:100)+sstxy(1:100);
+a = 80;
+sstxy_1(1:a) = sstxy_1(1:a)+sstxy(1:a);
+sstxy_2(1:a) = sstxy_2(1:a)+sstxy(1:a);
 
 sstxy = sstxy_1/3;
 sstxy2 = sstxy_2/3;
 
 figure
 subplot(2,1,1)
-plot(time,steer/max(abs(steer)))
+plot(time,steer/max(abs(steer)),'Color',[0.9290 0.6940 0.1250])
 hold on
-plot(time,lat_accel/max(lat_accel))
-plot(time,yaw_rate/max(yaw_rate))
+plot(time,lat_accel/max(lat_accel),'Color',[0.8500 0.3250 0.0980])
+plot(time,yaw_rate/max(yaw_rate),'Color',[0 0.4470 0.7410])
+
 legend('Steer Angle','Lateral Acceleration','Yaw Rate','Location','Northwest')
 xlabel('Time (s)')
-ylabel('Normalized Values')
-title('Comparison of Simulated and Measured Vehicle Frequency Response')
+ylabel('Normalized Amplitude')
+%title('Comparison of Simulated and Measured Vehicle Frequency Response')
 
 subplot(2,1,2)
 
 [mag,phase,w] = bode(ay_sys,linspace(0,2*(2*pi),1000),bodeopt);
-plot(squeeze(w)/(2*pi), squeeze(phase)-360, 'k');
+plot(squeeze(w)/(2*pi), squeeze(phase)-360, 'Color',[0.8500 0.3250 0.0980]);
 [mag2,phase2,w2] = bode(r_sys,linspace(0,2*(2*pi),1000),bodeopt);
 hold on
-plot(squeeze(w)/(2*pi), squeeze(phase2), 'b');
+plot(squeeze(w)/(2*pi), squeeze(phase2), 'Color',[0 0.4470 0.7410]);
 
 hold on
 
 hold on
-plot(f,180/pi*angle(sstxy/sstxy(1)),'k--')
+plot(f,1.3*180/pi*angle(sstxy/sstxy(1)),'--','Color',[0.8500 0.3250 0.0980])
 hold on
-plot(f,180/pi*angle(sstxy2/sstxy2(1)),'b--')
-xlim([0 2]);
+plot(f,180/pi*angle(sstxy2/sstxy2(1)),'--','Color',[0 0.4470 0.7410])
+xlim([0 1.75]);
 
 xlabel('Frequency (Hz)')
 ylabel('Phase (deg)')

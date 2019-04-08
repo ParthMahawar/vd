@@ -5,7 +5,7 @@ clear all;clc
 % import mat file from motec
 %load('18in_lowrideheight_processed.mat');
 %load('16in_slalom_only.mat');
-load('10_13_2018_Autocross3_processed.mat');
+load('10_13_2018_AutocrossJake1_processed.mat');
 
 % input variable names of channels 
 data = {engine_rpm,lat_accel,long_accel,wheelspeed_FL,wheelspeed_FR,yaw_rate,steer_angle,time};
@@ -159,8 +159,8 @@ legend('Lat Accel','Yaw Rate')
 %% Frequency Response
 Fs = 1/(time(2)-time(1));
 
-[sstxy,f] = tfestimate(steer_angle,lat_accel,100,[],[],Fs);
-[sstxy2,f] = tfestimate(steer_angle,-yaw_rate,100,[],[],Fs);
+[sstxy,f] = tfestimate(steer_angle,lat_accel,50,[],[],Fs);
+[sstxy2,f] = tfestimate(steer_angle,-yaw_rate,50,[],[],Fs);
 figure
 subplot(2,1,1)
 plot(f,abs(sstxy/sstxy(1)))

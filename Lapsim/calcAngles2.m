@@ -81,8 +81,12 @@ for i = 2:n+1
     latAccelcg = -car.M*yawRate*longVel*(car.h_g-car.h_rc);
     longAccelcg = car.M*yawRate*latVel*(car.h_g-car.h_rc);
     
+    %latAccelcg
+    
     jacking_rotation = [1 1 1 1; a_1 a_1 -a_2 -a_2; b_1 -b_2 b_1 -b_2];
-    jacking_Fz = jacking_rotation*([-car.h_rf/b_1; car.h_rf/b_2; -car.h_rr/b_1; car.h_rr/b_2].*tireForceXY(:,2));
+    jacking_Fz = [-car.h_rf/b_1; car.h_rf/b_2; -car.h_rr/b_1; car.h_rr/b_2].*tireForceXY(:,2);
+    % jacking_vec: [vertical force; roll moment; pitch moment]
+    jacking_vec = jacking_rotation*jacking_Fz;
     
 %     momentSum = 0;
 %     for j = 1:4 % moments for all 4 tires; M = rxF for CCW convention
@@ -99,7 +103,8 @@ for i = 2:n+1
        
     % transform from SAE coordinate system to ISO
     F = [-sum(Fapplied(:,3)) (latAccelcg) (longAccelcg) 0 0 0 0]';
-    
+    %F = F + [jacking_vec; jacking_Fz];
+        
     % state vector: [x phi theta x1 x2 x3 x4]'
     yd = [y(8:end); m\(F-c*y(8:end)-k*y(1:7))];
     
