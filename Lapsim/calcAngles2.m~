@@ -70,29 +70,43 @@ for i = 2:n+1
         -k_r -b_2*k_r -a_2*k_r 0 0 k_r+k_tr 0;
         -k_r b_1*k_r -a_2*k_r 0 0 0 k_r+k_tr];
     
+    Fapplied = forces.F;
     tireForceXY = forces.Ftires;
     tireForceXY(:,3) = 0;
     yawRate = x(2);
     longVel = x(3);
     latVel = x(4);
     
-    rollMoment = -car.M*yawRate*longVel*(car.h_g-car.h_rc);
-    pitchMoment = car.M*yawRate*latVel*(car.h_g-car.h_rc);
+    latAccelcg = -car.M*yawRate*longVel*(car.h_g-car.h_rc);
+    longAccelcg = car.M*yawRate*latVel*(car.h_g-car.h_rc);
     
     jacking_rotation = [1 1 1 1; a_1 a_1 -a_2 -a_2; b_1 -b_2 b_1 -b_2];
     jacking_Fz = jacking_rotation*([-car.h_rf/b_1; car.h_rf/b_2; -car.h_rr/b_1; car.h_rr/b_2].*tireForceXY(:,2));
-        
-    %add up all applied moments, using given position vectors
-    for i = 1:size(forces.F,1)
-        M = cross(forces.F(i,4:6),forces.F(i,1:3));
-        rollMoment = rollMoment-M(2);
-        pitchMoment = pitchMoment+M(1);
-    end
+    
+%     momentSum = 0;
+%     for j = 1:4 % moments for all 4 tires; M = rxF for CCW convention
+%         Fj = [0; 0; Fzs(j)]; 
+%         momentSum = momentSum + cross(r(:,j),Fj);
+%     end
+%     for j = 1:size(Fapplied,1) % applied forces
+%         Fj = [Fapplied(j,1); Fapplied(j,2); Fapplied(j,3)];
+%         rVec = Fapplied(j,4:6)*[t1F(tcd,pcd) t2F(tcd,pcd) t3F(tcd,pcd)]; % apply car basis vectors
+%         rVec = rVec + toCarOrigin(tcd,pcd); % use car origin and moment point -> r vector
+%         momentSum = momentSum + cross(rVec',Fj);
+%         FzSum = FzSum + Fapplied(j,3);
+%     end
+
+%add up all applied moments, using given position vectors
+for i = 1:size(Fapplied,1)
+    cross = cros
+    latAccelcg = latAccelcg + cross([forces.F(i,2);forces.F(i,6)]);
+    longAccelcg = longAccelcg + cross([forces.F(i,1);forces.F(i,6)]);
+end
 
 % transform from SAE coordinate system to ISO
     % [applied sprung mass vertical force, roll moment, pitch moment,
     % unsprung mass forces]
-    F = [-sum(Fapplied(:,3)) (rollMoment) (pitchMoment) 0 0 0 0]';
+    F = [-sum(Fapplied(:,3)) (latAccelcg) (longAccelcg) 0 0 0 0]';
     
     % state vector: [x phi theta x1 x2 x3 x4]'
     yd = [y(8:end); m\(F-c*y(8:end)-k*y(1:7))];

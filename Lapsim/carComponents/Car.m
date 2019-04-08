@@ -218,13 +218,13 @@ classdef Car
             Fx = forces.Fx;
             T = forces.T;
             Fxw = forces.Fxw;
-            FapTotal = forces.F(:,1:3); % applied Fxyz: car frame
+            apFTotal = forces.F(:,1:3); % applied Fxyz: car frame
             xF = forces.F(:,4:6); % position vectors Xxyz: car frame
             psiMoments = 0;
             
             %add up all applied moments, using given position vectors
-            for i = 1:size(FapTotal,1)
-                psiMoments = psiMoments + det([xF(i,1:2);FapTotal(i,1:2)]);
+            for i = 1:size(apFTotal,1)
+                psiMoments = psiMoments + det([xF(i,1:2);apFTotal(i,1:2)]);
             end
             Ftires = forces.Ftires(:,1:3);
             rTires = forces.Ftires(:,4:6);
@@ -233,7 +233,7 @@ classdef Car
             end
                                     
             %total matrix of forces in vehicle axes (e1, e2)
-            allForces = [FapTotal(:,1:2); Ftires(:,1:2)]; 
+            allForces = [apFTotal(:,1:2); Ftires(:,1:2)]; 
             
             % total acceleration vector
             sumA = sum(allForces,1)/obj.M;

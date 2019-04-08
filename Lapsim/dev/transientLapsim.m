@@ -23,12 +23,12 @@ n = 8000; % number of timesteps
 steerDeg = 3;
 steer = deg2rad(steerDeg)*[zeros(1,n/8) ones(1,7*n/8)];
 
-time = 0:car.TSmpc:car.TSmpc*(n-1);
-steer = steer.*sin((2*pi)*time);
+%time = 0:car.TSmpc:car.TSmpc*(n-1);
+%steer = steer.*sin((2*pi)*time);
 %steer(1:3000) = 0;
 
-steer = chirp(time,0,time(end),2,'linear',-90);
-steer =  deg2rad(steerDeg)*[zeros(1,3000) steer(1:end-3000)];
+%steer = chirp(time,0,time(end),2,'linear',-90);
+%steer =  deg2rad(steerDeg)*[zeros(1,3000) steer(1:end-3000)];
 
 throttle = zeros(1,n);
 %throttle = 0.1*ones(1,n);
