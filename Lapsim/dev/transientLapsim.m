@@ -31,8 +31,8 @@ steer = deg2rad(steerDeg)*[zeros(1,n/8) ones(1,7*n/8)];
 %steer =  deg2rad(steerDeg)*[zeros(1,3000) steer(1:end-3000)];
 
 throttle = zeros(1,n);
-%throttle = 0.1*ones(1,n);
-%throttle = [0*ones(1,n/2) 1*ones(1,n/4) -1*ones(1,n/4)];
+throttle = 0.1*ones(1,n);
+%throttle = [0*ones(1,n/2) 1*ones(1,n/4) -0.3*ones(1,n/4)];
 % throttle = [zeros(1,n/4) ones(1,2*n/4) -ones(1,n/4)];
 uArr = [steer; throttle];
 
@@ -71,6 +71,7 @@ yaw_rate = xArr(2,:);
 long_vel = xArr(3,:);
 lat_vel = xArr(4,:);
 lat_accel = long_vel.*yaw_rate+xdotArr(4,:);
+long_accel = -lat_vel.*yaw_rate+xdotArr(3,:);
 beta = rad2deg(atan(lat_vel./long_vel));
 
 bounce = yArr(1,:);
@@ -140,14 +141,14 @@ title('Beta')
 
 %% Transfer Function Estimation
 
-data = iddata(beta',steer',car.TSmpc);
-beta_sys = tfest(data,2,1);
+data1 = iddata(beta',steer',car.TSmpc);
+beta_sys = tfest(data1,2,1);
 
-data = iddata(lat_accel',steer',car.TSmpc);
-ay_sys = tfest(data,2,2);
+data2 = iddata(lat_accel',steer',car.TSmpc);
+ay_sys = tfest(data2,2,2);
 
-data = iddata(yaw_rate',steer',car.TSmpc);
-r_sys = tfest(data,2,1);
+data3 = iddata(yaw_rate',steer',car.TSmpc);
+r_sys = tfest(data3,2,1);
 
 % Bode plot
 bodeopt = bodeoptions;

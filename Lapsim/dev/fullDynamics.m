@@ -10,11 +10,13 @@ dt = car.TSmpc;
 g = 9.81;
 
 % applied forces (SAE coordinate system)
-apFTotal = cell(n,1); %applied forces at each step
+% x forwards, y right, z downwards
+% origin at cg location at average roll center height
+Fapplied = cell(n,1); %applied forces at each step
 Fxyz = [0 0 0]; % applied force
-Rxyz = [0 0 car.h_g]; % position of applied force
+Rxyz = [0 0 0]; % position of applied force
 Fg = [0 0 car.M*g]; % gravity
-Rg = [0 0 car.h_g];
+Rg = [0 0 0];
 Fconstant = [Fg Rg]; 
 
 for i = 1:n
@@ -24,14 +26,15 @@ for i = 1:n
     forces.Ftires = zeros(4,6); % forces applied by tires
     forces.Fxw = 0;         % x forces in front wheels tire csys
     forces.Fx = 0;          % x forces, in car coordinate system, kept for compatibility
-    apFTotal{i} = forces;
+    Fapplied{i} = forces;
 end
 
 for i = 2:n  
     % state vector y: [x phi theta x1 x2 x3 x4 x' phi' theta' x1' x2' x3' x4']'
     y = yArr(:,i-1);
-    forces1 = apFTotal{i-1};
+    forces1 = Fapplied{i-1};
     x = xArr(:,i-1);
+    xdot0 = xdotArr(:,i-1);
     u = uArr(:,i-1);
     
     % add powertrain and aero forces
@@ -43,7 +46,7 @@ for i = 2:n
     % calculates new roll and pitch angles
     % calculates new normal forces
     %[outputs,forces4,nextFz] = calcAngles(car,x,angles,forces3);    
-    [y_new,forces4,nextFz] = calcAngles2(car,x,y,forces3);    
+    [y_new,forces4,nextFz] = calcAngles2(car,x,y,forces3,xdot0);    
 
     % applies forces.F to the car to produce xdot
     [xdot, forces5] = car.dynamics(x,forces4,Gr);
@@ -56,10 +59,10 @@ for i = 2:n
     FzArr(:,i) = forces5.Ftires(:,3);
     
     %store all applied forces
-    apFTotal{i-1} = forces5; 
-    nextF = apFTotal{i};
+    Fapplied{i-1} = forces5; 
+    nextF = Fapplied{i};
     nextF.Ftires(:,3) = nextFz;
-    apFTotal{i} = nextF;
+    Fapplied{i} = nextF;
 end
 
 outputs = struct();

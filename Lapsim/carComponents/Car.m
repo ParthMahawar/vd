@@ -155,9 +155,9 @@ classdef Car
             
             % aero
             F_lift = [0 0 obj.aero.lift(longVel)];
-            R_lift = [-obj.aero.D_f*obj.W_b 0 obj.h_g];
+            R_lift = [obj.aero.D_f*obj.W_b-obj.l_r 0 0];
             F_drag = [-obj.aero.drag(longVel) 0 0];
-            R_drag = [-obj.l_f 0 obj.h_g]; 
+            R_drag = [0 0 0]; 
             lift = [F_lift R_lift];
             drag = [F_drag R_drag];
             forces.F = [forces.F; lift; drag];
@@ -218,13 +218,13 @@ classdef Car
             Fx = forces.Fx;
             T = forces.T;
             Fxw = forces.Fxw;
-            apFTotal = forces.F(:,1:3); % applied Fxyz: car frame
+            Fapplied = forces.F(:,1:3); % applied Fxyz: car frame
             xF = forces.F(:,4:6); % position vectors Xxyz: car frame
             psiMoments = 0;
             
             %add up all applied moments, using given position vectors
-            for i = 1:size(apFTotal,1)
-                psiMoments = psiMoments + det([xF(i,1:2);apFTotal(i,1:2)]);
+            for i = 1:size(Fapplied,1)
+                psiMoments = psiMoments + det([xF(i,1:2);Fapplied(i,1:2)]);
             end
             Ftires = forces.Ftires(:,1:3);
             rTires = forces.Ftires(:,4:6);
@@ -233,7 +233,7 @@ classdef Car
             end
                                     
             %total matrix of forces in vehicle axes (e1, e2)
-            allForces = [apFTotal(:,1:2); Ftires(:,1:2)]; 
+            allForces = [Fapplied(:,1:2); Ftires(:,1:2)]; 
             
             % total acceleration vector
             sumA = sum(allForces,1)/obj.M;
@@ -245,7 +245,12 @@ classdef Car
             xdot(2) = (1/obj.I_zz)*psiMoments;
             
             %long accel, lat accel. Vehicle coordinates
-            xdot(3) = 0; %sumA(1)+psid*latVel;
+            xdot(3) = sumA(1)+psid*latVel;
+            if longVel <=0
+                xdot(3) = max(0,sumA(1)+psid*latVel);
+            end
+            
+            xdot(3) = 0; % for pure cornering studies
             xdot(4) = sumA(2)-psid*longVel;
             %X velocity, Y velocity. Global coordinates
             xdot(5) = longVel*cos(-psi)-latVel*sin(-psi); 
