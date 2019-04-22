@@ -14,7 +14,7 @@ c_r = car.c_rebound;
 for i =1:4 %calculate damping coeff by interp of dampincurves.mat data
     v = tireVel(i)*MRArr(i)*39.3701; %get current tire vel (m/s to in/s)    
     if v == 0
-        cArr(i) = 0;
+        cArr(i) = (c_c(2,2)-c_c(1,2))/(c_c(2,1)-c_c(1,1));
     elseif v > 0
         cArr(i) = lininterp1(c_c(:,1),c_c(:,2),v)/v*175.126835;
     else
@@ -41,10 +41,10 @@ k_1 = car.k*MRArr(1)^2; %tire k = spring k * MR^2
 k_2 = car.k*MRArr(2)^2;
 k_3 = car.k*MRArr(3)^2;
 k_4 = car.k*MRArr(4)^2;
-c_1 = cArr(1);
-c_2 = cArr(2);
-c_3 = cArr(3);
-c_4 = cArr(4);
+c_1 = cArr(1)*MRArr(1)^2;
+c_2 = cArr(2)*MRArr(2)^2;
+c_3 = cArr(3)*MRArr(3)^2;
+c_4 = cArr(4)*MRArr(4)^2;
 
 m = diag([m Ix Iy m_f m_f m_r m_r]);
 
