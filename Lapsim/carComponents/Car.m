@@ -23,10 +23,15 @@ classdef Car
         
         Iyy
         Ixx   % needs to be about roll center
-        k     %spring rate (assumed same over all tires) N/m
-        c     %damping coefficient N*s/m
+        k     % spring rate (assumed same over all tires) N/m
+        k_tf % tire stiffness (N/m)
+        k_tr % tire stiffness (N/m)
         k_rf  % front arb roll stiffness (Nm/rad)
         k_rr  % rear arb roll stiffness (Nm/rad)
+        c_compression % damper curves ([in/s, lbf])
+        c_rebound % damper curves ([in/s, lbf])
+        MR_F % front motion ratio curve ([in,MR])
+        MR_R % rear motion ratio curve ([in,MR])
         TSmpc %mpc timestep
         TSdyn %dynamics timestep
         

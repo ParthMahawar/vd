@@ -1,5 +1,5 @@
 %% Inputs
-weight_dist = 0.4; % rearwards
+weight_dist = 0.6; % rearwards
 m = 535*0.453592; % mass, kg
 L = 1.524; % wheelbase, m
 
