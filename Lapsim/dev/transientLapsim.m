@@ -10,10 +10,18 @@ load('dampingcurves.mat');
 % input car parameters
 car = testCar();
 car.k = 200*4.45*39.37; % N/m
-car.k_tf = car.k*10; % tire stiffness (N/m)
+car.k_tf = car.k*4; % tire stiffness (N/m)
 car.k_tr = car.k_tf;
-car.c_compression = [0 0.5 7 10; 0 20 40 50]'; % damping curves ([in/s lbf])
-car.c_rebound = [0 0.5 7 10; 0 20 40 50]';
+
+% LSC-HSC, LSR_HSR
+% LS ticks from fully clockwise
+% HS turns from fully couter clockwise
+% C12/R12 valving
+% 1:5 HS sweep (0-x 0-x), x = 4.3 3 2 1 0
+% 6:11 LS sweep (x-4.3 x-4.3), x = 0 2 4 6 10 15 25
+car.c_compression = cdamp{8}([1 2 10:10:end],:); % damping curves ([in/s lbf])
+car.c_rebound = rdamp{8}([1 2 10:10:end],:);
+
 car.k_rf = 10000; % Nm/rad
 car.k_rr = 20000; % Nm/rad
 car.Ixx = 60;
