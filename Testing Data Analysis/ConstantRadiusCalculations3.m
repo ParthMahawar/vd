@@ -3,7 +3,7 @@
 %clear all;clc
 
 % import mat file from motec
-load('ConstantRadiusRun2_processed.mat');
+load('ConstantRadiusRun1_processed.mat');
 
 % input variable names of channels 
 data = {engine_rpm,lat_accel,long_accel,shockpot_FR,shockpot_RR,shockpot_RL,...
@@ -12,15 +12,15 @@ data = {engine_rpm,lat_accel,long_accel,shockpot_FR,shockpot_RR,shockpot_RL,...
 %% Constant Radius Calculations
 
 %Run 1
-% indices = (time > 125 & time < 147)...
-%     | (time > 170 & time < 210)...
-%     | (time > 241 & time < 307);
+indices = (time > 125 & time < 147)...
+    | (time > 170 & time < 210)...
+    | (time > 241 & time < 307);
 
-% % % % %Run 2
-indices = (time > 40 & time < 165)...
-        | (time > 210 & time < 255);
-% % %| (time > 295 & time < 320)... bad
-
+% % % % % %Run 2
+% indices = (time > 40 & time < 165)...
+%         | (time > 210 & time < 255);
+% % % %| (time > 295 & time < 320)... bad
+% 
 for i = 1:numel(data)
     variable = data{i};
     data{i} = variable(indices);
@@ -100,11 +100,15 @@ xlabel('Lateral Acceleration (g)')
 ylabel('Steer Angle (deg)')
 
 hold on
-steer_angle2 = -movmean(steer_angle,100);
-pseudo_lat_accel2 = -movmean(pseudo_lat_accel,100);
-scatter(pseudo_lat_accel2,steer_angle2)
+steer_angle2 = -movmean(steer_angle,400);
+pseudo_lat_accel2 = -movmean(pseudo_lat_accel,400);
 
-[fitresult, gof] = createFit(pseudo_lat_accel2, steer_angle2);
+steer_angle2 = steer_angle2(1:40:end);
+pseudo_lat_accel2 = pseudo_lat_accel2(1:40:end);
+
+scatter(pseudo_lat_accel2/9.81,steer_angle2)
+
+[fitresult, gof] = createFit(pseudo_lat_accel2/9.81, steer_angle2);
 
 %%
 % close all

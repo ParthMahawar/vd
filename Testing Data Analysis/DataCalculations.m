@@ -3,7 +3,7 @@
 clear all;clc
 
 % import mat file from motec
-load('AlexAutoX_processed.mat');
+load('FrequencyResponse_processed.mat');
 
 shockpot_FL = -shockpot_FL;
 shockpot_RL = -shockpot_RL;
@@ -130,12 +130,44 @@ legend('FL','FR','RL','RR');
 %%
 
 figure
-plot(lat_accel,rollangle)
+scatter(lat_accel,rollangle,'.')
+p = polyfit(lat_accel,rollangle,1);
+y = polyval(p,linspace(-1.5,1.5,1000))
 xlabel('Lateral Acceleration (g)');
 ylabel('Roll Angle (deg)');
+hold on
+plot(linspace(-1.5,1.5,1000),y)
+legend(['Roll Gradient = ' num2str(p(1))])
 
 figure
 plot(long_accel,pitchangle)
 xlabel('Lateral Acceleration (g)');
 ylabel('Pitch Angle (deg)');
+
+%%
+Fs = 1/(time(2)-time(1));
+
+[pxx,f] = pwelch(shockpot_FL,[],[],[],Fs);
+
+plot(f,log10(pxx))
+xlim([0 10])
+xlabel('Frequency (Hz)')
+ylabel('PSD')
+
+%%
+shock_bump_FL = wheelbump_FL*MR_shock_front;
+shock_bump_FR = wheelbump_FR*MR_shock_front;
+shock_bump_RL = wheelbump_RL*MR_shock_rear;
+shock_bump_RR = wheelbump_RR*MR_shock_rear;
+
+shock_bump_FL_vel = diff(shock_bump_FL)/(time(2)-time(1));
+shock_bump_FR_vel = diff(shock_bump_FR)/(time(2)-time(1));
+shock_bump_RL_vel = diff(shock_bump_RL)/(time(2)-time(1));
+shock_bump_RR_vel = diff(shock_bump_RR)/(time(2)-time(1));
+
+histogram(shock_bump_RR_vel)
+title('Damper Velocity Histogram')
+xlabel('Damper Velocity (in/s)')
+
+
 

@@ -1,5 +1,6 @@
 function carCell = carConfig()
 
+% car parameters (updated 5/1/19)
 carParams = struct();
 carParams.mass = 177; %170.097; % not including driver
 carParams.driver_weight = 72.5748;
@@ -11,16 +12,16 @@ carParams.wheel_radius = 0.1956; %0.221; %0.232; % should ideally be loaded radi
 carParams.cg_height = 0.2794;
 carParams.roll_center_height_front = 0.052;
 carParams.roll_center_height_rear = 0.0762;
-carParams.R_sf = 0.4; %0.3:0.01:0.6; % proportion of roll stiffness in front (not same as LLTD)
+carParams.R_sf = 0.47; %0.3:0.01:0.6; % proportion of roll stiffness in front (not same as LLTD)
 carParams.I_zz = 83.28; %kg-m^2
 
-% aero parameters
+% aero parameters (updated 5/1/19)
 aeroParams = struct();
-aeroParams.cda = 0.787;
-aeroParams.cla = 2.5;
-aeroParams.distribution = 0.5; % proportion of downforce in front
+aeroParams.cda = 1.0;
+aeroParams.cla = 3.7;
+aeroParams.distribution = 0.44; % proportion of downforce in front
 
-% engine parameters
+% engine parameters (updated 5/1/19)
 eParams = struct();
 eParams.redline = 13000; 
 eParams.shift_point = 12000; % approximate
@@ -28,20 +29,20 @@ eParams.shift_point = 12000; % approximate
 eParams.gears = [2.0, 1.63, 1.33, 1.14, 0.95];
 eParams.torque_fn = KTM350(); % contains torque curve
 
-% drivetrain parameters
+% drivetrain parameters (updated 5/1/19)
 DTparams = struct();
-DTparams.final_drive = 9.3016;
+DTparams.final_drive = 11.055; % 40/11 sprocket
 DTparams.drivetrain_efficiency = 0.92; % copied from old lapsim
 DTparams.G_d1 = 0; % differential torque transfer offset due to internal friction
 DTparams.G_d2_overrun = 0; % differential torque transfer gain in overrun (not used now)
 DTparams.G_d2_driving = 0; % differential torque transfer gain on power
 
-% brake parameters
+% brake parameters 
 Bparams = struct();
 Bparams.brake_distribution = 0.7; % proportion of brake torque applied to front
-Bparams.max_braking_torque = 800; % total braking torque
+Bparams.max_braking_torque = 800; %1158; % total braking torque
 
-% tire parameters
+% tire parameters (updated 5/1/19)
 tireParams = struct();
 tireParams.gamma = 0; % camber angle
 tireParams.p_i = 12; % pressure

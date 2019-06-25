@@ -3,7 +3,7 @@
 clear all;clc
 
 % import mat file from motec
-load('10_13_2018_AutocrossJake2.mat');
+load('18in_lowrideheight.mat');
 
 % input variable names of channels 
 data = {Engine_RPM,G_Force_Lat,G_Force_Long,Ground_Speed_Left,Ground_Speed_Right...

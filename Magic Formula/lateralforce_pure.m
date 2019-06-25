@@ -53,7 +53,7 @@ F_y = transpose(D_y.*sin(C_y.*atan(B_y.*alpha_y-E_y.*(B_y.*alpha_y-atan(B_y.*alp
 
 % F_y(F_z==0) = 0; %zero load
 
-%F_y = K_yalpha*-0.0174533;
+F_y = K_yalpha*-0.0174533;
 
 %F_y = -D_y;
 

@@ -77,7 +77,7 @@ title('Peak Lateral Force Decrease (P = 10, IA = 0)',...
 for i = 1:2
     Xbestcell = parameters{i};
     FZ = linspace(50,250,1000).';
-    Fyplot = lateralforce_pure(Xbestcell,13,FZ,10,0);
+    Fyplot = lateralforce_pure(Xbestcell,13,FZ,12,0);
     x{i} = Fyplot;
     plot(FZ,Fyplot,'Linewidth',3,'LineStyle',linS{i},...
         'DisplayName',label{i});
@@ -93,10 +93,10 @@ title('Cornering Stiffness Comparison (P = 10, IA = 0)',...
 figure
 percent_reduction = (x{2}-x{1})./x{1};
 plot(FZ,percent_reduction*100);
-xlabel('Normal Load (lb)','FontSize',15);
-ylabel('Percent Reduction in Cornering Stiffness','FontSize',15);
-title('Cornering Stiffness Reduction (P = 10, IA = 0)',...
-    'FontSize',18);
+xlabel('Normal Load (lb)','FontSize',12);
+ylabel('Percent Reduction in Cornering Stiffness','FontSize',12);
+title('Cornering Stiffness Reduction (P = 12, IA = 0)',...
+    'FontSize',15);
 
 %% Peak Fy Tire Pressure Sensitivity
 

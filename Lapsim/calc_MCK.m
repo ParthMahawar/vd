@@ -11,7 +11,7 @@ end
 
 c_c = car.c_compression;
 c_r = car.c_rebound;
-for i =1:4 %calculate damping coeff by interp of dampincurves.mat data
+for i =1:4 %calculate damping coeff by interp of dampingcurves.mat data
     v = tireVel(i)*MRArr(i)*39.3701; %get current tire vel (m/s to in/s)    
     if v == 0
         cArr(i) = (c_c(2,2)-c_c(1,2))/(c_c(2,1)-c_c(1,1))*175.126835;

@@ -19,11 +19,11 @@ car.k_tr = car.k_tf;
 % C12/R12 valving
 % 1:5 HS sweep (0-x 0-x), x = 4.3 3 2 1 0
 % 6:11 LS sweep (x-4.3 x-4.3), x = 0 2 4 6 10 15 25
-car.c_compression = cdamp{8}([1 2 10:10:end],:); % damping curves ([in/s lbf])
-car.c_rebound = rdamp{8}([1 2 10:10:end],:);
+car.c_compression = cdamp{6}([1 2 10:10:end],:); % damping curves ([in/s lbf])
+car.c_rebound = rdamp{6}([1 2 10:10:end],:);
 
-car.k_rf = 10000; % Nm/rad
-car.k_rr = 20000; % Nm/rad
+car.k_rf = 3000*6.474; % Nm/rad
+car.k_rr = 7000*6.474; % Nm/rad
 car.Ixx = 60;
 car.Iyy = 82;
 car.TSmpc = .003; %has to be multiple of TSdyn
@@ -31,18 +31,18 @@ car.TSdyn = .0005;
 car.MR_F = MR18Front;
 car.MR_R = MR18Front;
 car.Jm = 0; car.Jw = 1;
-n = 8000; % number of timesteps
+n = 3000; % number of timesteps
 
 % steering/throttle input
-steerDeg = 3;
-steer = deg2rad(steerDeg)*[zeros(1,n/8) ones(1,7*n/8)];
+steerDeg = 5;
+%steer = deg2rad(steerDeg)*[zeros(1,n/8) ones(1,7*n/8)];
 
 % time = 0:car.TSmpc:car.TSmpc*(n-1);
 % steer = steer.*sin((2*pi)*time);
 % steer(1:3000) = 0;
 % 
-% steer = chirp(time,0,time(end),2,'linear',-90);
-% steer =  deg2rad(steerDeg)*[zeros(1,3000) steer(1:end-3000)];
+steer = chirp(time,0,time(end),2,'linear',-90);
+steer =  deg2rad(steerDeg)*[zeros(1,3000) steer(1:end-3000)];
 
 throttle = zeros(1,n);
 %throttle = 0.1*ones(1,n);
@@ -110,6 +110,8 @@ plot(time,rad2deg(phi)); hold on
 plot(time,rad2deg(theta));grid
 title('phi and theta, deg');
 legend('phi','theta','Location','best');
+hold on
+yline(rad2deg(phi(end))*0.67)
 
 figure(4);clf
 plot(time,rad2deg(steer)) %deg
@@ -123,16 +125,16 @@ grid
 title('Fz'); legend('1','2','3','4');
 
 figure(6);clf
-plot(time,bounce);
-title('Roll Center Height');
+plot(time,bounce*39.37);
+title('Roll Center Height (in)');
 
 disp('done');
 fprintf("phi: %0.2f\n",rad2deg(phi(end-10)));
 fprintf("theta: %0.2f\n",rad2deg(theta(end-10)));
 
 figure(7); clf
-plot(time,long_vel.*yaw_rate)
-hold on
+%plot(time,long_vel.*yaw_rate)
+%hold on
 plot(time,lat_accel)
 title('Lateral Acceleration')
 
@@ -152,3 +154,7 @@ legend('Steer','Roll','Lat Accel','Yaw Rate','Sideslip Angle')
 figure(10); clf
 plot(time,beta)
 title('Beta')
+
+
+
+

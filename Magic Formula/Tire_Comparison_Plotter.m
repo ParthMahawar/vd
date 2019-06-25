@@ -22,7 +22,8 @@ load('Fy_pure_parameters_run24_final.mat')
 parameters{6} = Xbestcell;
 load('Fy_pure_parameters_run2_final.mat')
 parameters{7} = Xbestcell;
-load('Fy_pure_parameters_run5_final.mat')
+%load('Fy_pure_parameters_run5_final.mat')
+load('Fy_pure_parameters_run6.mat')
 parameters{8} = Xbestcell;
 
 %% Plot settings
@@ -34,7 +35,9 @@ label = {'Hoosier 18.0x6.0-10 R25B, 6 in rim',...
     'Hoosier 18.0x7.5-10 R25B, 7 in rim',...
     'Hoosier 18.0x7.5-10 R25B, 8 in rim',...
     'Avon 7.0/16.0-10, 7 in rim',...
-	'Avon 7.0/16.0-10, 8 in rim'};
+        'Hoosier 16.0x7.5-10 R25B, 8 in rim'};
+
+	%'Avon 7.0/16.0-10, 8 in rim'};
 
 %% Fy plotter
 
@@ -76,7 +79,7 @@ title('Peak Lateral Force Comparison (P = 12, IA = 0)',...
 
 % change F_y = K_yalpha*-0.0174533 in lateralforce_pure
 
-for i = 1:8
+for i = [4 6 8]
     Xbestcell = parameters{i};
     FZ = linspace(50,250,1000).';
     Fyplot = lateralforce_pure(Xbestcell,12,FZ,12,0);
