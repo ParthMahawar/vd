@@ -234,9 +234,16 @@ classdef Events2 < handle
             time_final = time_final*16; % 16 laps in endurance
             obj.enduranceTime = time_final;
         end
+        
         function points = computePoints(obj)
             % computes dynamic event points
             % based on 2018/2019 rules
+            
+            % Acceleration 100 points
+            % Skid Pad 75 points
+            % Autocross 125 points
+            % Efficiency 100 points
+            % Endurance 275 points
 
             % winning times (based on 2017 Lincoln)
             skidpad_winning_time = 4.868;

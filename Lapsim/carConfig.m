@@ -24,7 +24,7 @@ aeroParams.distribution = 0.44; % proportion of downforce in front
 % engine parameters (updated 5/1/19)
 eParams = struct();
 eParams.redline = 13000; 
-eParams.shift_point = 12000; % approximate
+eParams.shift_point = 10000; % approximate
 % these parameters are non-iterable
 eParams.gears = [2.0, 1.63, 1.33, 1.14, 0.95];
 eParams.torque_fn = KTM350(); % contains torque curve
