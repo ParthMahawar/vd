@@ -43,7 +43,7 @@ end
 fprintf("done\n");
 
 %% Saving
-%save('blahblah.mat','carCell');
+save('B20_baseline.mat','carCell');
 
 %% Car Plotting
 
@@ -54,17 +54,11 @@ plot3 = 0; % max accel for given velocity and lateral g w/ scattered interpolant
 plot4 = 0; % max braking for given velocity and lateral w/ scattered interpolant
 plot5 = 0; % 2D g-g diagram for velocity specified below (gg_vel)
 
-% list of state indices: exitflag long_accel lat_accel steer_angle throttle
-% long_vel lat_vel yaw_rate kappa(1:4) omega(1:4) engine_rpm current_gear beta
-% Fz(1:4) alpha(1:4) T(1:4)
-variable_index = 4; 
-
 g_g_vel = [10 15 23]; % can input vector to overlay different velocities
 
-plot_choice = [plot1 plot2 plot3 plot4 plot5 plot6 plot7];
+plot_choice = [plot1 plot2 plot3 plot4 plot5];
 plotter(car,g_g_vel,plot_choice);
 
- 
 %% Event Plotting
 
 % set desired plots to 1
