@@ -8,13 +8,15 @@ long_accel_vector = zeros(1,10000);
 long_vel_vector = zeros(1,10000);
 
 obj = accelCar.powertrain;
+switch_gear_velocities = obj.shift_point./obj.gears/obj.final_drive*pi/30*obj.wheel_radius;
+switch_gear_velocities(end) = obj.redline./obj.gears(end)/obj.final_drive*pi/30*obj.wheel_radius;
 current_gear = 1;
 shift_time_cumulative = 0;
 
 time = zeros(1,10000);
 for i = 1:10000 
     
-    if long_vel>obj.switch_gear_velocities(current_gear) ...
+    if long_vel>switch_gear_velocities(current_gear) ...
             && shift_time_cumulative < obj.shift_time
         long_accel = -accelCar.aero.drag(long_vel)/accelCar.M;
         shift_time_cumulative = shift_time_cumulative+time(i-1);
@@ -28,7 +30,7 @@ for i = 1:10000
     end
      
     % reset shift time counter
-    if shift_time_cumulative>obj.shift_time
+    if shift_time_cumulative>shift_time
         shift_time_cumulative = 0;
         current_gear = current_gear+1;
     end

@@ -273,7 +273,7 @@ classdef Car
             xdot(14) = ((T(4)-Fx(4)*obj.R)*(obj.Jw+obj.Jm*(Gr/2)^2) - (T(3)-Fx(3)*obj.R)*obj.Jm*(Gr/2)^2)*(1/denom);
         end
         
-                function [Fz, Fzvirtual] = ssForces(obj,longVel,yawRate,T)
+        function [Fz, Fzvirtual] = ssForces(obj,longVel,yawRate,T)
             Fz_front_static = (obj.M*9.81*obj.l_r+obj.aero.lift(longVel)*obj.aero.D_f)/obj.W_b;
             Fz_rear_static = (obj.M*9.81*obj.l_f+obj.aero.lift(longVel)*obj.aero.D_r)/obj.W_b;
             
@@ -292,7 +292,7 @@ classdef Car
             Fzvirtual(4) = 0.5*Fz_rear_static+0.5*long_load_transfer-lat_load_transfer_rear;
 
             % smooth approximation of max function
-            epsilon = 10; %why 10
+            epsilon = 10; 
             Fz = (Fzvirtual + sqrt(Fzvirtual.^2 + epsilon))./2;
         end
         
