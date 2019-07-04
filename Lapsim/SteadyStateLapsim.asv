@@ -42,11 +42,35 @@ for i = 1:numCars
 end
 fprintf("done\n");
 
-%% Plotting
+%% Saving
+%save('blahblah.mat','carCell');
 
-plot(comp.radius_vector,comp.max_vel_corner_vector)
-xlabel('Radius (m)')
-ylabel('
+%% Car Plotting
 
+% set desired plots to 1
+plot1 = 0; % velocity-dependent g-g diagram scatter plot
+plot2 = 0; % velocity-dependent g-g diagram surface
+plot3 = 0; % max accel for given velocity and lateral g w/ scattered interpolant
+plot4 = 0; % max braking for given velocity and lateral w/ scattered interpolant
+plot5 = 0; % 2D g-g diagram for velocity specified below
 
+g_g_vel = [7 10 15]; % can input vector to overlay different velocities
+
+plot_choice = [plot1 plot2 plot3 plot4 plot5];
+plotter(car,g_g_vel,plot_choice);
+
+ 
+%% Event Plotting
+
+% set desired plots to 1
+plot1 = 0; % autocross track distance vs curvature
+plot2 = 0; % endurance track distance vs curvature
+plot3 = 0; % max possible velocity for given radius
+plot4 = 0; % max possible long accel for given velocity
+plot5 = 0; % accel event longitudinal velocity vs time
+plot5 = 0;
+plot6 = 0; % accel event longitudinal accel vs time
+
+plot_choice = [plot1 plot2 plot3 plot4 plot5 plot6];
+event_plotter(comp,plot_choice);
 

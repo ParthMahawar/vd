@@ -45,50 +45,36 @@ fprintf("done\n");
 %% Saving
 %save('blahblah.mat','carCell');
 
-
-
-
 %% Car Plotting
-% 
-% % set desired plots to 1
-% plot1 = 1; % velocity-dependent g-g diagram scatter plot
-% plot2 = 0; % velocity-dependent g-g diagram surface
-% plot3 = 0; % max accel for given velocity and lateral g
-% plot4 = 0; % max braking for given velocity and lateral g
-% plot5 = 0; % scattered interpolant version of plot3
-% plot6 = 0; % scattered interpolant version of plot4
-% plot7 = 0; % 2D g-g diagram for velocity specified below
-% 
-% g_g_vel = 10; % can input vector to overlay different velocities
-% 
-% plot_choice = [plot1 plot2 plot3 plot4 plot5 plot6 plot7];
-% 
-% car.ggPoints(:,1),car.ggPoints(:,2),car.ggPoints(:,3)
-% 
-% plotter(car,g_g_vel,plot_choice);
 
-% 
-% %% Event Plotting
-% 
-% figure
-% title('Autocross Track')
-% plot(comp.autocross_track(1,:),comp.autocross_track(2,:))
-% xlabel('Distance (m)')
-% ylabel('Curvature (1/m)')
-% 
-% figure
-% title('Endurance Track')
-% plot(comp.endurance_track(1,:),comp.endurance_track(2,:))
-% xlabel('Distance (m)')
-% ylabel('Curvature (1/m)')
-% 
-% figure
-% plot(comp.interp_info.radius_vector,comp.interp_info.max_vel_corner_vector)
-% xlabel('Radius (m)')
-% ylabel('Maximum possible velocity')
-% 
-% figure
-% plot(comp.interp_info.long_vel_guess,comp.interp_info.long_accel_matrix/9.81)
-% xlabel('Velocity (m/s)')
-% ylabel('Maximum possible longitudinal acceleration (g)')
-% 
+% set desired plots to 1
+plot1 = 0; % velocity-dependent g-g diagram scatter plot
+plot2 = 0; % velocity-dependent g-g diagram surface
+plot3 = 0; % max accel for given velocity and lateral g w/ scattered interpolant
+plot4 = 0; % max braking for given velocity and lateral w/ scattered interpolant
+plot5 = 0; % 2D g-g diagram for velocity specified below (gg_vel)
+
+% list of state indices: exitflag long_accel lat_accel steer_angle throttle
+% long_vel lat_vel yaw_rate kappa(1:4) omega(1:4) engine_rpm current_gear beta
+% Fz(1:4) alpha(1:4) T(1:4)
+variable_index = 4; 
+
+g_g_vel = [10 15 23]; % can input vector to overlay different velocities
+
+plot_choice = [plot1 plot2 plot3 plot4 plot5 plot6 plot7];
+plotter(car,g_g_vel,plot_choice);
+
+ 
+%% Event Plotting
+
+% set desired plots to 1
+plot1 = 0; % autocross track distance vs curvature
+plot2 = 0; % endurance track distance vs curvature
+plot3 = 0; % max possible velocity for given radius
+plot4 = 0; % max possible long accel for given velocity
+plot5 = 0; % accel event longitudinal velocity vs time
+plot6 = 0; % accel event longitudinal accel vs time
+
+plot_choice = [plot1 plot2 plot3 plot4 plot5 plot6];
+event_plotter(comp,plot_choice);
+

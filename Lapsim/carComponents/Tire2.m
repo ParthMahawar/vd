@@ -81,7 +81,7 @@ classdef Tire2
             lambda_hy = 0;       % horizontal shift
             lambda_kyalpha = 1;  % cornering stiffness
             lambda_kygamma = 1;  % camber force stiffness
-            lambda_muy = 0.5;      % peak friction coefficient
+            lambda_muy = 0.52;      % peak friction coefficient
             lambda_vy = 0;       % vertical shift
 
             lambda_ykappa = 1;   % influence on F_y(alpha)
@@ -181,7 +181,7 @@ classdef Tire2
             lambda_ex  = 1;     %curve factor
             lambda_hx  = 0;     %horizontal shift
             lambda_kxkappa = 1; %brake slip stiffness
-            lambda_mux = 0.5;      % peak friction coefficient
+            lambda_mux = 0.52;      % peak friction coefficient
             lambda_vx  = 0;     %vertical shift
 
             lambda_xalpha = 1; %influence on F_x(kappa)

@@ -8,6 +8,10 @@ classdef Events2 < handle
         autocross_track
         endurance_track
         
+        % info
+        accel
+        skidpad
+        
         times
         points
         
@@ -60,6 +64,7 @@ classdef Events2 < handle
             radius = 8.5;
             [x_table_skid,maxVel,time] = max_skidpad_vel(radius,obj.car);
             obj.times.skidpad = time;
+            obj.skidpad.x_table_skid = x_table_skid;
         end
         
         function [time,ending_vel,long_accel_vector,long_vel_vector] = Accel(obj)
@@ -77,10 +82,12 @@ classdef Events2 < handle
             % starting velocity for accel is ending velocity of 0.3 straight
             long_vel = ending_vel;
             
-            [time,ending_vel,long_accel_vector,long_vel_vector] = straight(long_vel,75,...
+            [time_vec,ending_vel,long_accel_vector,long_vel_vector] = straight(long_vel,75,...
                 long_vel_interp,long_accel_interp,obj.accelCar.max_vel,obj.accelCar);
-            obj.times.accel = sum(time);
-            obj.accel.time_vec = time;
+            obj.times.accel = time_vec(end);
+            obj.accel.time_vec = time_vec;
+            obj.accel.long_vel_vector = long_vel_vector;
+            obj.accel.long_accel_vector = long_accel_vector;
         end
         
         function [long_vel_final,long_accel_final,lat_accel_final,time_final] = Track_Solver(obj,arclength,curvature)
@@ -216,7 +223,9 @@ classdef Events2 < handle
             [long_vel_final,long_accel_final,lat_accel_final,time_final] = ...
                 Track_Solver(obj,arclength,curvature);
             time_final = time_final*15; % 15 laps in endurance
-            obj.times.endurance = time_final;
+            
+            
+            obj.times.endurance = time_final*1.05; % scaling factor due to driver conservatism during enduro
         end
         
         function points = computePoints(obj)
@@ -290,7 +299,6 @@ classdef Events2 < handle
                                    autocross_points;
                                    endurance_points]);
             obj.points = points;
-           
         end
     end
 end

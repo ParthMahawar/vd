@@ -8,7 +8,7 @@ long_g_accel = vel_matrix_accel(:,1);
 lat_g_accel = vel_matrix_accel(:,2);
 vel_accel = vel_matrix_accel(:,3);
 
-long_g_braking = -vel_matrix_braking(:,1);
+long_g_braking = vel_matrix_braking(:,1);
 lat_g_braking = vel_matrix_braking(:,2);
 vel_braking = vel_matrix_braking(:,3);
 
@@ -16,13 +16,13 @@ x = lat_g_accel;
 y = vel_accel;
 z = long_g_accel;
 
-F_accel = scatteredInterpolant([x y],z);
+F_accel = scatteredInterpolant([x y],z,'natural');
 
 x = lat_g_braking;
 y = vel_braking;
 z = long_g_braking;
 
-F_braking = scatteredInterpolant([x y],z);
+F_braking = scatteredInterpolant([x y],z,'natural');
 
 end
 

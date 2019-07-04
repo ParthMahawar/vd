@@ -1,4 +1,4 @@
-function [] = plotter(car,g_g_vel,plot_choice)
+function [] = plotter(car,,g_g_vel,plot_choice)
 % plotting gg-diagram variations for car
 
 max_vel = car.max_vel;

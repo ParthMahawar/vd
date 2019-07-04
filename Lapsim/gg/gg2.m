@@ -8,17 +8,17 @@ function paramArr = gg2(car,numWorkers)
 %   rows: different longitudinal velocities, columns: different lat accels
 
 minV = 5; maxV = car.max_vel-.5;
-longVgrid = 25;
-latAgrid = 30;
+longVinterval = 1; % m/s
+latAgrid = 20;
 
-longVelArr = linspace(minV,maxV,longVgrid);
-paramArr(longVgrid,latAgrid) = ParamSet();
+longVelArr = [minV:longVinterval:maxV maxV];
+paramArr(numel(longVelArr),latAgrid) = ParamSet();
 
 % iterate through velocities
 parfor (c1 = 1:numel(longVelArr),numWorkers)
     longVel = longVelArr(c1);
     [maxLatx,maxLatLatAccel,maxLatLongAccel,maxLatx0] = max_lat_accel(longVel,car);
-    latAccelArr = linspace(0,maxLatLatAccel,latAgrid);
+    latAccelArr = linspace(0.1,maxLatLatAccel-0.1,latAgrid);
     row = ParamSet();
     row(numel(latAccelArr)) = ParamSet();
     

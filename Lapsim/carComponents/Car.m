@@ -39,6 +39,9 @@ classdef Car
         Jw %wheel polar moi
         
         ggPoints %g-g diagram points for car instance
+        ss_info % information (x vector including normal loads, etc) for pure cornering
+        accel_info % information (x vector including normal loads, etc) when accelerating
+        decel_info % information (x vector including normal loads, etc) when decelerating
         longAccelLookup %maxLongAccel = f(latAccel,velocity)
         longDecelLookup %maxLongDecel = f(latAccel,velocity)
         comp

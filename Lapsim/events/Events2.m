@@ -9,8 +9,10 @@ classdef Events2 < handle
         endurance_track
         
         % info
-        accel
         skidpad
+        accel
+        autocross
+        endurance
         
         times
         points
@@ -82,10 +84,10 @@ classdef Events2 < handle
             % starting velocity for accel is ending velocity of 0.3 straight
             long_vel = ending_vel;
             
-            [time,ending_vel,long_accel_vector,long_vel_vector] = straight(long_vel,75,...
+            [time_vec,ending_vel,long_accel_vector,long_vel_vector] = straight(long_vel,75,...
                 long_vel_interp,long_accel_interp,obj.accelCar.max_vel,obj.accelCar);
-            obj.times.accel = sum(time);
-            obj.accel.time_vec = time;
+            obj.times.accel = time_vec(end);
+            obj.accel.time_vec = time_vec;
             obj.accel.long_vel_vector = long_vel_vector;
             obj.accel.long_accel_vector = long_accel_vector;
         end
@@ -215,6 +217,10 @@ classdef Events2 < handle
             [long_vel_final,long_accel_final,lat_accel_final,time_final] = ...
                 Track_Solver(obj,arclength,curvature);
             obj.times.autocross = time_final;
+            obj.autocross.time_vec = linspace(0,time_final,100000);
+            obj.autocross.long_vel = long_vel_final;
+            obj.autocross.long_accel = long_accel_final;
+            obj.autocross.lat_accel = lat_accel_final;
         end
         
         function [long_vel_final,long_accel_final,lat_accel_final,time_final] = Endurance(obj)
@@ -224,6 +230,10 @@ classdef Events2 < handle
                 Track_Solver(obj,arclength,curvature);
             time_final = time_final*15; % 15 laps in endurance
             obj.times.endurance = time_final*1.05; % scaling factor due to driver conservatism during enduro
+            obj.endurance.time_vec = linspace(0,time_final,100000);
+            obj.endurance.long_vel = long_vel_final;
+            obj.endurance.long_accel = long_accel_final;
+            obj.endurance.lat_accel = lat_accel_final;
         end
         
         function points = computePoints(obj)
@@ -297,7 +307,6 @@ classdef Events2 < handle
                                    autocross_points;
                                    endurance_points]);
             obj.points = points;
-           
         end
     end
 end
