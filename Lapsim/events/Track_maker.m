@@ -59,4 +59,4 @@ xlabel('Distance','FontSize',15);
 ylabel('Curvature','FontSize',15);
 
 % when satisfied with results, save arclength and curvature data
-save('track_autocross_2018.mat','arclength','curvature');
+save('track_endurance_2019.mat','arclength','curvature');

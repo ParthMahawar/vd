@@ -36,9 +36,9 @@ classdef Events2 < handle
             obj.accelCar = accelCar;
             
             % maps
-            load('track_autocross_2017.mat');
+            load('track_autocross_2019.mat');
             obj.autocross_track = [arclength; curvature];
-            load('track_endurance_2017.mat');
+            load('track_endurance_2019.mat');
             obj.endurance_track = [arclength; curvature];
             
             % sweep for max velocity for given radius
