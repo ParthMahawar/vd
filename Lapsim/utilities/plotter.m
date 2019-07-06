@@ -3,12 +3,12 @@ function [] = plotter(car,g_g_vel,plot_choice)
 
 max_vel = car.max_vel;
 
-long_g_accel = car.longAccelLookup(:,1)';
-lat_g_accel = car.longAccelLookup(:,2)';
+long_g_accel = car.longAccelLookup(:,1)'/9.81;
+lat_g_accel = car.longAccelLookup(:,2)'/9.81;
 vel_accel = car.longAccelLookup(:,3)';
 
-long_g_braking = car.longDecelLookup(:,1)';
-lat_g_braking = car.longDecelLookup(:,2)';
+long_g_braking = car.longDecelLookup(:,1)'/9.81;
+lat_g_braking = car.longDecelLookup(:,2)'/9.81;
 vel_braking = car.longDecelLookup(:,3)';
     
 if plot_choice(1)
@@ -49,9 +49,9 @@ if plot_choice(3)
     y = vel_accel;
     z = long_g_accel;
 
-    F_accel = scatteredInterpolant([x' y'],z','natural');
+    F_accel = scatteredInterpolant([x' y'],z');
 
-    [Xq,Yq] = meshgrid(-2*9.81:0.05:2*9.81, 5:0.05:max_vel);
+    [Xq,Yq] = meshgrid(-2:0.05:2, 5:0.05:max_vel);
     Vq = F_accel(Xq,Yq);
     mesh(Xq,Yq,Vq);
     title('Max Accel (Scattered Interpolant)','FontSize',18)        
@@ -61,8 +61,8 @@ if plot_choice(3)
 
     hold on
     scatter3(x,y,z);
-    xlim([0 2*9.81]);
-    zlim([0 1.5*9.81]);
+    xlim([0 2]);
+    zlim([0 1.5]);
     hold off
 end
 
@@ -73,9 +73,9 @@ if plot_choice(4)
     y = vel_braking;
     z = long_g_braking;
 
-    F_braking = scatteredInterpolant([x' y'],z','natural');
+    F_braking = scatteredInterpolant([x' y'],z');
 
-    [Xq,Yq] = meshgrid(-2*9.81:0.05:2*9.81, 5:0.05:max_vel);
+    [Xq,Yq] = meshgrid(-2:0.05:2, 5:0.05:max_vel);
     Vq = F_braking(Xq,Yq);
     mesh(Xq,Yq,Vq);
     title('Max Braking (Scattered Interpolant)','FontSize',18)    
@@ -85,32 +85,8 @@ if plot_choice(4)
 
     hold on
     scatter3(x,y,z);
-    xlim([0 2*9.81]);
-    zlim([-1.5*9.81 0]);
-    hold off
-end
-
-if plot_choice(4)
-    figure
-    
-    x = lat_g_braking;
-    y = vel_braking;
-    z = long_g_braking;
-
-    F_braking = scatteredInterpolant([x' y'],z','natural');
-
-    [Xq,Yq] = meshgrid(-2*9.81:0.05:2*9.81, 5:0.05:max_vel);
-    Vq = F_braking(Xq,Yq);
-    mesh(Xq,Yq,Vq);
-    title('Max Braking (Scattered Interpolant)','FontSize',18)    
-    xlabel('Lat G')
-    ylabel('Velocity')
-    zlabel('Long G')
-
-    hold on
-    scatter3(x,y,z);
-    xlim([0 2*9.81]);
-    zlim([-1.5*9.81 0]);
+    xlim([0 2]);
+    zlim([-1.5 0]);
     hold off
 end
 

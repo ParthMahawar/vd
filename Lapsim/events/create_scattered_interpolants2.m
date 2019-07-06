@@ -16,13 +16,13 @@ x = lat_g_accel;
 y = vel_accel;
 z = long_g_accel;
 
-F_accel = scatteredInterpolant([x y],z,'natural');
+F_accel = scatteredInterpolant([x y],z);
 
 x = lat_g_braking;
 y = vel_braking;
 z = long_g_braking;
 
-F_braking = scatteredInterpolant([x y],z,'natural');
+F_braking = scatteredInterpolant([x y],z);
 
 end
 
