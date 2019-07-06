@@ -81,7 +81,7 @@ classdef Tire2
             lambda_hy = 0;       % horizontal shift
             lambda_kyalpha = 1;  % cornering stiffness
             lambda_kygamma = 1;  % camber force stiffness
-            lambda_muy = 0.55;      % peak friction coefficient
+            lambda_muy = 0.52;      % peak friction coefficient
             lambda_vy = 0;       % vertical shift
 
             lambda_ykappa = 1;   % influence on F_y(alpha)
@@ -99,10 +99,8 @@ classdef Tire2
             S_hygamma = (K_ygamma.*gamma-S_vygamma)./K_yalpha;
             S_hy = S_hy0+S_hygamma;
             alpha_y = alpha+S_hy;
-             %mu_y = (p_dy1+p_dy2.*df_z).*(1-p_dy3.*gamma.^2).*...
-              %   (1+p_py3.*dp_i+p_py4.*dp_i.^2).*lambda_muy;
-
-            mu_y =(1.8073 - .00018293*F_z/4.44822)*.875;
+            mu_y = (p_dy1+p_dy2.*df_z).*(1-p_dy3.*gamma.^2).*...
+                (1+p_py3.*dp_i+p_py4.*dp_i.^2).*lambda_muy;
             
             C_y = p_cy1.*lambda_cy;
             D_y = mu_y.*F_z;
@@ -183,16 +181,14 @@ classdef Tire2
             lambda_ex  = 1;     %curve factor
             lambda_hx  = 0;     %horizontal shift
             lambda_kxkappa = 1; %brake slip stiffness
-            lambda_mux = 0.55;      % peak friction coefficient
+            lambda_mux = 0.52;      % peak friction coefficient
             lambda_vx  = 0;     %vertical shift
 
             lambda_xalpha = 1; %influence on F_x(kappa)
 
             %% Magic Formula Equations
-            %mu_x = (p_dx1+p_dx2.*df_z).*(1-p_dx3.*gamma.^2).*(1+p_px3.*dp_i+p_px4.*dp_i.^2).*lambda_mux;
+            mu_x = (p_dx1+p_dx2.*df_z).*(1-p_dx3.*gamma.^2).*(1+p_px3.*dp_i+p_px4.*dp_i.^2).*lambda_mux;
             
-            mu_x =(1.8073 - .00018293*F_z/4.44822)*.875;
-
             K_xkappa = (p_kx1+p_kx2.*df_z).*exp(p_kx3.*df_z).*(1+p_px1.*dp_i+p_px2.*dp_i.^2).*F_z.*lambda_kxkappa;
             if ~isfinite(K_xkappa)
                 K_xkappa = 1e200;

@@ -19,7 +19,7 @@ end
 x_table_corner_vel = generate_table(x_matrix);
 
 % visual check if necessary
-plot(radius,max_vel_corner_vector);
+% plot(radius,max_vel_corner_vector);
 
 end
 

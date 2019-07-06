@@ -8,7 +8,7 @@ long_g_accel = vel_matrix_accel(:,1);
 lat_g_accel = vel_matrix_accel(:,2);
 vel_accel = vel_matrix_accel(:,3);
 
-long_g_braking = -vel_matrix_braking(:,1);
+long_g_braking = vel_matrix_braking(:,1);
 lat_g_braking = vel_matrix_braking(:,2);
 vel_braking = vel_matrix_braking(:,3);
 

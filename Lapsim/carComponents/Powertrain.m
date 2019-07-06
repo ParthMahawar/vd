@@ -5,8 +5,10 @@ classdef Powertrain
         redline
         shift_point
         gears
-        final_drive 
+        primary_reduction
         torque_fn
+        shift_time
+        final_drive
         wheel_radius
         drivetrain_efficiency
         
@@ -15,15 +17,19 @@ classdef Powertrain
         G_d2_overrun
         G_d2_driving 
         max_braking_torque
+        
+        switch_gear_velocities
     end
     
     methods
-        function obj = Powertrain(redline,shift_point,gears,torque_fn,final_drive,wheel_radius,...
-                drivetrain_efficiency,G_d1,G_d2_overrun,G_d2_driving,brake_distribution,max_braking_torque)
+        function obj = Powertrain(redline,shift_point,gears,primary_reduction,torque_fn,shift_time,final_drive,...
+                wheel_radius,drivetrain_efficiency,G_d1,G_d2_overrun,G_d2_driving,brake_distribution,max_braking_torque)
             obj.redline = redline;
             obj.shift_point = shift_point;
             obj.gears = gears;
+            obj.primary_reduction = primary_reduction;
             obj.torque_fn = torque_fn;
+            obj.shift_time = shift_time;
             obj.final_drive = final_drive;
             obj.wheel_radius = wheel_radius;  
             obj.drivetrain_efficiency = drivetrain_efficiency;
@@ -32,25 +38,28 @@ classdef Powertrain
             obj.G_d2_driving = G_d2_driving;
             obj.brake_distribution = brake_distribution;            
             obj.max_braking_torque = max_braking_torque;
+            
+            % calculates longitudinal velocities to switch gears at
+            % approximately equal to redline but a tiny bit off due to wheel slips
+            switch_gear_velocities = obj.shift_point./obj.gears/obj.final_drive/obj.primary_reduction*pi/30*obj.wheel_radius;
+            % in final gear car can reach redline
+            switch_gear_velocities(end) = obj.redline./obj.gears(end)/obj.final_drive/obj.primary_reduction*pi/30*obj.wheel_radius;
+            
+            obj.switch_gear_velocities = switch_gear_velocities;
         end
                 
         function out = drivetrain_reduction (obj,current_gear)
             % input current_gear means gear number
             % output drivetrain_reduction means total gearing from engine to axle
-            out = obj.gears(current_gear)*obj.final_drive;
+            out = obj.gears(current_gear)*obj.final_drive*obj.primary_reduction;
         end
         
         function [engine_rpm,current_gear] = engine_rpm(obj,omega_3,omega_4,long_vel)
-            % calculates longitudinal velocities to switch gears at
-            % approximately equal to redline but a tiny bit off due to wheel slips
-            switch_gear_velocities = obj.shift_point./obj.gears/obj.final_drive*pi/30*obj.wheel_radius;
-            % in final gear car can reach redline
-            switch_gear_velocities(end) = obj.redline./obj.gears(end)/obj.final_drive*pi/30*obj.wheel_radius;
                         
             % finds lowest possible gear for given longitudinal velocity
-            current_gear = find(long_vel< switch_gear_velocities,1);
-            if long_vel >= switch_gear_velocities(end) 
-                current_gear = numel(switch_gear_velocities);
+            current_gear = find(long_vel< obj.switch_gear_velocities,1);
+            if long_vel >= obj.switch_gear_velocities(end) 
+                current_gear = numel(obj.switch_gear_velocities);
             end
             engine_rpm = (omega_3+omega_4)/2*obj.drivetrain_reduction(current_gear)*30/pi; %rpm      
             %engine_rpm = (omega_3+omega_4)/2*obj.final_drive(current_gear)*30/pi; %rpm          

@@ -42,3 +42,40 @@ for i = 1:numCars
 end
 fprintf("done\n");
 
+%% Saving
+%save('B20_baseline2.mat','carCell');
+
+%% Car Plotting
+
+% select desired car object
+car = carCell{1,1};
+
+% set desired plots to 1
+plot1 = 1; % velocity-dependent g-g diagram scatter plot
+plot2 = 1; % velocity-dependent g-g diagram surface
+plot3 = 1; % max accel for given velocity and lateral g w/ scattered interpolant
+plot4 = 1; % max braking for given velocity and lateral w/ scattered interpolant
+plot5 = 1; % 2D g-g diagram for velocity specified below (gg_vel)
+
+g_g_vel = [10 15 23]; % can input vector to overlay different velocities
+
+plot_choice = [plot1 plot2 plot3 plot4 plot5];
+plotter(car,g_g_vel,plot_choice);
+
+%% Event Plotting
+
+% select desired comp object
+comp = carCell{1,1}.comp;
+
+% set desired plots to 1
+plot1 = 0; % autocross track distance vs curvature
+plot2 = 0; % endurance track distance vs curvature
+plot3 = 0; % max possible velocity for given radius
+plot4 = 0; % max possible long accel for given velocity
+plot5 = 0; % accel event longitudinal velocity vs time
+plot6 = 0; % accel event longitudinal accel vs time
+plot7 = 0; % autocross gear shifts
+
+plot_choice = [plot1 plot2 plot3 plot4 plot5 plot6 plot7];
+event_plotter(comp,plot_choice);
+

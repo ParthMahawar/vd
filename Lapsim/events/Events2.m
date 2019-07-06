@@ -8,26 +8,17 @@ classdef Events2 < handle
         autocross_track
         endurance_track
         
-        maxVelSkid
-        skidpadTime
+        % info
+        skidpad
+        accel
+        autocross
+        endurance
         
-        maxVelAccel
-        accelTime
-        
-        enduranceTime
-        autoXTime
-        
+        times
         points
-        totalPoints
-        % used for interpolation in Autocross
-        x_table_corner_vel
-        radius_vector
-        max_vel_corner_vector
         
-        % used for interpolation in Accel
-        x_table_accel
-        long_vel_guess
-        long_accel_matrix
+        % contains info used for interpolation in autocross/accel solvers
+        interp_info
     end
     
     methods
@@ -45,16 +36,16 @@ classdef Events2 < handle
             % used for interpolation in Autocross
             [x_table_corner_vel,radius_vector,max_vel_corner_vector] = vel_cornering_sweep(obj.car);
             
-            obj.x_table_corner_vel = x_table_corner_vel;
-            obj.radius_vector = radius_vector;
-            obj.max_vel_corner_vector = max_vel_corner_vector;
+            obj.interp_info.x_table_corner_vel = x_table_corner_vel;
+            obj.interp_info.radius_vector = radius_vector;
+            obj.interp_info.max_vel_corner_vector = max_vel_corner_vector;
             
             % sweep for max pure longitudinal acceleration for given velocity
             % used for interpolation in Accel
             [x_table_accel,long_vel_guess,long_accel_matrix] = long_accel_sweep(obj.accelCar);
-            obj.x_table_accel = x_table_accel;
-            obj.long_vel_guess = long_vel_guess;
-            obj.long_accel_matrix = long_accel_matrix;
+            obj.interp_info.x_table_accel = x_table_accel;
+            obj.interp_info.long_vel_guess = long_vel_guess;
+            obj.interp_info.long_accel_matrix = long_accel_matrix;
                         
         end
         
@@ -74,8 +65,8 @@ classdef Events2 < handle
 
             radius = 8.5;
             [x_table_skid,maxVel,time] = max_skidpad_vel(radius,obj.car);
-            obj.skidpadTime = time;
-            obj.maxVelSkid = maxVel;
+            obj.times.skidpad = time;
+            obj.skidpad.x_table_skid = x_table_skid;
         end
         
         function [time,ending_vel,long_accel_vector,long_vel_vector] = Accel(obj)
@@ -84,19 +75,21 @@ classdef Events2 < handle
             
             long_vel = 0;
                       
-            long_vel_interp = obj.long_vel_guess;
-            long_accel_interp = obj.long_accel_matrix;
+            long_vel_interp = obj.interp_info.long_vel_guess;
+            long_accel_interp = obj.interp_info.long_accel_matrix;
             
             [~,ending_vel,~,~] = straight(long_vel,0.3,long_vel_interp,...
-                long_accel_interp,obj.accelCar.max_vel);
+                long_accel_interp,obj.accelCar.max_vel,obj.accelCar);
             
             % starting velocity for accel is ending velocity of 0.3 straight
             long_vel = ending_vel;
             
-            [time,ending_vel,long_accel_vector,long_vel_vector] = straight(long_vel,75,...
-                long_vel_interp,long_accel_interp,obj.accelCar.max_vel);
-            obj.maxVelAccel = max(long_vel_vector);
-            obj.accelTime = time;
+            [time_vec,ending_vel,long_accel_vector,long_vel_vector] = straight(long_vel,75,...
+                long_vel_interp,long_accel_interp,obj.accelCar.max_vel,obj.accelCar);
+            obj.times.accel = time_vec(end);
+            obj.accel.time_vec = time_vec;
+            obj.accel.long_vel_vector = long_vel_vector;
+            obj.accel.long_accel_vector = long_accel_vector;
         end
         
         function [long_vel_final,long_accel_final,lat_accel_final,time_final] = Track_Solver(obj,arclength,curvature)
@@ -114,7 +107,7 @@ classdef Events2 < handle
             arclength = [0 arclength];
 
             % find max possible velocity at each apex
-            [apex_velocity] = apex_velocities(obj.radius_vector,obj.max_vel_corner_vector,extrema);
+            [apex_velocity] = apex_velocities(obj.interp_info.radius_vector,obj.interp_info.max_vel_corner_vector,extrema);
             
             % F_accel/braking(lat_accel,long_vel) returns the max possible accel/braking
             [F_accel,F_braking] = create_scattered_interpolants2(obj.car.longAccelLookup,...
@@ -124,9 +117,9 @@ classdef Events2 < handle
             % calculating velocity and acceleration profiles as well as time
             
             % car starts 6 m behind starting line 
-            long_vel_interp = obj.long_vel_guess;
-            long_accel_interp = obj.long_accel_matrix;
-            [~,ending_vel,~,~] = straight(0,6,long_vel_interp,long_accel_interp,obj.car.max_vel);
+            long_vel_interp = obj.interp_info.long_vel_guess;
+            long_accel_interp = obj.interp_info.long_accel_matrix;
+            [~,ending_vel,~,~] = straight(0,6,long_vel_interp,long_accel_interp,obj.car.max_vel,obj.car);
 
             % starting velocity is ending velocity of straight
             long_vel = ending_vel; 
@@ -161,7 +154,7 @@ classdef Events2 < handle
                     long_vel_vector_1(i) = long_vel_initial;
                     long_vel = sqrt(long_vel^2+2*long_accel*(arclength(i+1)-arclength(i)));
                     % can't exceed max possible velocity for given radius
-                    long_vel = min(long_vel,lininterp1(obj.radius_vector,obj.max_vel_corner_vector,...
+                    long_vel = min(long_vel,lininterp1(obj.interp_info.radius_vector,obj.interp_info.max_vel_corner_vector,...
                         abs(1/curvature(i)))); 
                     time_1(i) = 2*(arclength(i+1)-arclength(i))/(long_vel+long_vel_initial);
                 end
@@ -186,7 +179,7 @@ classdef Events2 < handle
                     long_vel_vector_2(i) = long_vel_initial;
                     long_vel = sqrt(long_vel^2-2*long_accel*(arclength(i+1)-arclength(i)));
                     % can't exceed max possible velocity for given radius
-                    long_vel = min(long_vel,lininterp1(obj.radius_vector,obj.max_vel_corner_vector,...
+                    long_vel = min(long_vel,lininterp1(obj.interp_info.radius_vector,obj.interp_info.max_vel_corner_vector,...
                         abs(1/curvature(i)))); 
                     time_2(i) = 2*(arclength(i+1)-arclength(i))/(long_vel+long_vel_initial);
                 end
@@ -223,7 +216,11 @@ classdef Events2 < handle
             curvature = obj.autocross_track(2,:);
             [long_vel_final,long_accel_final,lat_accel_final,time_final] = ...
                 Track_Solver(obj,arclength,curvature);
-            obj.autoXTime = time_final;
+            obj.times.autocross = time_final;
+            obj.autocross.time_vec = linspace(0,time_final,100000);
+            obj.autocross.long_vel = long_vel_final;
+            obj.autocross.long_accel = long_accel_final;
+            obj.autocross.lat_accel = lat_accel_final;
         end
         
         function [long_vel_final,long_accel_final,lat_accel_final,time_final] = Endurance(obj)
@@ -231,21 +228,37 @@ classdef Events2 < handle
             curvature = obj.endurance_track(2,:);
             [long_vel_final,long_accel_final,lat_accel_final,time_final] = ...
                 Track_Solver(obj,arclength,curvature);
-            time_final = time_final*16; % 16 laps in endurance
-            obj.enduranceTime = time_final;
+            time_final = time_final*15; % 15 laps in endurance
+            obj.times.endurance = time_final*1.05; % scaling factor due to driver conservatism during enduro
+            obj.endurance.time_vec = linspace(0,time_final,100000);
+            obj.endurance.long_vel = long_vel_final;
+            obj.endurance.long_accel = long_accel_final;
+            obj.endurance.lat_accel = lat_accel_final;
         end
+        
         function points = computePoints(obj)
             % computes dynamic event points
             % based on 2018/2019 rules
+            
+            % Acceleration 100 points
+            % Skid Pad 75 points
+            % Autocross 125 points
+            % Efficiency 100 points
+            % Endurance 275 points
+            
+            % B19 points:
+            % skidpad: 41.3, accel: 52.7, autocross: 104.9, enduro: 98.8
 
-            % winning times (based on 2017 Lincoln)
-            skidpad_winning_time = 4.868;
-            accel_winning_time = 4.186;
-            autocross_winning_time = 51.516;
-            endurance_winning_time = 1272.016;
+            % winning time (based on 2017 Lincoln - 2019 skidpad raining)
+            skidpad_winning_time = 4.868; 
+            
+            % winning times (based on 2019 Lincoln)
+            accel_winning_time = 3.993;
+            autocross_winning_time = 58.383;
+            endurance_winning_time = 1344.592;
 
             % skidpad
-            t_your = obj.skidpadTime;
+            t_your = obj.times.skidpad;
             t_min = min([skidpad_winning_time t_your]);
             t_max = 1.25 * t_min;
             if t_your > t_max
@@ -256,7 +269,7 @@ classdef Events2 < handle
 
 
             % accel
-            t_your = obj.accelTime;
+            t_your = obj.times.accel;
             t_min = min(accel_winning_time, t_your);
             t_max = t_min * 1.5;
             if t_your > t_max
@@ -266,7 +279,7 @@ classdef Events2 < handle
             end
 
             % autocross
-            t_your = obj.autoXTime;
+            t_your = obj.times.autocross;
             t_min = min([autocross_winning_time, t_your]);
             t_max = 1.45 * t_min;
             if t_your > t_max
@@ -276,7 +289,7 @@ classdef Events2 < handle
             end
 
             % endurance
-            t_your = obj.enduranceTime;
+            t_your = obj.times.endurance;
             t_min = min(endurance_winning_time, t_your);
             t_max = 1.45 * t_min;
             if t_your > t_max
@@ -289,11 +302,11 @@ classdef Events2 < handle
             points.accel = accel_points;
             points.autocross = autocross_points;
             points.endurance = endurance_points;
-            obj.points = points;
-            obj.totalPoints = sum([skidpad_points; 
+            points.total = sum([skidpad_points; 
                                    accel_points;
                                    autocross_points;
                                    endurance_points]);
+            obj.points = points;
         end
     end
 end

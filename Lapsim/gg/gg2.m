@@ -1,16 +1,28 @@
 function paramArr = gg2(car,numWorkers)
-minV = 5; maxV = car.max_vel-.5;
-longVgrid = 25;
-latAgrid = 30;
+% creates velocity-dependent g-g diagram 
+% describes max lateral acceleration, max longitudinal acceleration for
+%   certain velocity
+% inputs car: car object, numWorkers: number of workers for parallelization
+% outputs paramArr: array of ParamSets (contains info about each
+%   optimization point). 
+%   rows: different longitudinal velocities, columns: different lat accels
 
-longVelArr = linspace(minV,maxV,longVgrid);
-paramArr(longVgrid,latAgrid) = ParamSet();
+minV = 5; maxV = car.max_vel-.5;
+longVinterval = 1; % m/s
+latAgrid = 20;
+
+longVelArr = [minV:longVinterval:maxV maxV];
+paramArr(numel(longVelArr),latAgrid) = ParamSet();
+
+% iterate through velocities
 parfor (c1 = 1:numel(longVelArr),numWorkers)
     longVel = longVelArr(c1);
     [maxLatx,maxLatLatAccel,maxLatLongAccel,maxLatx0] = max_lat_accel(longVel,car);
-    latAccelArr = linspace(0,maxLatLatAccel,latAgrid);
+    latAccelArr = linspace(0.1,maxLatLatAccel-0.1,latAgrid);
     row = ParamSet();
     row(numel(latAccelArr)) = ParamSet();
+    
+    % iterate through lateral accelerations
     for c2 = 1:numel(latAccelArr)
         latAccel = latAccelArr(c2);
         [xAccel,longAccel,longAccelx0] = max_long_accel_cornering(longVel,latAccel,car);
