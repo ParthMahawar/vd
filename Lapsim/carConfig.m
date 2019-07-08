@@ -40,12 +40,12 @@ eParams.torque_fn = KTM350(); % contains torque curve
 % eParams.torque_fn = CBR600RR();
 % eParams.torque_fn = R6();
 % eParams.torque_fn = R600();
-eParams.shift_time = 0.15; % seconds
+eParams.shift_time = 0.050; % seconds FOR UPSHIFT ONLY; 150ms for downshift
 
 % drivetrain parameters (updated 5/1/19)
 DTparams = struct();
 DTparams.final_drive = 40/11; % drivetrain sprocket ratio
-DTparams.drivetrain_efficiency = 0.85; % scales torque value
+DTparams.drivetrain_efficiency = 0.92; % scales torque value
 DTparams.G_d1 = 0; % differential torque transfer offset due to internal friction
 DTparams.G_d2_overrun = 0; % differential torque transfer gain in overrun (not used right now)
 DTparams.G_d2_driving = 0; % differential torque transfer gain on power
