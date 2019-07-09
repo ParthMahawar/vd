@@ -2,6 +2,7 @@ function torque_fn = KTM350()
 
 % Preliminary Spark Tune (from Feb 2019)
 points = [...
+0	0
 6000	22.5535
 6500	24.2606
 7000	25.6219
