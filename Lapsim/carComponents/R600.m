@@ -2,7 +2,8 @@ function torque_fn = R600()
 
 % Joanneum Racing Graz
 % points = [...
-% 500	2
+% 0       0    
+% 500     2
 % 6031	53.54701204
 % 6227	56.27599199
 % 6415	56.49726063
@@ -33,7 +34,8 @@ function torque_fn = R600()
 
 % % TU Darmstadt Racing Team
 % points = [...
-% 500	2
+% 0       0
+% 500     2
 % 6119	35.91927667
 % 6256	36.36181396
 % 6396	37.02561989
@@ -106,9 +108,10 @@ function torque_fn = R600()
 % 13870	4.277860466
 % ];
 % 
-% % FaSTTUBerlin
+% FaSTTUBerlin
 % points = [...
-% 500	2
+% 0       0
+% 500     2
 % 5876	41.89353008
 % 6012	41.22972414
 % 6132	39.82835606
@@ -173,9 +176,10 @@ function torque_fn = R600()
 % 13573	6.711815558
 % ];
 % 
-% % University Racing Eindhoven
+% University Racing Eindhoven
 % points = [...
-% 500	2
+% 0       0
+% 500     2
 % 5267	18.2915413
 % 5419	22.79067041
 % 5592	29.57624219
@@ -237,9 +241,10 @@ function torque_fn = R600()
 % 13175	5.974253409
 % ];
 % 
-% % Scuderia Mensa HS
+% Scuderia Mensa HS
 % points = [...
-% 500	2
+% 0       0
+% 500     2
 % 6828	24.708332
 % 7032	28.91243625
 % 7238	36.65683882
@@ -285,9 +290,10 @@ function torque_fn = R600()
 % 13695	12.75982518
 % ];
 % 
-% % Kaiserslautern Racing Team
+% Kaiserslautern Racing Team
 points = [...
-500	2
+0       0
+500     2
 6206	23.89701364
 6303	24.708332
 6406	25.51965036
