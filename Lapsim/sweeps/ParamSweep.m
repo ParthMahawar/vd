@@ -20,7 +20,7 @@ function z = ParamSweep(carCells,params)
   
 
     z = figure;
-    filename = 'weightSweep.xlsx';
+    filename = 'Weight_Sweep.xlsx';
 
     %checks how many params were tested
     for e = 1:length(carCells)
@@ -67,7 +67,7 @@ function z = ParamSweep(carCells,params)
             hold on
             
             % Fit model to data from curvefit app
-            [xData, yData] = prepareCurveData(x1(1:r-1),y1(1:r-1));
+            [xData, yData] = prepareCurveData(x1,y1);%(x1(1:r-1),y1(1:r-1));
             ft = fittype( 'poly1' );
             excludedPoints = xData <= 0;
             opts = fitoptions( 'Method', 'LinearLeastSquares' );
