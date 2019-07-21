@@ -1,0 +1,40 @@
+%% Parameters
+clear
+setup_paths
+carCell = carConfig(); %generate all cars to sim over
+numCars = size(carCell,1);
+
+car = carCell{1,1};
+
+%% Simulation
+radius = 10; % m 
+
+for i = 1:numCars
+    car = carCell{i,1};
+    [lat_accel,K,steer_angle,beta,alpha_f,alpha_r] = UndersteerGradient(car,radius);
+    lat_accel_vec{i} = lat_accel;
+    K_vec{i} = K;
+    steer_angle_vec{i} = steer_angle;
+    beta_vec{i} = beta;
+    alpha_f_vec{i} = alpha_f;
+    alpha_r_vec{i} = alpha_r;
+end
+
+%% Plotting
+figure
+for i = 1:numCars
+    plot(lat_accel_vec{i}/9.81,steer_angle_vec{i})
+    hold on
+    xlabel('Lateral Accel (g)')
+    ylabel('Steer Angle (deg)')
+end
+
+figure
+for i = 1:numCars
+plot(lat_accel(2:end)/9.81, K);
+hold on
+xlabel('Lateral Accel (g)','FontSize',15)
+ylabel('Understeer Gradient (deg/g)','FontSize',15)
+end
+
+

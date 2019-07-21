@@ -1,12 +1,13 @@
 %% Parameters
 clear
+setup_paths
 carCell = carConfig(); %generate all cars to sim over
 
 car = carCell{1,1};
     
 %%
 counter = 1;
-radius = 20;
+radius = 15;
 
 [x_table, x_guess] = constant_radius(radius,4,car);
 x0 = x_guess;
@@ -32,6 +33,8 @@ for i = velocities
     lat_accel(counter) = x_table{1,'lat_accel'};
     long_vel(counter) = x_table{1,'long_vel'};
     yaw_rate(counter) = x_table{1,'yaw_rate'};
+    alpha_f(counter) = (x_table{1,'alpha_1'}+x_table{1,'alpha_2'})/2;
+    alpha_r(counter) = (x_table{1,'alpha_3'}+x_table{1,'alpha_4'})/2;
     counter = counter+1;
 end
 
@@ -73,6 +76,14 @@ ylabel('Understeer Gradient (deg/g)','FontSize',15)
 % plot([-fliplr(lat_accel(2:end)/9.81) lat_accel(2:end)/9.81], [fliplr(sideslip_gradient) sideslip_gradient]);
 % xlabel('Lateral Accel (g)')
 % ylabel('Sideslip Angle Gradient (deg/g)')
+
+%% Slip angles
+figure
+plot(lat_accel,alpha_f)
+hold on
+plot(lat_accel,alpha_r)
+legend('Front slip angle','Rear slip angle')
+
 %% Steering Ratio Calculations
 % 
 % steer = [0.1 (2.597+2.627)/2 

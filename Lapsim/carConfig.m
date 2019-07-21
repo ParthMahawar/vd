@@ -23,24 +23,24 @@ aeroParams.distribution = 0.45; % proportion of downforce in front
 
 % engine parameters (updated 5/1/19)
 eParams = struct();
-eParams.redline = 11500; 
-eParams.shift_point = 8500; % approximate
+eParams.redline = 13000; 
+eParams.shift_point = 10000; % approximate
 % these parameters are non-iterable
-% eParams.gears = [2.0, 1.63, 1.33, 1.14, 0.95]; % KTM350
-eParams.gears = [32/17, 30/19, 28/21, 26/23]; % KTM450
+ eParams.gears = [2.0, 1.63, 1.33, 1.14, 0.95]; % KTM350
+%eParams.gears = [32/17, 30/19, 28/21, 26/23]; % KTM450
 % eParams.gears = [34/16, 31/19, 26/20, 25/23, 24/26]; % KTM450 other
 % eParams.gears = [2.583, 2, 1.57, 1.444, 1.286]; % Honda CBR600RR 2007-09
 % eParams.gears = [2.75, 2, 1.667, 1.444, 1.304]; % Yamaha R6 2006-11
 % eParams.gears = [2.786, 2.053, 1.714, 1.5, 1.348]; % Suzuki GSX-R600 2006-10
-% eParams.primary_reduction = 3.04; % KTM350
-eParams.primary_reduction = 74/29; % KTM450
+ eParams.primary_reduction = 3.04; % KTM350
+%eParams.primary_reduction = 74/29; % KTM450
 % eParams.primary_reduction = 2.111; % CBR600RR
 % eParams.primary_reduction = 2.073; % R6
 % eParams.primary_reduction = 1.974; % R600
 
 % !!! FIRST DATAPOINT MUST BE (0,0) !!!
-% eParams.torque_fn = KTM350(); % contains torque curve
-eParams.torque_fn = KTM450();
+ eParams.torque_fn = KTM350(); % contains torque curve
+%eParams.torque_fn = KTM450();
 % eParams.torque_fn = CBR600RR();
 % eParams.torque_fn = R6();
 % eParams.torque_fn = R600();
@@ -48,7 +48,7 @@ eParams.shift_time = 0.050; % seconds FOR UPSHIFT ONLY; 150ms for downshift
 
 % drivetrain parameters (updated 5/1/19)
 DTparams = struct();
-DTparams.final_drive = 40/13; % drivetrain sprocket ratio
+DTparams.final_drive = 40/11; % drivetrain sprocket ratio
 DTparams.drivetrain_efficiency = 0.92; % scales torque value
 DTparams.G_d1 = 0; % differential torque transfer offset due to internal friction
 DTparams.G_d2_overrun = 0; % differential torque transfer gain in overrun (not used right now)

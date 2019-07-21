@@ -110,7 +110,7 @@ classdef Car
          
             % Tire Forces
             steer_angle = steer_angle_1*pi/180;
-            [Fx,Fy,Fxw] = obj.tireForce(steer_angle,alpha,kappa,Fz);
+            [Fx,Fy,Fxw] = obj.tireForce(steer_angle,alpha,kappa,Fz);                      
             
             % Equations of Motion
             lat_accel = sum(Fy)*(1/obj.M)-yaw_rate*long_vel;

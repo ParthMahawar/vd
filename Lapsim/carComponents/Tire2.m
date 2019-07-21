@@ -15,6 +15,7 @@ classdef Tire2
         end
         
         function out = F_y(obj,alpha,kappa,F_z)
+            
             % Inputs
             gamma = obj.gamma*0.0174533; %degrees to radians
             alpha = alpha*0.0174533; %degrees to radians

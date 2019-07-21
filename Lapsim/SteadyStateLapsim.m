@@ -72,8 +72,8 @@ plot1 = 0; % autocross track distance vs curvature
 plot2 = 0; % endurance track distance vs curvature
 plot3 = 0; % max possible velocity for given radius
 plot4 = 0; % max possible long accel for given velocity
-plot5 = 0; % accel event longitudinal velocity vs time
-plot6 = 0; % accel event longitudinal accel vs time
+plot5 = 1; % accel event longitudinal velocity vs time
+plot6 = 1; % accel event longitudinal accel vs time
 plot7 = 0; % autocross gear shifts
 
 plot_choice = [plot1 plot2 plot3 plot4 plot5 plot6 plot7];
