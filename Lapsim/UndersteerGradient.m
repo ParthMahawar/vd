@@ -1,7 +1,6 @@
 function [lat_accel,K,steer_angle,beta,alpha_f,alpha_r] = UndersteerGradient(car,radius)
 
 counter = 1;
-radius = 15;
 
 [x_table, x_guess] = constant_radius(radius,4,car);
 x0 = x_guess;
@@ -20,7 +19,7 @@ for i = velocities
     x0(3) = i;
     x0(5) = i/radius;
     
-    [x_table, x_guess] = constant_radius(radius,i,car,x0);
+    [x_table, x_guess] = constant_radius(radius,i,car,x0);    
     x0 = x_guess;
     steer_angle(counter) = x_table{1,'steer_angle'};
     beta(counter) = x_table{1,'beta'};

@@ -5,7 +5,7 @@ function [x_table_skid, max_vel_skid, skidpad_time, skid_guess] = max_skidpad_ve
 % disp('max_skidpad_vel');
 if nargin == 2 % no initial guess supplied
     % initial guesses 
-    steer_angle_guess = 7; % degrees
+    steer_angle_guess = 3; % degrees
     throttle_guess = 0.1;
     long_vel_guess = sqrt(9.81*0.3*radius); % approximation method to help convergence
     lat_vel_guess = 0.2;

@@ -43,7 +43,17 @@ end
 fprintf("done\n");
 
 %% Saving
-%save('B20_baseline2.mat','carCell');
+% save('450_finaldrive_sweep.mat','carCell');
+
+% %% 
+% for i = 1:7
+%     comp = carCell{i,1}.comp;
+%     points(i) = comp.points.skidpad;
+% end
+% 
+% bar(points)
+% set(gca,'xticklabel',{'0.50' '0.52' '0.54' '0.56' '0.58' '0.60' '0.62'})
+% %ylim([400 450])
 
 %% Car Plotting
 

@@ -6,7 +6,7 @@ carParams.mass = 179.2; % not including driver (395 lb)
 carParams.driver_weight = 68; % (150 lb)
 carParams.accel_driver_weight = 68; % (150 lb)
 carParams.wheelbase = 1.524; % 60 in
-carParams.weight_dist = 0.5; % percentage of weight in rear
+carParams.weight_dist = 0.51; % percentage of weight in rear
 carParams.track_width = 1.27; % (50 in)
 carParams.wheel_radius = 0.1956; % loaded radius (7.7 in)
 carParams.cg_height = 0.3048; % (12 in)
@@ -21,10 +21,10 @@ aeroParams.cda = 1.73; % m^2
 aeroParams.cla = 3.77; % m^2
 aeroParams.distribution = 0.45; % proportion of downforce in front
 
-% engine parameters (updated 5/1/19)
+% KTM engine parameters (updated 5/1/19)
 eParams = struct();
-eParams.redline = 11500; 
-eParams.shift_point = 8500; % approximate
+eParams.redline = 13000; 
+eParams.shift_point = 10000; % approximate
 % these parameters are non-iterable
  eParams.gears = [2.0, 1.63, 1.33, 1.14, 0.95]; % KTM350
 %eParams.gears = [32/17, 30/19, 28/21, 26/23]; % KTM450

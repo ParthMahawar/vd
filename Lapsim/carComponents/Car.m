@@ -95,7 +95,7 @@ classdef Car
             [T_1,T_2,T_3,T_4] = obj.powertrain.wheel_torques(engine_rpm, omega(3), omega(4), throttle, current_gear);
             T = [T_1,T_2,T_3,T_4];
             
-            [Fz, Fzvirtual] = ssForces(obj,long_vel,yaw_rate,T);
+            [Fz, Fzvirtual] = ssForces(obj,long_vel,yaw_rate,T,steer_angle*pi/180);
             
             % Tire Slips
             beta = atan(lat_vel/long_vel)*180/pi; % vehicle slip angle in deg
@@ -111,6 +111,9 @@ classdef Car
             % Tire Forces
             steer_angle = steer_angle_1*pi/180;
             [Fx,Fy,Fxw] = obj.tireForce(steer_angle,alpha,kappa,Fz);                      
+           
+            Fx
+            Fxw
             
             % Equations of Motion
             lat_accel = sum(Fy)*(1/obj.M)-yaw_rate*long_vel;
@@ -276,12 +279,18 @@ classdef Car
             xdot(14) = ((T(4)-Fx(4)*obj.R)*(obj.Jw+obj.Jm*(Gr/2)^2) - (T(3)-Fx(3)*obj.R)*obj.Jm*(Gr/2)^2)*(1/denom);
         end
         
-        function [Fz, Fzvirtual] = ssForces(obj,longVel,yawRate,T)
+        function [Fz, Fzvirtual] = ssForces(obj,longVel,yawRate,T,steer_angle)
             Fz_front_static = (obj.M*9.81*obj.l_r+obj.aero.lift(longVel)*obj.aero.D_f)/obj.W_b;
             Fz_rear_static = (obj.M*9.81*obj.l_f+obj.aero.lift(longVel)*obj.aero.D_r)/obj.W_b;
             
-            long_load_transfer = (sum(T))/obj.R*(obj.h_g/obj.W_b); %(F_x1+F_x2+F_x3+F_x4)*h_g/W_b approximated (neglecting wheel dynamics) since longitudinal forces are unknown
-
+            Fy_front_approx = longVel*yawRate*obj.M*(obj.l_r/obj.W_b);
+            Fx_fromFy = -Fy_front_approx*sin(steer_angle);
+            %(F_x1+F_x2+F_x3+F_x4)*h_g/W_b approximated (neglecting wheel dynamics) since longitudinal forces are unknown
+            %Fx_fromFy term added to avoid overestimation of long load
+            %   transfer. Approximates Fx component from front tire lateral
+            %   forces
+            long_load_transfer = (sum(T)+Fx_fromFy)/obj.R*(obj.h_g/obj.W_b);                        
+            
             lat_load_transfer_front = (yawRate*longVel*obj.M)/obj.t_f*((obj.l_r*obj.h_rf)/obj.W_b+...
                 obj.R_sf*(obj.h_g-obj.h_rc));
             lat_load_transfer_rear = (yawRate*longVel*obj.M)/obj.t_r*((obj.l_r*obj.h_rr)/obj.W_b+...
