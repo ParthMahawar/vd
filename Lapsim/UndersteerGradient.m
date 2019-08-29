@@ -1,4 +1,4 @@
-function [lat_accel,K,steer_angle,beta,alpha_f,alpha_r] = UndersteerGradient(car,radius)
+function [lat_accel,K,steer_angle,beta,alpha_f,alpha_r,Fz_f,Fz_r] = UndersteerGradient(car,radius)
 
 counter = 1;
 
@@ -28,6 +28,9 @@ for i = velocities
     yaw_rate(counter) = x_table{1,'yaw_rate'};
     alpha_f(counter) = (x_table{1,'alpha_1'}+x_table{1,'alpha_2'})/2;
     alpha_r(counter) = (x_table{1,'alpha_3'}+x_table{1,'alpha_4'})/2;
+    Fz_f(counter) = (x_table{1,'Fz_1'}+x_table{1,'Fz_2'})/2;
+    Fz_r(counter) = (x_table{1,'Fz_3'}+x_table{1,'Fz_4'})/2;
+
     counter = counter+1;
 end
 

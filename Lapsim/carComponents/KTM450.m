@@ -2,7 +2,7 @@ function torque_fn = KTM450()
 
 % Stock
 points = [
-0 0
+%0 0
 % 4925, 25.66
 % 5024, 25.42
 % 5133, 26.00

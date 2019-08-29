@@ -110,16 +110,14 @@ classdef Car
          
             % Tire Forces
             steer_angle = steer_angle_1*pi/180;
-            [Fx,Fy,Fxw] = obj.tireForce(steer_angle,alpha,kappa,Fz);                      
-           
-            Fx
-            Fxw
-            
+            [Fx,Fy,Fxw] = obj.tireForce(steer_angle,alpha,kappa,Fz);     
+                        
             % Equations of Motion
             lat_accel = sum(Fy)*(1/obj.M)-yaw_rate*long_vel;
             long_accel = (sum(Fx)-obj.aero.drag(long_vel))*(1/obj.M)+yaw_rate*lat_vel;
             yaw_accel = ((Fx(1)-Fx(2))*obj.t_f/2+(Fx(3)-Fx(4))*obj.t_r/2+(Fy(1)+Fy(2))*obj.l_f-(Fy(3)+Fy(4))*obj.l_r)*(1/obj.I_zz);
-            
+            %yaw_accel = ((Fy(1)+Fy(2))*obj.l_f-(Fy(3)+Fy(4))*obj.l_r)*(1/obj.I_zz);
+    
             % neglects wheel rotational dynamics: for justification see Koutrik p.16
             wheel_accel(1) = (T(1)-Fxw(1)*obj.R);
             wheel_accel(2) = (T(2)-Fxw(2)*obj.R);
@@ -289,8 +287,8 @@ classdef Car
             %Fx_fromFy term added to avoid overestimation of long load
             %   transfer. Approximates Fx component from front tire lateral
             %   forces
-            long_load_transfer = (sum(T)+Fx_fromFy)/obj.R*(obj.h_g/obj.W_b);                        
-            
+            long_load_transfer = (sum(T)/obj.R+Fx_fromFy)*(obj.h_g/obj.W_b);
+                        
             lat_load_transfer_front = (yawRate*longVel*obj.M)/obj.t_f*((obj.l_r*obj.h_rf)/obj.W_b+...
                 obj.R_sf*(obj.h_g-obj.h_rc));
             lat_load_transfer_rear = (yawRate*longVel*obj.M)/obj.t_r*((obj.l_r*obj.h_rr)/obj.W_b+...

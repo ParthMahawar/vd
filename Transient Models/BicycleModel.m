@@ -1,7 +1,7 @@
 %% Inputs
-weight_dist = 0.6; % rearwards
+weight_dist = 0.5; % rearwards
 m = 535*0.453592; % mass, kg
-L = 1.524; % wheelbase, m
+L = 1.6; % wheelbase, m
 
 load('Fy_pure_parameters_run24_new2.mat')
 C_f = 0.55*2*4.448*cornering_stiffness(Xbestcell,0,535*(1-weight_dist),12,0);
@@ -22,7 +22,6 @@ b = L*(1-weight_dist); % rear axle to cg, m
 
 D_f = (g*m*b)/(L*C_f); % front cornering compliance, deg/g
 D_r = (g*m*a)/(L*C_r); % rear cornering compliance, deg/g
-
 
 % r = yaw velocity, rad/sec
 % beta = sideslip angle, rad

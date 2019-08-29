@@ -264,6 +264,42 @@ if plot2 == 1
     ylabel('Sum-Squared Error');
 end
 
+%%
+
+%tire load sensitivity (function of Fz)
+plot4 = 1; %turn on plotting
+alpha_input4 = -1:-1:-9
+P_input4 = [12];
+IA_input4 = [0];
+FZ4 = linspace(50,300,1000).';
+
+if plot4 == 1
+    alpha4 = -repmat(alpha_input4,numel(FZ4),1);
+    pi4 = repmat(P_input4,numel(FZ4),1);
+    gamma4 = repmat(IA_input4,numel(FZ4),1);
+    
+    %tony = 1;
+    figure(4)
+    set(gcf,'Position',[656,194,560,420]);
+    for a = 1:numel(P_input4)
+        for b = 1:numel(IA_input4)
+            for c = 1:numel(alpha_input4)
+                %Fyplot4 = lateralforce_pure(Xbestcell,alpha4(:,c),FZ4,pi3(:,a),gamma4(:,b));
+                Fyplot4 = lateralforce_combined(Xbestcell,alpha4(:,c),FZ4,pi3(:,a),gamma4(:,b),...
+                        0);
+                plot(FZ4,Fyplot4,'Linewidth',3);
+                hold on
+                %Fyplot{tony} = Fyplot4;
+                %tony = tony+1;
+            end
+        end
+    end
+    xlabel('Normal Load (lb)','FontSize',15);
+    ylabel('Lateral Force (lb)','FontSize',15);
+    grid on
+    %title('Hoosier 18.0x7.5-R25B, 8 in rim','FontSize',18)
+    legend('1','2','3','4','5','6','7','8','9');
+end
 %% Save Parameters
 combined_parameters = Xbestcell;
 load('Fy_pure_parameters_run6.mat')

@@ -43,17 +43,18 @@ end
 fprintf("done\n");
 
 %% Saving
-% save('450_finaldrive_sweep.mat','carCell');
+save('KTM450_IdealTurbo_finaldrivesweep.mat','carCell');
 
-% %% 
-% for i = 1:7
-%     comp = carCell{i,1}.comp;
-%     points(i) = comp.points.skidpad;
-% end
-% 
-% bar(points)
-% set(gca,'xticklabel',{'0.50' '0.52' '0.54' '0.56' '0.58' '0.60' '0.62'})
-% %ylim([400 450])
+%% Plotting
+
+for i = 1:1
+    comp = carCell{i,1}.comp;
+    points(i) = comp.points.total;
+end
+
+bar(points)
+%set(gca,'xticklabel',{'30/11' '35/11' '40/11' '45/11' '50/11'})
+ylim([450 480])
 
 %% Car Plotting
 
@@ -61,11 +62,11 @@ fprintf("done\n");
 car = carCell{1,1};
 
 % set desired plots to 1
-plot1 = 1; % velocity-dependent g-g diagram scatter plot
-plot2 = 1; % velocity-dependent g-g diagram surface
-plot3 = 1; % max accel for given velocity and lateral g w/ scattered interpolant
-plot4 = 1; % max braking for given velocity and lateral w/ scattered interpolant
-plot5 = 1; % 2D g-g diagram for velocity specified below (gg_vel)
+plot1 = 0; % velocity-dependent g-g diagram scatter plot
+plot2 = 0; % velocity-dependent g-g diagram surface
+plot3 = 0; % max accel for given velocity and lateral g w/ scattered interpolant
+plot4 = 0; % max braking for given velocity and lateral w/ scattered interpolant
+plot5 = 0; % 2D g-g diagram for velocity specified below (gg_vel)
 
 g_g_vel = [10 15 23]; % can input vector to overlay different velocities
 
@@ -82,8 +83,8 @@ plot1 = 0; % autocross track distance vs curvature
 plot2 = 0; % endurance track distance vs curvature
 plot3 = 0; % max possible velocity for given radius
 plot4 = 0; % max possible long accel for given velocity
-plot5 = 1; % accel event longitudinal velocity vs time
-plot6 = 1; % accel event longitudinal accel vs time
+plot5 = 0; % accel event longitudinal velocity vs time
+plot6 = 0; % accel event longitudinal accel vs time
 plot7 = 0; % autocross gear shifts
 
 plot_choice = [plot1 plot2 plot3 plot4 plot5 plot6 plot7];

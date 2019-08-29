@@ -4,18 +4,20 @@ classdef Tire2
         p_i 
         Fx_parameters
         Fy_parameters       
+        friction_scaling_factor
     end
            
     methods
-        function obj = Tire2(gamma,p_i,Fx_parameters,Fy_parameters)
+        function obj = Tire2(gamma,p_i,Fx_parameters,Fy_parameters,friction_scaling_factor)
             obj.gamma = gamma;
             obj.p_i = p_i;
             obj.Fx_parameters = Fx_parameters;
-            obj.Fy_parameters = Fy_parameters;         
+            obj.Fy_parameters = Fy_parameters;      
+            obj.friction_scaling_factor = friction_scaling_factor;
         end
         
         function out = F_y(obj,alpha,kappa,F_z)
-            
+                       
             % Inputs
             gamma = obj.gamma*0.0174533; %degrees to radians
             alpha = alpha*0.0174533; %degrees to radians
@@ -82,7 +84,7 @@ classdef Tire2
             lambda_hy = 0;       % horizontal shift
             lambda_kyalpha = 1;  % cornering stiffness
             lambda_kygamma = 1;  % camber force stiffness
-            lambda_muy = 0.52;      % peak friction coefficient
+            lambda_muy = 1;      % peak friction coefficient
             lambda_vy = 0;       % vertical shift
 
             lambda_ykappa = 1;   % influence on F_y(alpha)
@@ -123,14 +125,13 @@ classdef Tire2
                 atan(B_ykappa.*kappa_s))))./cos(C_ykappa.*atan(B_ykappa.*S_hykappa - E_ykappa...
                 .*(B_ykappa.*S_hykappa - atan(B_ykappa.*S_hykappa))));
 
-
             %Lateral Force
             F_y = D_y.*sin(C_y.*atan(B_y.*alpha_y-E_y.*(B_y.*alpha_y-atan(B_y.*alpha_y))))+S_vy;
             F_y = transpose(G_ykappa.*F_y+S_vykappa);
 
             F_y(F_z==0) = 0; %zero load
             
-            out = F_y*4.44822; %lbf to N
+            out = F_y*4.44822*obj.friction_scaling_factor; %lbf to N, scaled
         end        
         
         function out = F_x(obj,alpha,kappa,F_z)
@@ -182,7 +183,7 @@ classdef Tire2
             lambda_ex  = 1;     %curve factor
             lambda_hx  = 0;     %horizontal shift
             lambda_kxkappa = 1; %brake slip stiffness
-            lambda_mux = 0.52;      % peak friction coefficient
+            lambda_mux = 1;      % peak friction coefficient
             lambda_vx  = 0;     %vertical shift
 
             lambda_xalpha = 1; %influence on F_x(kappa)
@@ -217,7 +218,7 @@ classdef Tire2
 
             F_x(F_z==0) = 0; %zero load
             
-            out = F_x*4.44822; %lbf to N
+            out = F_x*4.44822*obj.friction_scaling_factor; %lbf to N, scaled
 
 
         end
