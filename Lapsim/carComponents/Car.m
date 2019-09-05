@@ -284,10 +284,11 @@ classdef Car
             Fy_front_approx = longVel*yawRate*obj.M*(obj.l_r/obj.W_b);
             Fx_fromFy = -Fy_front_approx*sin(steer_angle);
             %(F_x1+F_x2+F_x3+F_x4)*h_g/W_b approximated (neglecting wheel dynamics) since longitudinal forces are unknown
-            %Fx_fromFy term added to avoid overestimation of long load
+            % Fx_fromFy term added to avoid overestimation of long load
             %   transfer. Approximates Fx component from front tire lateral
             %   forces
-            long_load_transfer = (sum(T)/obj.R+Fx_fromFy)*(obj.h_g/obj.W_b);
+            long_load_transfer = (sum(T)/obj.R+Fx_fromFy)*(obj.h_g/obj.W_b);            
+            long_load_transfer = (sum(T)/obj.R)*(obj.h_g/obj.W_b);
                         
             lat_load_transfer_front = (yawRate*longVel*obj.M)/obj.t_f*((obj.l_r*obj.h_rf)/obj.W_b+...
                 obj.R_sf*(obj.h_g-obj.h_rc));

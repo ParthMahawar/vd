@@ -34,12 +34,12 @@ function z = ParamSweep(carCells,params)
             point_list = struct2array(carCells{e}{i,1}.comp.points);
 
             switch params{e}    
-            case "CdA"
+            case "cda"
                 test_var1(i) = carCells{e}{i,1}.aero.cda;
-            case "ClA"
+            case "cla"
                 test_var1(i) = carCells{e}{i,1}.aero.cla;
-            case "Weight"
-                test_var1(i) = carCells{e}{i,1}.M;
+            case "weight"
+                test_var1(i) = carCells{e}{i,1}.M*2.20462;
             end
 
             %get pts from carCell events
@@ -83,7 +83,7 @@ function z = ParamSweep(carCells,params)
             
             %creating words
             title([events{a} ' Points'])
-            xlabel( [params{e},' (kg)'])
+            xlabel( [params{e}])
             ylabel('Points')
             legend('FontSize',6,'Location','NorthEast')
             
@@ -92,8 +92,8 @@ function z = ParamSweep(carCells,params)
         end
         
         %write to filename
-        T = table(params,events,test_var1,point_cell);
-        writetable(T,filename,'Sheet',2,'WriteVariableNames',false);
+        % T = table(params,events,test_var1,point_cell);
+        % writetable(T,filename,'Sheet',2,'WriteVariableNames',false);
        
     end
      

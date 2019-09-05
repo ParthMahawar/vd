@@ -43,18 +43,19 @@ end
 fprintf("done\n");
 
 %% Saving
-save('KTM450_IdealTurbo_finaldrivesweep.mat','carCell');
+%save('ActiveAero4.mat','carCell');
 
 %% Plotting
 
-for i = 1:1
+for i = 1:5
     comp = carCell{i,1}.comp;
     points(i) = comp.points.total;
 end
 
+%plot(points)
 bar(points)
 %set(gca,'xticklabel',{'30/11' '35/11' '40/11' '45/11' '50/11'})
-ylim([450 480])
+%ylim([60 110])
 
 %% Car Plotting
 
