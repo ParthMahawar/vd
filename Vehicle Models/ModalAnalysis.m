@@ -5,7 +5,8 @@ setup_paths
 
 load('dampingcurves.mat');
 % input car parameters
-car = testCar();
+carCell = carConfig();
+car = carCell{1,1};
 car.k = 250*4.45*39.37; % N/m
 car.k_tf = car.k*3; % tire stiffness (N/m)
 car.k_tr = car.k_tf;
