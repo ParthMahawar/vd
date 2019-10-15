@@ -1,6 +1,8 @@
 %% Car Parameters
 clear; %close all; clc
 
+setup_paths
+
 load('dampingcurves.mat');
 % input car parameters
 car = testCar();
@@ -135,6 +137,7 @@ for j = 1:6
     pitch(j) = zeta_vec{j}(3);
 end
 
+figure
 plot(bounce,'-o')
 hold on
 plot(roll,'-o')

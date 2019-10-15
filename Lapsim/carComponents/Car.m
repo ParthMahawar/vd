@@ -110,7 +110,10 @@ classdef Car
          
             % Tire Forces
             steer_angle = steer_angle_1*pi/180;
-            [Fx,Fy,Fxw] = obj.tireForce(steer_angle,alpha,kappa,Fz);     
+            [Fx,Fy,Fxw] = obj.tireForce(steer_angle,alpha,kappa,Fz);
+            
+            %Fy(1) = Fy(1)*1.05;
+           % Fy(2) = Fy(2)*1.05;
                         
             % Equations of Motion
             lat_accel = sum(Fy)*(1/obj.M)-yaw_rate*long_vel;
@@ -287,14 +290,21 @@ classdef Car
             % Fx_fromFy term added to avoid overestimation of long load
             %   transfer. Approximates Fx component from front tire lateral
             %   forces
-            long_load_transfer = (sum(T)/obj.R+Fx_fromFy)*(obj.h_g/obj.W_b);            
+            %long_load_transfer = (sum(T)/obj.R+Fx_fromFy)*(obj.h_g/obj.W_b);            
             long_load_transfer = (sum(T)/obj.R)*(obj.h_g/obj.W_b);
-                        
+            
+            
             lat_load_transfer_front = (yawRate*longVel*obj.M)/obj.t_f*((obj.l_r*obj.h_rf)/obj.W_b+...
                 obj.R_sf*(obj.h_g-obj.h_rc));
             lat_load_transfer_rear = (yawRate*longVel*obj.M)/obj.t_r*((obj.l_r*obj.h_rr)/obj.W_b+...
                 (1-obj.R_sf)*(obj.h_g-obj.h_rc));
             
+%             LLTD_caster = obj.R_sf-0.06*steer_angle/(25*pi/180);
+%             lat_load_transfer_front = (yawRate*longVel*obj.M)/obj.t_f*((obj.l_r*obj.h_rf)/obj.W_b+...
+%                 LLTD_caster*(obj.h_g-obj.h_rc));
+%             lat_load_transfer_rear = (yawRate*longVel*obj.M)/obj.t_r*((obj.l_r*obj.h_rr)/obj.W_b+...
+%                 (1-LLTD_caster)*(obj.h_g-obj.h_rc));
+%             
             % wheel load constraint method from Kelly
             Fzvirtual = zeros(1,4);
             Fzvirtual(1) = 0.5*Fz_front_static-0.5*long_load_transfer+lat_load_transfer_front;

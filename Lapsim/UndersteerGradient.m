@@ -1,12 +1,11 @@
-function [lat_accel,K,steer_angle,beta,alpha_f,alpha_r,Fz_f,Fz_r] = UndersteerGradient(car,radius)
+function [lat_accel,K,steer_angle,beta,alpha_f,alpha_r,Fz_f,Fz_r] = UndersteerGradient(car,radius,max_vel_skid)
 
 counter = 1;
 
 [x_table, x_guess] = constant_radius(radius,4,car);
 x0 = x_guess;
 
-long_vel_guess = sqrt(1.5*radius*9.81);
-[~, max_vel_skid, ~] = max_skidpad_vel(radius,car,x0);
+[~, max_vel_skid, ~] = max_skidpad_vel(radius,car);
 
 velocities = 3:0.1:max_vel_skid-0.5;
 steer_angle = zeros(size(velocities));

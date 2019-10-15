@@ -6,16 +6,16 @@ clear all;close all;clc
 %normal force values: 50,150,200,250
 %slip angle is 0 for pure slip
 
-P_input = [10 12 14];     
-IA_input = [0 2 4];    
-FZ_input = [50 150 250];    
-SA_input = 0;     
+P_input = [10 12 14];
+IA_input = [0 2 4];
+FZ_input = [50 150 250];
+SA_input = 0;
 
 [kappa, ~, Fx, ~, Fz, ~, gamma, pi, testrange] = TireParser_DriveBrake(P_input, IA_input, FZ_input,SA_input);
 
 %% Parameters/Starting Population
 
-a = -1;           %initial interval 
+a = -1;           %initial interval
 b = 1;
 N = 19;          %number of parameters
 NP = 100;        %size of population = number of chromosomes
@@ -55,118 +55,118 @@ X = a + (b-a).*rand(NP,N);  %initial population
 errorplot = zeros(itermax,1);
 tic
 
-for iterations = 1:itermax 
-%% Xbest Evaluation
-
-FyXeval = zeros(NP,numel(testrange));
-for j = 1:NP
-    Xeval = num2cell(X(j,:));
-    FyXeval(j,:) = longitudinalforce_pure(Xeval,kappa,Fz,pi,gamma);
-end
-errorXeval = sum((FyXeval - repmat(transpose(Fx),NP,1)).^2,2); 
-[Xbesterror,index] = min(errorXeval);
-Xbest = X(index,:);
-
-if(Xbest(1))<1.3
-    Xbest(1) = 1.3;
-end
-
-Xbestcell = num2cell(Xbest);
-
-errorplot(iterations) = Xbesterror; %for plotting error
-
-%% Selection
-
-for i0 = 1:NP;
+for iterations = 1:itermax
+    %% Xbest Evaluation
     
-i1 = randi(NP);
-i2 = randi(NP);
-Xi = X(i0,:);
-Xr1 = X(i1,:);
-Xr2 = X(i2,:);
-V = Xbest + F*(Xr1 - Xr2);
-
-%% Reproduction and Mutation
-
-crossover = rand(1);
-Xni = Xi;
-if crossover < CP  
-    Xni = V;
-    Xiselect = randi(N,[round(N/2) 1]);
-    Xni(Xiselect) = Xi(Xiselect);
-end
-
-mutation = -1 + (2).*rand(1);
-
-if abs(mutation) < MP
-    Xni = Xni + sign(mutation)*range*rand(1);
-end
-%% Error Evaluation
-
-Xicell = num2cell(Xi);
-FxXi = longitudinalforce_pure(Xicell,kappa,Fz,pi,gamma);
-
-Xnicell = num2cell(Xni);
-FyXni = longitudinalforce_pure(Xnicell,kappa,Fz,pi,gamma);
-
-errorXi = sum((FxXi - transpose(Fx)).^2); 
-errorXni = sum((FyXni - transpose(Fx)).^2); 
-
-if errorXni < errorXi
-    Xi = Xni;
-end
-
-X(i0,:) = Xi;
-
-end
-%% Live Plotting
-time = (toc);
-
-clc
-fprintf('iteration number: %d \nelapsed time:%.1f seconds', iterations,time);
-
-%terminate for loop if change in percent error is below errmin
-if (errorterminate == 1 && iterations>200 && (mean(errorplot(iterations-200:iterations)) - Xbesterror)...
-        /mean(errorplot(iterations-200:iterations-1)) < errmin) || iterations == itermax
-    break
-end
-
-if (iterations == 1 || mod(iterations,5) == 0) && liveplotting == 1
-    if iterations == 1 
-        f1 = figure(1);
-        set(gcf,'Position',[70,194,560,420]);
-    else
-        set(0,'CurrentFigure',f1);
+    FyXeval = zeros(NP,numel(testrange));
+    for j = 1:NP
+        Xeval = num2cell(X(j,:));
+        FyXeval(j,:) = longitudinalforce_pure(Xeval,kappa,Fz,pi,gamma);
     end
-    scatter(kappa,Fx);
-    hold on
-
-    Fxplot = longitudinalforce_pure(Xbestcell,kappa,Fz,pi,gamma);
-
-    plot(kappa,Fxplot,'k','Linewidth',3);
-    xlabel('Slip Ratio','FontSize',15);
-    ylabel('Fx:Longitudinal Force','FontSize',15);
-    grid on
-    hold off
+    errorXeval = sum((FyXeval - repmat(transpose(Fx),NP,1)).^2,2);
+    [Xbesterror,index] = min(errorXeval);
+    Xbest = X(index,:);
     
-    if iterations == 1 
-        f2 = figure(2);
-        set(gcf,'Position',[656,194,560,420]);
-    else
-        set(0,'CurrentFigure',f2);
+    if(Xbest(1))<1.3
+        Xbest(1) = 1.3;
     end
     
-    plot(1:itermax,errorplot);
-    xlabel('Iterations','FontSize',15);
-    ylabel('Sum-Squared Error','FontSize',15);
-    if iterations<200
-        itermin = 0;
-    else
-        itermin = iterations-200;
-    end 
-    xlim([itermin iterations]);
-    pause(0.00001);
-end
+    Xbestcell = num2cell(Xbest);
+    
+    errorplot(iterations) = Xbesterror; %for plotting error
+    
+    %% Selection
+    
+    for i0 = 1:NP;
+        
+        i1 = randi(NP);
+        i2 = randi(NP);
+        Xi = X(i0,:);
+        Xr1 = X(i1,:);
+        Xr2 = X(i2,:);
+        V = Xbest + F*(Xr1 - Xr2);
+        
+        %% Reproduction and Mutation
+        
+        crossover = rand(1);
+        Xni = Xi;
+        if crossover < CP
+            Xni = V;
+            Xiselect = randi(N,[round(N/2) 1]);
+            Xni(Xiselect) = Xi(Xiselect);
+        end
+        
+        mutation = -1 + (2).*rand(1);
+        
+        if abs(mutation) < MP
+            Xni = Xni + sign(mutation)*range*rand(1);
+        end
+        %% Error Evaluation
+        
+        Xicell = num2cell(Xi);
+        FxXi = longitudinalforce_pure(Xicell,kappa,Fz,pi,gamma);
+        
+        Xnicell = num2cell(Xni);
+        FyXni = longitudinalforce_pure(Xnicell,kappa,Fz,pi,gamma);
+        
+        errorXi = sum((FxXi - transpose(Fx)).^2);
+        errorXni = sum((FyXni - transpose(Fx)).^2);
+        
+        if errorXni < errorXi
+            Xi = Xni;
+        end
+        
+        X(i0,:) = Xi;
+        
+    end
+    %% Live Plotting
+    time = (toc);
+    
+    clc
+    fprintf('iteration number: %d \nelapsed time:%.1f seconds', iterations,time);
+    
+    %terminate for loop if change in percent error is below errmin
+    if (errorterminate == 1 && iterations>200 && (mean(errorplot(iterations-200:iterations)) - Xbesterror)...
+            /mean(errorplot(iterations-200:iterations-1)) < errmin) || iterations == itermax
+        break
+    end
+    
+    if (iterations == 1 || mod(iterations,5) == 0) && liveplotting == 1
+        if iterations == 1
+            f1 = figure(1);
+            set(gcf,'Position',[70,194,560,420]);
+        else
+            set(0,'CurrentFigure',f1);
+        end
+        scatter(kappa,Fx);
+        hold on
+        
+        Fxplot = longitudinalforce_pure(Xbestcell,kappa,Fz,pi,gamma);
+        
+        plot(kappa,Fxplot,'k','Linewidth',3);
+        xlabel('Slip Ratio','FontSize',15);
+        ylabel('Fx:Longitudinal Force','FontSize',15);
+        grid on
+        hold off
+        
+        if iterations == 1
+            f2 = figure(2);
+            set(gcf,'Position',[656,194,560,420]);
+        else
+            set(0,'CurrentFigure',f2);
+        end
+        
+        plot(1:itermax,errorplot);
+        xlabel('Iterations','FontSize',15);
+        ylabel('Sum-Squared Error','FontSize',15);
+        if iterations<200
+            itermin = 0;
+        else
+            itermin = iterations-200;
+        end
+        xlim([itermin iterations]);
+        pause(0.00001);
+    end
 end
 %% Plotting
 
@@ -210,7 +210,7 @@ if plot3 == 1
     Fz3 = -repmat(FZ_input3,numel(kappa3),1);
     pi3 = repmat(P_input3,numel(kappa3),1);
     gamma3 = repmat(IA_input3,numel(kappa3),1);
-
+    
     figure(3)
     set(gcf,'Position',[656,194,560,420]);
     for a = 1:numel(P_input3)

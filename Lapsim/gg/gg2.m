@@ -25,8 +25,8 @@ parfor (c1 = 1:numel(longVelArr),numWorkers)
     % iterate through lateral accelerations
     for c2 = 1:numel(latAccelArr)
         latAccel = latAccelArr(c2);
-        [xAccel,longAccel,longAccelx0] = max_long_accel_cornering(longVel,latAccel);
-        [xBraking,longDecel,brakingDecelx0] = max_braking_decel_cornering(longVel,latAccel);       
+        [xAccel,longAccel,longAccelx0] = max_long_accel_cornering(longVel,latAccel,car);
+        [xBraking,longDecel,brakingDecelx0] = max_braking_decel_cornering(longVel,latAccel,car);       
         carParams = ParamSet(car,longVel); 
         carParams = carParams.setMaxLatParams(maxLatx,maxLatLatAccel,maxLatLongAccel,maxLatx0);
         carParams = carParams.setMaxAccelParams(xAccel,longAccel,latAccel,longAccelx0);

@@ -35,7 +35,7 @@ label = {'Hoosier 18.0x6.0-10 R25B, 6 in rim',...
     'Hoosier 18.0x7.5-10 R25B, 7 in rim',...
     'Hoosier 18.0x7.5-10 R25B, 8 in rim',...
     'Avon 7.0/16.0-10, 7 in rim',...
-        'Hoosier 16.0x7.5-10 R25B, 8 in rim'};
+    'Hoosier 16.0x7.5-10 R25B, 8 in rim'};
 
 	%'Avon 7.0/16.0-10, 8 in rim'};
 
@@ -45,7 +45,7 @@ figure
 for i = 1:8
     Xbestcell = parameters{i};
     alpha = linspace(-15,15,1000).';
-    Fyplot = lateralforce_pure(Xbestcell,alpha,150,12,0);
+    Fyplot = lateralforce_pure(Xbestcell,alpha,250,12,0);
     plot(alpha,Fyplot,'Linewidth',3,'LineStyle',linS{i},...
         'DisplayName',label{i});
     hold on
@@ -194,7 +194,7 @@ parameters{8} = Xbestcell;
 figure
 
 for j = [0 2 4]
-    Xbestcell = parameters{4};
+    Xbestcell = parameters{6};
     alpha = linspace(-15,15,1000).';
     Fyplot = lateralforce_pure(Xbestcell,alpha,150,12,j);
     plot(alpha,Fyplot,'Linewidth',3,'DisplayName',['Camber = ' num2str(j)]);
@@ -211,12 +211,11 @@ title('Lateral Force (FZ = 150, P = 12, IA = 0)',...
 
 figure
 
-for i = 1:6
+for i = 6
     Xbestcell = parameters{i};
-    IA = linspace(0,2,1000).';
-    peakFy = -lateralforce_pure(Xbestcell,12,150,12,0);
-    Fyplot = -lateralforce_pure(Xbestcell,12,150,12,IA)/peakFy;
-    plot(IA,Fyplot,'Linewidth',3,'LineStyle',linS{i},...
+    IA = linspace(-2,2,1000).';
+    Fyplot = -lateralforce_pure(Xbestcell,-12,150,12,IA);
+    plot(-IA,Fyplot/max(Fyplot),'Linewidth',3,'LineStyle',linS{i},...
         'DisplayName',label{i});
     hold on
 end

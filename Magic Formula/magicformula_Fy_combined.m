@@ -6,9 +6,11 @@ clear all;close all;clc
 %normal force values: 50,150,200,250
 %slip angle values: 0,-3,-6
 
-P_input = [12];
-IA_input = [0];
-FZ_input = [50 150 250];
+setup_paths
+
+P_input = [10 12 14];
+IA_input = [0 2 4];
+FZ_input = [50 100 150 200 250];
 SA_input = [0 -3 -6];
 
 [kappa, alpha, ~, Fy, Fz, ~, gamma, pi, testrange] = TireParser_DriveBrake(P_input, IA_input, FZ_input,SA_input);
@@ -16,7 +18,7 @@ SA_input = [0 -3 -6];
 
 %% Parameters/Starting Population
 
-a = -1;           %initial interval 
+a = -1;           %initial interval
 b = 1;
 N = 42;          %number of parameters
 NP = 100;        %size of population = number of chromosomes
@@ -38,120 +40,120 @@ errorplot = zeros(itermax,1);
 
 tic
 
-for iterations = 1:itermax 
-%% Xbest Evaluation
-
-FyXeval = zeros(NP,numel(testrange));
-for j = 1:NP
-    Xeval = num2cell(X(j,:));
-    FyXeval(j,:) = lateralforce_combined(Xeval,alpha,Fz,pi,gamma,kappa);
-end
-errorXeval = sum((FyXeval - repmat(transpose(Fy),NP,1)).^2,2); 
-[Xbesterror,index] = min(errorXeval);
-Xbest = X(index,:);
-
-%Xbest(1:27) = cell2mat(tony);
-%Xbest(30) = 0;
-
-Xbestcell = num2cell(Xbest);
-
-errorplot(iterations) = Xbesterror; %for plotting error
-
-%% Selection
-
-for i0 = 1:NP
-
-i1 = randi(NP);
-i2 = randi(NP);
-Xi = X(i0,:);
-Xr1 = X(i1,:);
-Xr2 = X(i2,:);
-V = Xbest + F*(Xr1 - Xr2);
-
-%% Reproduction and Mutation
-
-crossover = rand(1);
-Xni = Xi;
-if crossover < CP  
-    Xni = V;
-    Xiselect = randi(N,[round(N/2) 1]);
-    Xni(Xiselect) = Xi(Xiselect);
-end
-
-mutation = -1 + (2).*rand(1);
-
-if abs(mutation) < MP
-    Xni = Xni + sign(mutation)*range*rand(1);
-end
-%% Error Evaluation
-
-Xicell = num2cell(Xi);
-FyXi = lateralforce_combined(Xicell,alpha,Fz,pi,gamma,kappa);
-
-Xnicell = num2cell(Xni);
-FyXni = lateralforce_combined(Xnicell,alpha,Fz,pi,gamma,kappa);
-
-errorXi = sum((FyXi - transpose(Fy)).^2); 
-errorXni = sum((FyXni - transpose(Fy)).^2); 
-
-if errorXni < errorXi
-    Xi = Xni;
-end
-
-X(i0,:) = Xi;
-
-end
-%% Plotting
-
-time = (toc);
-
-clc
-fprintf('iteration number: %d \nelapsed time:%.1f seconds', iterations,time);
-
-%terminate for loop if change in percent error is below errmin
-finished = 0;
-if (errorterminate == 1 && iterations>200 && (mean(errorplot(iterations-200:iterations)) - Xbesterror)...
-        /mean(errorplot(iterations-200:iterations-1)) < errmin) || iterations == itermax
-    break
-end
-
-if ((iterations == 1 || mod(iterations,5) == 0) && liveplotting == 1)
-    if iterations == 1 
-        f1 = figure(1);
-        set(gcf,'Position',[70,194,560,420]);
-    else
-        set(0,'CurrentFigure',f1);
-    end
-    scatter(kappa,Fy);
-    hold on
-
-    Fyplot = lateralforce_combined(Xbestcell,alpha,Fz,pi,gamma,kappa);
-
-    plot(kappa,Fyplot,'k','Linewidth',3);
-    xlabel('Slip Ratio','FontSize',15);
-    ylabel('Fy:Lateral Force','FontSize',15);
-    grid on
-    hold off
+for iterations = 1:itermax
+    %% Xbest Evaluation
     
-    if iterations == 1 
-        f2 = figure(2);
-        set(gcf,'Position',[656,194,560,420]);
-    else
-        set(0,'CurrentFigure',f2);
+    FyXeval = zeros(NP,numel(testrange));
+    for j = 1:NP
+        Xeval = num2cell(X(j,:));
+        FyXeval(j,:) = lateralforce_combined(Xeval,alpha,Fz,pi,gamma,kappa);
     end
-  
-    plot(1:itermax,errorplot);
-    xlabel('Iterations','FontSize',15);
-    ylabel('Sum-Squared Error','FontSize',15);
-    if iterations<200
-        itermin = 0;
-    else
-        itermin = iterations-200;
-    end 
-    xlim([itermin iterations]);
-    pause(0.00001);
-end
-
+    errorXeval = sum((FyXeval - repmat(transpose(Fy),NP,1)).^2,2);
+    [Xbesterror,index] = min(errorXeval);
+    Xbest = X(index,:);
+    
+    %Xbest(1:27) = cell2mat(tony);
+    %Xbest(30) = 0;
+    
+    Xbestcell = num2cell(Xbest);
+    
+    errorplot(iterations) = Xbesterror; %for plotting error
+    
+    %% Selection
+    
+    for i0 = 1:NP
+        
+        i1 = randi(NP);
+        i2 = randi(NP);
+        Xi = X(i0,:);
+        Xr1 = X(i1,:);
+        Xr2 = X(i2,:);
+        V = Xbest + F*(Xr1 - Xr2);
+        
+        %% Reproduction and Mutation
+        
+        crossover = rand(1);
+        Xni = Xi;
+        if crossover < CP
+            Xni = V;
+            Xiselect = randi(N,[round(N/2) 1]);
+            Xni(Xiselect) = Xi(Xiselect);
+        end
+        
+        mutation = -1 + (2).*rand(1);
+        
+        if abs(mutation) < MP
+            Xni = Xni + sign(mutation)*range*rand(1);
+        end
+        %% Error Evaluation
+        
+        Xicell = num2cell(Xi);
+        FyXi = lateralforce_combined(Xicell,alpha,Fz,pi,gamma,kappa);
+        
+        Xnicell = num2cell(Xni);
+        FyXni = lateralforce_combined(Xnicell,alpha,Fz,pi,gamma,kappa);
+        
+        errorXi = sum((FyXi - transpose(Fy)).^2);
+        errorXni = sum((FyXni - transpose(Fy)).^2);
+        
+        if errorXni < errorXi
+            Xi = Xni;
+        end
+        
+        X(i0,:) = Xi;
+        
+    end
+    %% Plotting
+    
+    time = (toc);
+    
+    clc
+    fprintf('iteration number: %d \nelapsed time:%.1f seconds', iterations,time);
+    
+    %terminate for loop if change in percent error is below errmin
+    finished = 0;
+    if (errorterminate == 1 && iterations>200 && (mean(errorplot(iterations-200:iterations)) - Xbesterror)...
+            /mean(errorplot(iterations-200:iterations-1)) < errmin) || iterations == itermax
+        break
+    end
+    
+    if ((iterations == 1 || mod(iterations,5) == 0) && liveplotting == 1)
+        if iterations == 1
+            f1 = figure(1);
+            set(gcf,'Position',[70,194,560,420]);
+        else
+            set(0,'CurrentFigure',f1);
+        end
+        scatter(kappa,Fy);
+        hold on
+        
+        Fyplot = lateralforce_combined(Xbestcell,alpha,Fz,pi,gamma,kappa);
+        
+        plot(kappa,Fyplot,'k','Linewidth',3);
+        xlabel('Slip Ratio','FontSize',15);
+        ylabel('Fy:Lateral Force','FontSize',15);
+        grid on
+        hold off
+        
+        if iterations == 1
+            f2 = figure(2);
+            set(gcf,'Position',[656,194,560,420]);
+        else
+            set(0,'CurrentFigure',f2);
+        end
+        
+        plot(1:itermax,errorplot);
+        xlabel('Iterations','FontSize',15);
+        ylabel('Sum-Squared Error','FontSize',15);
+        if iterations<200
+            itermin = 0;
+        else
+            itermin = iterations-200;
+        end
+        xlim([itermin iterations]);
+        pause(0.00001);
+    end
+    
 end
 %% Plotting
 
@@ -166,9 +168,9 @@ plot3 = 1;    %turn on plotting
 
 kappa3 = linspace(-0.2,0.2,1000).';
 P_input3 = [12];
-IA_input3 = [0]; 
+IA_input3 = [0];
 FZ_input3 = [250];
-SA_input3 = [0 -3 -6]; %slip angle input for combined slip 
+SA_input3 = [0 -3 -6]; %slip angle input for combined slip
 
 plot2 = 0; %turn on error plot
 
@@ -178,8 +180,8 @@ plot4 = 1;  %turn on plotting
 alpha4 = linspace(-20,20,1000).';
 P_input4 = [12];
 IA_input4 = [0];
-FZ_input4 = [0 10 20 30 40 50 150 250];
-SR_input4 = [0]; %slip ratio input for combined slip 
+FZ_input4 = [50 150 250];
+SR_input4 = [0]; %slip ratio input for combined slip
 
 [kappa2, alpha2, ~, Fy2, Fz2, ~, gamma2, pi2, testrange2] = TireParser_DriveBrake(P_input2, IA_input2, FZ_input2,SA_input2);
 
@@ -206,7 +208,7 @@ if plot3 == 1
     for a = 1:numel(P_input3)
         for b = 1:numel(IA_input3)
             for c = 1:numel(FZ_input3)
-                for d = 1:numel(SA_input3) 
+                for d = 1:numel(SA_input3)
                     Fyplot3 = lateralforce_combined(Xbestcell,alpha3(:,d),Fz3(:,c),pi3(:,a),gamma3(:,b),...
                         kappa3);
                     plot(kappa3,Fyplot3,'k','Linewidth',3);
@@ -231,7 +233,7 @@ if plot4 == 1
     for a = 1:numel(P_input4)
         for b = 1:numel(IA_input4)
             for c = 1:numel(FZ_input4)
-                for d = 1:numel(SR_input4) 
+                for d = 1:numel(SR_input4)
                     Fyplot4 = lateralforce_combined(Xbestcell,alpha4,Fz4(:,c),pi4(:,a),gamma4(:,b),...
                         kappa4(:,d));
                     plot(alpha4,Fyplot4,'k','Linewidth',3);
@@ -251,8 +253,8 @@ if plot4 == 1
     
     %load('Fy_pure_parameters_run24_12.mat');
     %Fyplot4 = lateralforce_pure(Xbestcell,alpha4,Fz4,pi4,gamma4);
-    %plot(alpha4,Fyplot4,'k','Linewidth',3);    
-   
+    %plot(alpha4,Fyplot4,'k','Linewidth',3);
+    
 end
 
 hold off
@@ -286,7 +288,7 @@ if plot4 == 1
             for c = 1:numel(alpha_input4)
                 %Fyplot4 = lateralforce_pure(Xbestcell,alpha4(:,c),FZ4,pi3(:,a),gamma4(:,b));
                 Fyplot4 = lateralforce_combined(Xbestcell,alpha4(:,c),FZ4,pi3(:,a),gamma4(:,b),...
-                        0);
+                    0);
                 plot(FZ4,Fyplot4,'Linewidth',3);
                 hold on
                 %Fyplot{tony} = Fyplot4;
@@ -302,9 +304,9 @@ if plot4 == 1
 end
 %% Save Parameters
 combined_parameters = Xbestcell;
-load('Fy_pure_parameters_run6.mat')
+load('Fy_pure_parameters_run15_9_27_19.mat')
 combined_parameters(1:27) = Xbestcell(1:27);
 Xbestcell = combined_parameters;
 
-save('Fy_combined_parameters_run6_new.mat','Xbestcell');
+save('Fy_combined_parameters_run15_9_27_19.mat','Xbestcell');
 

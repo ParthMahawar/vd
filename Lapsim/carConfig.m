@@ -5,21 +5,21 @@ carParams = struct();
 carParams.mass = 179.2; % not including driver (395 lb)
 carParams.driver_weight = 68; % (150 lb)
 carParams.accel_driver_weight = 68; % (150 lb)
-carParams.wheelbase = 1.524; % 63 in
-carParams.weight_dist = 0.51; % percentage of weight in rear
+carParams.wheelbase = 1.5494; % 61 in
+carParams.weight_dist = 0.54; % percentage of weight in rear
 carParams.track_width = 1.1938; % (47 in)
-carParams.wheel_radius = 0.1956; % loaded radius (7.7 in)
+carParams.wheel_radius = 0.173; %0.1956; % loaded radius (7.7 in)
 carParams.cg_height = 0.3048; % (12 in)
 carParams.roll_center_height_front = 0.0254; % (1 in)
 carParams.roll_center_height_rear = 0.0889; % (3.5 in)
-carParams.R_sf = 0.3; % proportion of roll stiffness in front (not same as LLTD)
+carParams.R_sf = 0.4; % proportion of roll stiffness in front (not same as LLTD)
 carParams.I_zz = 83.28; %kg-m^2
 
 % aero parameters (updated 5/25/19)
 aeroParams = struct();
 aeroParams.cda = 1.73; % m^2
 aeroParams.cla = 3.77; % m^2
-aeroParams.distribution = 0.45; % proportion of downforce in front
+aeroParams.distribution = 0.5; % proportion of downforce in front
 
 % KTM engine parameters (updated 5/1/19)
 eParams = struct();
@@ -33,7 +33,7 @@ eParams.shift_time = 0.050; % seconds FOR UPSHIFT ONLY; 150ms for downshift
 
 % drivetrain parameters (updated 5/1/19)
 DTparams = struct();
-DTparams.final_drive = 45/11; % drivetrain sprocket ratio
+DTparams.final_drive = 40/11; % drivetrain sprocket ratio
 DTparams.drivetrain_efficiency = 0.92; % scales torque value
 DTparams.G_d1 = 0; % differential torque transfer offset due to internal friction
 DTparams.G_d2_overrun = 0; % differential torque transfer gain in overrun (not used right now)
@@ -51,9 +51,9 @@ tireParams.p_i = 12; % pressure
 % these parameters are non-iterable
 load('Fx_combined_parameters_run38_30.mat'); % F_x combined magic formula parameters
 tireParams.Fx_parameters = cell2mat(Xbestcell);
-load('Fy_combined_parameters_run38_new.mat'); % F_y combined magic formula parameters
+load('Fy_combined_parameters_16x10x7.5_LC0.mat'); % F_y combined magic formula parameters
 tireParams.Fy_parameters = cell2mat(Xbestcell);
-tireParams.friction_scaling_factor = 0.52; % scales tire forces to account for test/road surface difference
+tireParams.friction_scaling_factor = 0.53; % scales tire forces to account for test/road surface difference
 
 % cell array of gridded parameters
 [carCell] = parameters_loop(carParams,aeroParams,eParams,DTparams,Bparams,tireParams);

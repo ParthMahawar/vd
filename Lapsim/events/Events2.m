@@ -216,7 +216,7 @@ classdef Events2 < handle
             curvature = obj.autocross_track(2,:);
             [long_vel_final,long_accel_final,lat_accel_final,time_final] = ...
                 Track_Solver(obj,arclength,curvature);
-            obj.times.autocross = time_final;
+            obj.times.autocross = time_final*1.03; % scaling factor to reduce endurance points
             obj.autocross.time_vec = linspace(0,time_final,100000);
             obj.autocross.long_vel = long_vel_final;
             obj.autocross.long_accel = long_accel_final;

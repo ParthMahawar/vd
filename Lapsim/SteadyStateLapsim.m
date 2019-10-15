@@ -47,7 +47,7 @@ fprintf("done\n");
 
 %% Plotting
 
-for i = 1:5
+for i = 1
     comp = carCell{i,1}.comp;
     points(i) = comp.points.total;
 end
@@ -63,7 +63,7 @@ bar(points)
 car = carCell{1,1};
 
 % set desired plots to 1
-plot1 = 0; % velocity-dependent g-g diagram scatter plot
+plot1 = 1; % velocity-dependent g-g diagram scatter plot
 plot2 = 0; % velocity-dependent g-g diagram surface
 plot3 = 0; % max accel for given velocity and lateral g w/ scattered interpolant
 plot4 = 0; % max braking for given velocity and lateral w/ scattered interpolant

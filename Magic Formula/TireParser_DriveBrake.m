@@ -7,7 +7,7 @@ SA_tol = 0.1;
 
 FZ_input = -FZ_input; %convention
 
-load('A1706run30.mat');
+load('A1654run38.mat');
 
 index = [];
 
