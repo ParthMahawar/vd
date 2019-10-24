@@ -107,7 +107,10 @@ MzXni = selfaligningmoment_pure(Xnicell,alpha,Fz,pi,gamma,Mz_Fycell);
 errorXi = sum((MzXi - transpose(Mz)).^2); 
 errorXni = sum((MzXni - transpose(Mz)).^2); 
 
-if errorXni < errorXi
+rmse_Xi = sqrt(errorXi / numel(FyXi));
+rmse_Xni = sqrt(errorXni / numel(FyXni));
+
+if rmse_Xni < rmse_Xi
     Xi = Xni;
 end
 

@@ -86,7 +86,10 @@ MxXni = overturningmoment(Xnicell,Fy,Fz,pi,gamma);
 errorXi = sum((MxXi - transpose(Mx)).^2); 
 errorXni = sum((MxXni - transpose(Mx)).^2); 
 
-if errorXni < errorXi
+rmse_Xi = sqrt(errorXi / numel(FyXi));
+rmse_Xni = sqrt(errorXni / numel(FyXni));
+
+if rmse_Xni < rmse_Xi
     Xi = Xni;
 end
 

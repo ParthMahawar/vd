@@ -1,4 +1,6 @@
 close all;clc
+
+setup_paths
 %% Measured Data
 
 %pressures: 10,12,14
@@ -119,7 +121,10 @@ for iterations = 1:itermax
         errorXi = sum((FxXi - transpose(Fx)).^2);
         errorXni = sum((FyXni - transpose(Fx)).^2);
         
-        if errorXni < errorXi
+        rmse_Xi = sqrt(errorXi / numel(FyXi));
+        rmse_Xni = sqrt(errorXni / numel(FyXni));
+        
+        if rmse_Xni < rmse_Xi
             Xi = Xni;
         end
         
@@ -172,10 +177,10 @@ for iterations = 1:itermax
         plot(1:itermax,errorplot);
         xlabel('Iterations','FontSize',15);
         ylabel('Sum-Squared Error','FontSize',15);
-        if iterations<200
+        if iterations < 200
             itermin = 0;
         else
-            itermin = iterations-200;
+            itermin = iterations - 200;
         end
         xlim([itermin iterations]);
         pause(0.00001);

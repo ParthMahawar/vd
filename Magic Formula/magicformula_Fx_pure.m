@@ -112,7 +112,10 @@ for iterations = 1:itermax
         errorXi = sum((FxXi - transpose(Fx)).^2);
         errorXni = sum((FyXni - transpose(Fx)).^2);
         
-        if errorXni < errorXi
+        rmse_Xi = sqrt(errorXi / numel(FyXi));
+        rmse_Xni = sqrt(errorXni / numel(FyXni));
+        
+        if rmse_Xni < rmse_Xi
             Xi = Xni;
         end
         
@@ -259,7 +262,6 @@ if plot2 == 1
     xlabel('Iterations');
     ylabel('Sum-Squared Error');
 end
-
 
 %% Save Parameters
 
