@@ -5,6 +5,7 @@
 setup_paths
 
 load('Fy_pure_parameters_run24_9_27_19.mat')
+%load('Fy_pure_parameters_run16.mat')
 parameters{1} = Xbestcell;
 load('Fy_pure_parameters_run6_9_27_19.mat')
 parameters{2} = Xbestcell;
@@ -23,7 +24,7 @@ figure
 for i = 1:3
     Xbestcell = parameters{i};
     alpha = linspace(-13,13,1000).';
-    Fyplot = lateralforce_pure(Xbestcell,alpha,250,10,0);
+    Fyplot = lateralforce_pure(Xbestcell,alpha,100,10,0);
     plot(alpha,Fyplot,'Linewidth',3,'LineStyle',linS{i},...
         'DisplayName',label{i});
     hold on
@@ -54,7 +55,7 @@ figure
 for i = 1:3
     Xbestcell = parameters{i};
     FZ = linspace(50,250,1000).';
-    Fyplot = -lateralforce_pure(Xbestcell,12,FZ,12,0);
+    Fyplot = -lateralforce_pure(Xbestcell,6,FZ,10,0);
     x{i} = Fyplot;
     plot(FZ,Fyplot,'Linewidth',3,'LineStyle',linS{i},...
         'DisplayName',label{i});
