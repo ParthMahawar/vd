@@ -11,7 +11,7 @@ P_input = [10 12 14];
 IA_input = [0 2 4];
 FZ_input = [50 100 150 200 250 300 350];
 
-[alpha, Fy, Fz, ~, ~, gamma, pi, testrange] = TireParser_Cornering(P_input, IA_input, FZ_input, 'A1965run6.mat');
+[alpha, Fy, Fz, ~, ~, gamma, pi, testrange] = TireParser_Cornering(P_input, IA_input, FZ_input, 'A1654run24.mat');
 
 %% Parameters/Starting Population
 
@@ -176,7 +176,7 @@ Fz4 = linspace(50,300,1000).';
 
 plot2 = 0;    %turn on error plot
 
-[alpha2, Fy2, Fz2, ~, ~, gamma2, pi2, testrange2] = TireParser_Cornering(P_input2, IA_input2, FZ_input2);
+[alpha2, Fy2, Fz2, ~, ~, gamma2, pi2, testrange2] = TireParser_Cornering(P_input2, IA_input2, FZ_input2, 'A1654run24.mat');
 
 figure(1);
 set(gcf,'Position',[70,194,560,420]);
@@ -247,16 +247,4 @@ end
 
 %% Save Parameters
 
-<<<<<<< HEAD
-%save('Fy_pure_parameters.mat','Xbestcell');
-
-function plotting(code)
-    if code == 3
-        
-    elseif code == 4
-    end
-end
-    
-=======
-save('Fy_pure_parameters_run1965run6.mat','Xbestcell');
->>>>>>> 6bcafd04fdf01a104175e2854476737ab869dc63
+save('Fy_pure_parameters_run1654run24.mat','Xbestcell');
