@@ -22,7 +22,7 @@ label = {'Hoosier 18.0x7.5-10 R25B, 8 in rim',...
 %% Fy plotter
 
 figure
-for i = 1:3
+for i = 1:1
     Xbestcell = parameters{i};
     alpha = linspace(-13,13,1000).';
     Fyplot = lateralforce_pure(Xbestcell,alpha,250,12,0);

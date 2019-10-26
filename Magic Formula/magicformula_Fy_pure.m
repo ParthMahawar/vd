@@ -172,7 +172,7 @@ plot4 = 1; %turn on plotting
 alpha_input4 = 1:1:9;
 P_input4 = [12];
 IA_input4 = [0];
-FZ4 = linspace(50,300,1000).';
+Fz4 = linspace(50,300,1000).';
 
 plot2 = 0;    %turn on error plot
 
@@ -221,7 +221,7 @@ if plot4 == 1
     for a = 1:numel(P_input4)
         for b = 1:numel(IA_input4)
             for c = 1:numel(alpha_input4)
-                Fyplot4 = lateralforce_pure(Xbestcell,alpha4(:,c),FZ4,pi3(:,a),gamma4(:,b));
+                Fyplot4 = lateralforce_pure(Xbestcell,alpha4(:,c),Fz4,pi3(:,a),gamma4(:,b));
                 plot(FZ4,Fyplot4,'Linewidth',3);
                 hold on
                 %Fyplot{tony} = Fyplot4;
@@ -247,4 +247,16 @@ end
 
 %% Save Parameters
 
+<<<<<<< HEAD
+%save('Fy_pure_parameters.mat','Xbestcell');
+
+function plotting(code)
+    if code == 3
+        
+    elseif code == 4
+    end
+end
+    
+=======
 save('Fy_pure_parameters_run1965run6.mat','Xbestcell');
+>>>>>>> 6bcafd04fdf01a104175e2854476737ab869dc63
