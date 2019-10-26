@@ -12,7 +12,9 @@ P_input = 12;
 IA_input = [0];
 FZ_input = [50 100 250];
 
-[alpha, Fy, Fz, ~, Mx, gamma, pi, testrange] = TireParser_Cornering(P_input, IA_input, FZ_input);
+data_file_to_fit = 'A1654run24.mat';
+
+[alpha, Fy, Fz, ~, Mx, gamma, pi, testrange] = TireParser_Cornering(P_input, IA_input, FZ_input, data_file_to_fit);
 %% Parameters/Starting Population
 
 a = 0;           %initial interval 
@@ -171,7 +173,7 @@ P_input4 = [12];
 IA_input4 = [0];
 FZ4 = linspace(0,500,1000).';
 
-[alpha2, Fy2, Fz2, ~, Mx2, gamma2, pi2, testrange2] = TireParser_Cornering(P_input2, IA_input2, FZ_input2);
+[alpha2, Fy2, Fz2, ~, Mx2, gamma2, pi2, testrange2] = TireParser_Cornering(P_input2, IA_input2, FZ_input2, data_file_to_fit);
 
 figure(1);
 set(gcf,'Position',[70,194,560,420]);

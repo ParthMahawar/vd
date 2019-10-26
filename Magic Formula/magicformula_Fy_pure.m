@@ -11,7 +11,9 @@ P_input = [10 12 14];
 IA_input = [0 2 4];
 FZ_input = [50 100 150 200 250 300 350];
 
-[alpha, Fy, Fz, ~, ~, gamma, pi, testrange] = TireParser_Cornering(P_input, IA_input, FZ_input, 'A1654run24.mat');
+data_file_to_fit = 'A1654run24.mat';
+
+[alpha, Fy, Fz, ~, ~, gamma, pi, testrange] = TireParser_Cornering(P_input, IA_input, FZ_input, data_file_to_fit);
 
 %% Parameters/Starting Population
 
@@ -176,7 +178,7 @@ Fz4 = linspace(50,300,1000).';
 
 plot2 = 0;    %turn on error plot
 
-[alpha2, Fy2, Fz2, ~, ~, gamma2, pi2, testrange2] = TireParser_Cornering(P_input2, IA_input2, FZ_input2, 'A1654run24.mat');
+[alpha2, Fy2, Fz2, ~, ~, gamma2, pi2, testrange2] = TireParser_Cornering(P_input2, IA_input2, FZ_input2, data_file_to_fit);
 
 figure(1);
 set(gcf,'Position',[70,194,560,420]);

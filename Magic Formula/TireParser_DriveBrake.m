@@ -1,4 +1,4 @@
-function [SR_out, SA_out, FX_out, FY_out, FZ_out, MZ_out, IA_out, P_out, index] = TireParser_DriveBrake(P_input, IA_input, FZ_input,SA_input)
+function [SR_out, SA_out, FX_out, FY_out, FZ_out, MZ_out, IA_out, P_out, index] = TireParser_DriveBrake(P_input, IA_input, FZ_input,SA_input, file_name)
 
 P_tol = 0.5;
 IA_tol = 0.1;
@@ -7,7 +7,7 @@ SA_tol = 0.1;
 
 FZ_input = -FZ_input; %convention
 
-load('TTC Data/A1654run38.mat');
+load(file_name);
 
 index = [];
 

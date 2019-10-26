@@ -9,7 +9,9 @@ P_input = [10 12 14];
 IA_input = [0 2 4];
 FZ_input = [50 150 250];
 
-[alpha, Fy, Fz, Mz, ~, gamma, pi, testrange] = TireParser_Cornering(P_input, IA_input, FZ_input);
+data_file_to_fit = 'A1654run24.mat';
+
+[alpha, Fy, Fz, Mz, ~, gamma, pi, testrange] = TireParser_Cornering(P_input, IA_input, FZ_input, data_file_to_fit);
 
 %{
 alpha0 = [linspace(14,20,100).';linspace(-20,-14,100).'];
@@ -185,7 +187,7 @@ FZ_input3 = [150];
 
 plot2 = 0; %turn on error plot
 
-[alpha2, Fy2, Fz2, Mz2, ~, gamma2, pi2, testrange2] = TireParser_Cornering(P_input2, IA_input2, FZ_input2);
+[alpha2, Fy2, Fz2, Mz2, ~, gamma2, pi2, testrange2] = TireParser_Cornering(P_input2, IA_input2, FZ_input2, data_file_to_fit);
 Mz_Fycell2 = Mz_lateralforce_pure(Xbestcell_Fy,alpha2,Fz2,pi2,gamma2);
 
 figure(1);

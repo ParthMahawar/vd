@@ -48,14 +48,14 @@ scatter(alpha2,Fy2,'DisplayName','18 RB25 raw daa');
 P_input2 = [10];
 IA_input2 = [0];
 FZ_input2 = [250];
-[alpha2, Fy2, Fz2, ~, ~, gamma2, pi2, testrange2] = TireParser_Cornering_File_Name(P_input2, IA_input2, FZ_input2, 'A1965run6.mat');
+[alpha2, Fy2, Fz2, ~, ~, gamma2, pi2, testrange2] = TireParser_Cornering(P_input2, IA_input2, FZ_input2, 'A1965run6.mat');
 scatter(alpha2,Fy2,'DisplayName','16 RB25 raw data');
 
 %% 
 P_input2 = [10];
 IA_input2 = [0];
 FZ_input2 = [250];
-[alpha2, Fy2, Fz2, ~, ~, gamma2, pi2, testrange2] = TireParser_Cornering_File_Name(P_input2, IA_input2, FZ_input2, 'A1965run15.mat');
+[alpha2, Fy2, Fz2, ~, ~, gamma2, pi2, testrange2] = TireParser_Cornering(P_input2, IA_input2, FZ_input2, 'A1965run15.mat');
 scatter(alpha2,Fy2,'DisplayName','16 LC0 raw data');
 
 

@@ -11,7 +11,9 @@ IA_input = [0 2 4];
 FZ_input = [50 150 250];
 SA_input = 0;
 
-[kappa, ~, Fx, ~, Fz, ~, gamma, pi, testrange] = TireParser_DriveBrake(P_input, IA_input, FZ_input,SA_input);
+data_file_to_fit = 'A1654run24.mat';
+
+[kappa, ~, Fx, ~, Fz, ~, gamma, pi, testrange] = TireParser_DriveBrake(P_input, IA_input, FZ_input,SA_input, data_file_to_fit);
 
 %% Parameters/Starting Population
 
@@ -195,7 +197,7 @@ FZ4 = linspace(25,500,1000).';
 
 plot2 = 0;    %turn on error plot
 
-[kappa2, ~, Fx2, ~, Fz2, ~,gamma2, pi2, testrange2] = TireParser_DriveBrake(P_input2, IA_input2, FZ_input2,SA_input2);
+[kappa2, ~, Fx2, ~, Fz2, ~,gamma2, pi2, testrange2] = TireParser_DriveBrake(P_input2, IA_input2, FZ_input2,SA_input2, data_file_to_fit);
 
 figure(1);
 set(gcf,'Position',[70,194,560,420]);
