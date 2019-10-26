@@ -96,7 +96,10 @@ for iterations = 1:itermax
         errorXi = sum((FyXi - transpose(Fy)).^2);
         errorXni = sum((FyXni - transpose(Fy)).^2);
         
-        if errorXni < errorXi
+        rmse_Xi = sqrt(errorXi / numel(FyXi));
+        rmse_Xni = sqrt(errorXni / numel(FyXni));
+        
+        if rmse_Xni < rmse_Xi
             Xi = Xni;
         end
         
