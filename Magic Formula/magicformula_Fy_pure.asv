@@ -11,7 +11,7 @@ P_input = [10 12 14];
 IA_input = [0 2 4];
 FZ_input = [50 100 150 200 250 300 350];
 
-[alpha, Fy, Fz, ~, ~, gamma, pi, testrange] = TireParser_Cornering(P_input, IA_input, FZ_input, 'A1965run6.mat');
+[alpha, Fy, Fz, ~, ~, gamma, pi, testrange] = TireParser_Cornering(P_input, IA_input, FZ_input, ''A1654run24.mat');
 
 %% Parameters/Starting Population
 
@@ -23,7 +23,7 @@ F = 0.4;         %disturbing factor
 CP = 0.6;        %crossover probability
 MP = 0.6;        %mutation probability
 range = 1;       %mutation range
-itermax = 1000;   %number of iterations
+itermax = 5000;   %number of iterations
 errmin = 1e-3;   %min percent error change
 
 errorterminate = 1; % 1 for error termination
@@ -91,10 +91,7 @@ for iterations = 1:itermax
         errorXi = sum((FyXi - transpose(Fy)).^2);
         errorXni = sum((FyXni - transpose(Fy)).^2);
         
-        rmse_Xi = sqrt(errorXi / numel(FyXi));
-        rmse_Xni = sqrt(errorXni / numel(FyXni));
-        
-        if rmse_Xni < rmse_Xi
+        if errorXni < errorXi
             Xi = Xni;
         end
         
@@ -172,7 +169,7 @@ plot4 = 1; %turn on plotting
 alpha_input4 = 1:1:9;
 P_input4 = [12];
 IA_input4 = [0];
-Fz4 = linspace(50,300,1000).';
+FZ4 = linspace(50,300,1000).';
 
 plot2 = 0;    %turn on error plot
 
@@ -221,7 +218,7 @@ if plot4 == 1
     for a = 1:numel(P_input4)
         for b = 1:numel(IA_input4)
             for c = 1:numel(alpha_input4)
-                Fyplot4 = lateralforce_pure(Xbestcell,alpha4(:,c),Fz4,pi3(:,a),gamma4(:,b));
+                Fyplot4 = lateralforce_pure(Xbestcell,alpha4(:,c),FZ4,pi3(:,a),gamma4(:,b));
                 plot(FZ4,Fyplot4,'Linewidth',3);
                 hold on
                 %Fyplot{tony} = Fyplot4;
@@ -247,16 +244,4 @@ end
 
 %% Save Parameters
 
-<<<<<<< HEAD
-%save('Fy_pure_parameters.mat','Xbestcell');
-
-function plotting(code)
-    if code == 3
-        
-    elseif code == 4
-    end
-end
-    
-=======
-save('Fy_pure_parameters_run1965run6.mat','Xbestcell');
->>>>>>> 6bcafd04fdf01a104175e2854476737ab869dc63
+%save('Fy_pure_parameters_run','Xbestcell');

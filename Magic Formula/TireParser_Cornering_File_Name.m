@@ -1,4 +1,4 @@
-function [SA_out, FY_out, FZ_out, MZ_out, MX_out, IA_out, P_out, index] = TireParser_Cornering(P_input, IA_input, FZ_input, file_name)
+function [SA_out, FY_out, FZ_out, MZ_out, MX_out, IA_out, P_out, index] = TireParser_Cornering_File_Name(P_input, IA_input, FZ_input, file_name)
 
 P_tol = .8;
 IA_tol = 0.4;

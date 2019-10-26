@@ -5,12 +5,12 @@
 
 setup_paths
 
-load('Fy_pure_parameters_1654run24.mat')
+load('Fy_pure_parameters_run24_9_27_19.mat')
 %load('Fy_pure_parameters_run16.mat')
 parameters{1} = Xbestcell;
-load('Fy_pure_parameters_run1965run6.mat')
+load('Fy_pure_parameters_run6_9_27_19.mat')
 parameters{2} = Xbestcell;
-load('Fy_pure_parameters_run1965run15.mat')
+load('Fy_pure_parameters_run15_9_27_19.mat')
 parameters{3} = Xbestcell;
 
 %% Plot settings
@@ -22,10 +22,10 @@ label = {'Hoosier 18.0x7.5-10 R25B, 8 in rim',...
 %% Fy plotter
 
 figure
-for i = 1:1
+for i = 1:3
     Xbestcell = parameters{i};
     alpha = linspace(-13,13,1000).';
-    Fyplot = lateralforce_pure(Xbestcell,alpha,250,12,0);
+    Fyplot = lateralforce_pure(Xbestcell,alpha,250,10,0);
     plot(alpha,Fyplot,'Linewidth',3,'LineStyle',linS{i},...
         'DisplayName',label{i});
     hold on
@@ -37,26 +37,26 @@ ylabel('Lateral Force (lb)','FontSize',15);
 title('Lateral Force Comparison (FZ = 250, P = 10, IA = 0)',...
     'FontSize',18);
 
-%% 
+%% load('A1965run6.mat'); 
 P_input2 = [10];
 IA_input2 = [0];
 FZ_input2 = [250];
-[alpha2, Fy2, Fz2, ~, ~, gamma2, pi2, testrange2] = TireParser_Cornering(P_input2, IA_input2, FZ_input2,'A1654run24.mat');
-scatter(alpha2,Fy2,'DisplayName','18 RB25 raw daa');
+[alpha2, Fy2, Fz2, ~, ~, gamma2, pi2, testrange2] = TireParser_Cornering(P_input2, IA_input2, FZ_input2);
+scatter(alpha2,Fy2,'DisplayName','18 in raw data');
 
-%% 
+%%
 P_input2 = [10];
 IA_input2 = [0];
 FZ_input2 = [250];
-[alpha2, Fy2, Fz2, ~, ~, gamma2, pi2, testrange2] = TireParser_Cornering_File_Name(P_input2, IA_input2, FZ_input2, 'A1965run6.mat');
-scatter(alpha2,Fy2,'DisplayName','16 RB25 raw data');
+[alpha2, Fy2, Fz2, ~, ~, gamma2, pi2, testrange2] = TireParser_Cornering(P_input2, IA_input2, FZ_input2);
+scatter(alpha2,Fy2,'DisplayName','16 in raw data');
 
-%% 
+%%
 P_input2 = [10];
 IA_input2 = [0];
 FZ_input2 = [250];
-[alpha2, Fy2, Fz2, ~, ~, gamma2, pi2, testrange2] = TireParser_Cornering_File_Name(P_input2, IA_input2, FZ_input2, 'A1965run15.mat');
-scatter(alpha2,Fy2,'DisplayName','16 LC0 raw data');
+[alpha2, Fy2, Fz2, ~, ~, gamma2, pi2, testrange2] = TireParser_Cornering(P_input2, IA_input2, FZ_input2);
+scatter(alpha2,Fy2,'DisplayName','18 in raw data');
 
 
 %% Peak Fy 
