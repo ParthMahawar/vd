@@ -20,7 +20,7 @@ for i = 1:numel(P_input)
     end
 end
 
-index = index(1:end);
+index = index(1:3:end);
 
 %outputs
 SA_out = SA(index);

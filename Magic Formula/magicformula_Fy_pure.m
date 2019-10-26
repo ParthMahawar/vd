@@ -15,8 +15,8 @@ FZ_input = [50 100 150 200 250 300 350];
 
 %% Parameters/Starting Population
 
-a = -1;           %initial interval
-b = 1;
+a = -10;           %initial interval
+b = 10;
 N = 27;          %size of chromosome = number of parameters (genes)
 NP = 200;        %size of population = number of chromosomes
 F = 0.4;         %disturbing factor
