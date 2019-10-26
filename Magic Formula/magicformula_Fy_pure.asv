@@ -11,7 +11,7 @@ P_input = [10 12 14];
 IA_input = [0 2 4];
 FZ_input = [50 100 150 200 250 300 350];
 
-[alpha, Fy, Fz, ~, ~, gamma, pi, testrange] = TireParser_Cornering(P_input, IA_input, FZ_input, 'A1965run6.mat');
+[alpha, Fy, Fz, ~, ~, gamma, pi, testrange] = TireParser_Cornering(P_input, IA_input, FZ_input, ''A1654run24.mat');
 
 %% Parameters/Starting Population
 
@@ -23,7 +23,7 @@ F = 0.4;         %disturbing factor
 CP = 0.6;        %crossover probability
 MP = 0.6;        %mutation probability
 range = 1;       %mutation range
-itermax = 1000;   %number of iterations
+itermax = 5000;   %number of iterations
 errmin = 1e-3;   %min percent error change
 
 errorterminate = 1; % 1 for error termination
@@ -244,4 +244,4 @@ end
 
 %% Save Parameters
 
-save('Fy_pure_parameters_run1965run6.mat','Xbestcell');
+%save('Fy_pure_parameters_run','Xbestcell');

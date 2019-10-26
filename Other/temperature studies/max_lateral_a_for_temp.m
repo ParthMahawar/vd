@@ -1,16 +1,15 @@
-load('C:\Users\scruf\Dropbox\Aeden\FSAE\2019-2020\vd_repo\Magic Formula\TTC Documentation\Round 8 (16 in Hoosiers)\RawData_Cornering_Matlab_USCS_10inch_Round8\A1965raw15.mat')
+load('C:\Users\scruf\Dropbox\FSAE\vd\Magic Formula\TTC Documentation\Round 8 (16 in Hoosiers)\RawData_Cornering_Matlab_USCS_10inch_Round8\A1965raw15.mat')
 raw_data = [TSTC, FY];
-
 %sort all datapoints by temperature
 raw_data = transpose(raw_data);
 raw_data = sortrows(raw_data.',1).';
 
-step = 1;
+step = 3;
 max_temp_for_current_set = raw_data(1,1);
 i = 1;
 
 matrix_of_max_lat_forces = [];
-size(raw_data,2)
+
 while i < size(raw_data,2)
     temp_vector = 0;
     while raw_data(1,i) < max_temp_for_current_set && i < size(raw_data,2)
@@ -27,3 +26,4 @@ while i < size(raw_data,2)
 end
 
 plot(matrix_of_max_lat_forces(2,:), matrix_of_max_lat_forces(1,:));
+hold off;
