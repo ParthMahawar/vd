@@ -15,9 +15,11 @@ SA_tol = 0.9;
 
 FZ_input = -FZ_input; %convention
 
-load('A1654run32.mat');
 %load('A1965run14.mat');
 %load('A1965run5.mat');
+
+%load('A1654run28.mat');
+load('A1654run30.mat');
 
 index = [];
 index2 = [];
@@ -31,7 +33,7 @@ for i = 1:numel(P_input)
                 for m = 1:numel(SA_input)
                     index2 = [index2; find(P > P_input(i) - P_tol & P < P_input(i) + P_tol & IA > IA_input(j) - IA_tol...
                         & IA < IA_input(j) + IA_tol & FZ > FZ_input(k) - FZ_tol & FZ < FZ_input(k) + FZ_tol & SA > SA_input(m) - SA_tol & SA < SA_input(m) + SA_tol &...
-                        V > 0.11)];
+                        V > 0.2399 )];
                 end
         end
     end

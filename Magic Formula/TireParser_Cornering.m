@@ -1,4 +1,4 @@
-function [SA_out, FY_out, FZ_out, MZ_out, MX_out, IA_out, P_out, index] = TireParser_Cornering(P_input, IA_input, FZ_input)
+function [SA_out, FY_out, FZ_out, MZ_out, MX_out, IA_out, P_out, index] = TireParser_Cornering(P_input, IA_input, FZ_input, file_name)
 
 P_tol = .8;
 IA_tol = 0.4;
@@ -6,8 +6,7 @@ FZ_tol = 5;
 
 FZ_input = -FZ_input; %convention
 
-%load('A1654run25.mat');
-load('A1965run15.mat');
+load(file_name);
 
 index = [];
 
@@ -21,7 +20,7 @@ for i = 1:numel(P_input)
     end
 end
 
-index = index(1:10:end);
+index = index(1:3:end);
 
 %outputs
 SA_out = SA(index);

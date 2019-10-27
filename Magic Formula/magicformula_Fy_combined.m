@@ -13,7 +13,9 @@ IA_input = [0 2 4];
 FZ_input = [50 100 150 200 250];
 SA_input = [0 -3 -6];
 
-[kappa, alpha, ~, Fy, Fz, ~, gamma, pi, testrange] = TireParser_DriveBrake(P_input, IA_input, FZ_input,SA_input);
+data_file_to_fit = 'A1654run24.mat';
+
+[kappa, alpha, ~, Fy, Fz, ~, gamma, pi, testrange] = TireParser_DriveBrake(P_input, IA_input, FZ_input,SA_input, data_file_to_fit);
 
 
 %% Parameters/Starting Population
@@ -96,7 +98,10 @@ for iterations = 1:itermax
         errorXi = sum((FyXi - transpose(Fy)).^2);
         errorXni = sum((FyXni - transpose(Fy)).^2);
         
-        if errorXni < errorXi
+        rmse_Xi = sqrt(errorXi / numel(FyXi));
+        rmse_Xni = sqrt(errorXni / numel(FyXni));
+        
+        if rmse_Xni < rmse_Xi
             Xi = Xni;
         end
         
@@ -183,7 +188,7 @@ IA_input4 = [0];
 FZ_input4 = [50 150 250];
 SR_input4 = [0]; %slip ratio input for combined slip
 
-[kappa2, alpha2, ~, Fy2, Fz2, ~, gamma2, pi2, testrange2] = TireParser_DriveBrake(P_input2, IA_input2, FZ_input2,SA_input2);
+[kappa2, alpha2, ~, Fy2, Fz2, ~, gamma2, pi2, testrange2] = TireParser_DriveBrake(P_input2, IA_input2, FZ_input2,SA_input2, data_file_to_fit);
 
 figure(1);
 set(gcf,'Position',[70,194,560,420]);
@@ -247,7 +252,7 @@ if plot4 == 1
     grid on
     
     
-    [alpha5, Fy5, Fz5, ~, ~, gamma5, pi5, testrange5] = TireParser_Cornering(P_input4, IA_input4, FZ_input4);
+    [alpha5, Fy5, Fz5, ~, ~, gamma5, pi5, testrange5] = TireParser_Cornering(P_input4, IA_input4, FZ_input4, data_file_to_fit);
     hold on
     scatter(alpha5,Fy5);
     

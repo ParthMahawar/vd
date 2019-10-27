@@ -1,4 +1,6 @@
 close all;clc
+
+setup_paths
 %% Measured Data
 
 %pressures: 10,12,14
@@ -11,7 +13,9 @@ IA_input = [0];
 FZ_input = [50 150 250];
 SA_input = [0 -3 -6];
 
-[kappa, alpha, Fx, ~, Fz, ~, gamma, pi, testrange] = TireParser_DriveBrake(P_input, IA_input, FZ_input,SA_input);
+data_file_to_fit = 'A1654run24.mat';
+
+[kappa, alpha, Fx, ~, Fz, ~, gamma, pi, testrange] = TireParser_DriveBrake(P_input, IA_input, FZ_input,SA_input, data_file_to_fit);
 
 %{
 kappa1 = linspace(-0.15,0.15,500)';
@@ -119,7 +123,10 @@ for iterations = 1:itermax
         errorXi = sum((FxXi - transpose(Fx)).^2);
         errorXni = sum((FyXni - transpose(Fx)).^2);
         
-        if errorXni < errorXi
+        rmse_Xi = sqrt(errorXi / numel(FyXi));
+        rmse_Xni = sqrt(errorXni / numel(FyXni));
+        
+        if rmse_Xni < rmse_Xi
             Xi = Xni;
         end
         
@@ -172,10 +179,10 @@ for iterations = 1:itermax
         plot(1:itermax,errorplot);
         xlabel('Iterations','FontSize',15);
         ylabel('Sum-Squared Error','FontSize',15);
-        if iterations<200
+        if iterations < 200
             itermin = 0;
         else
-            itermin = iterations-200;
+            itermin = iterations - 200;
         end
         xlim([itermin iterations]);
         pause(0.00001);
@@ -233,7 +240,7 @@ IA_input4 = [0];
 FZ_input4 = [250];
 SR_input4 = [0 0.05 0.1];
 
-[kappa2, alpha2, Fx2, ~, Fz2, ~,gamma2, pi2, testrange2] = TireParser_DriveBrake(P_input2, IA_input2, FZ_input2,SA_input2);
+[kappa2, alpha2, Fx2, ~, Fz2, ~,gamma2, pi2, testrange2] = TireParser_DriveBrake(P_input2, IA_input2, FZ_input2,SA_input2, data_file_to_fit);
 
 figure(1);
 set(gcf,'Position',[70,194,560,420]);

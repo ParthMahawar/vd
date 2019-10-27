@@ -11,22 +11,24 @@ P_input = [10 12 14];
 IA_input = [0 2 4];
 FZ_input = [50 100 150 200 250 300 350];
 
-[alpha, Fy, Fz, ~, ~, gamma, pi, testrange] = TireParser_Cornering(P_input, IA_input, FZ_input);
+data_file_to_fit = 'A1654run24.mat';
+
+[alpha, Fy, Fz, ~, ~, gamma, pi, testrange] = TireParser_Cornering(P_input, IA_input, FZ_input, data_file_to_fit);
 
 %% Parameters/Starting Population
 
-a = -1;           %initial interval
-b = 1;
+a = -10;           %initial interval
+b = 10;
 N = 27;          %size of chromosome = number of parameters (genes)
 NP = 200;        %size of population = number of chromosomes
 F = 0.4;         %disturbing factor
 CP = 0.6;        %crossover probability
 MP = 0.6;        %mutation probability
 range = 1;       %mutation range
-itermax = 5000;   %number of iterations
+itermax = 1000;   %number of iterations
 errmin = 1e-3;   %min percent error change
 
-errorterminate = 0; % 1 for error termination
+errorterminate = 1; % 1 for error termination
 liveplotting = 1;   % 1 for live plotting
 
 X = a + (b-a).*rand(NP,N); %starting population
@@ -91,7 +93,10 @@ for iterations = 1:itermax
         errorXi = sum((FyXi - transpose(Fy)).^2);
         errorXni = sum((FyXni - transpose(Fy)).^2);
         
-        if errorXni < errorXi
+        rmse_Xi = sqrt(errorXi / numel(FyXi));
+        rmse_Xni = sqrt(errorXni / numel(FyXni));
+        
+        if rmse_Xni < rmse_Xi
             Xi = Xni;
         end
         
@@ -169,11 +174,11 @@ plot4 = 1; %turn on plotting
 alpha_input4 = 1:1:9;
 P_input4 = [12];
 IA_input4 = [0];
-FZ4 = linspace(50,300,1000).';
+Fz4 = linspace(50,300,1000).';
 
 plot2 = 0;    %turn on error plot
 
-[alpha2, Fy2, Fz2, ~, ~, gamma2, pi2, testrange2] = TireParser_Cornering(P_input2, IA_input2, FZ_input2);
+[alpha2, Fy2, Fz2, ~, ~, gamma2, pi2, testrange2] = TireParser_Cornering(P_input2, IA_input2, FZ_input2, data_file_to_fit);
 
 figure(1);
 set(gcf,'Position',[70,194,560,420]);
@@ -218,7 +223,7 @@ if plot4 == 1
     for a = 1:numel(P_input4)
         for b = 1:numel(IA_input4)
             for c = 1:numel(alpha_input4)
-                Fyplot4 = lateralforce_pure(Xbestcell,alpha4(:,c),FZ4,pi3(:,a),gamma4(:,b));
+                Fyplot4 = lateralforce_pure(Xbestcell,alpha4(:,c),Fz4,pi3(:,a),gamma4(:,b));
                 plot(FZ4,Fyplot4,'Linewidth',3);
                 hold on
                 %Fyplot{tony} = Fyplot4;
@@ -244,4 +249,4 @@ end
 
 %% Save Parameters
 
-%save('Fy_pure_parameters.mat','Xbestcell');
+save('Fy_pure_parameters_run1654run24.mat','Xbestcell');

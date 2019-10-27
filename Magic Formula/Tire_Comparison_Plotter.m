@@ -159,7 +159,7 @@ title('Lateral Force (FZ = 150, IA = 0)',...
 % P_input2 = [10];
 % IA_input2 = [0];
 % FZ_input2 = [150];
-% [alpha2, Fy2, Fz2, ~, ~, gamma2, pi2, testrange2] = TireParser_Cornering(P_input2, IA_input2, FZ_input2);
+% [alpha2, Fy2, Fz2, ~, ~, gamma2, pi2, testrange2] = TireParser_Cornering(P_input2, IA_input2, FZ_input2, 'A1654run24.mat');
 % scatter(alpha2,Fy2,'DisplayName','Raw Data');
 
 %% Parameter loading

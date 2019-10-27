@@ -17,7 +17,7 @@ Fy_ss = mean(Fy(round(numel(Fy)/2):end));
 
 %% Fy Transfer Function Fitting 
 data = iddata(Fy/Fy_ss,alpha,.01);
-D1 = tfest(data,2,0);
+D1 = tfest(data,3,0);
 
 opt = stepDataOptions;
 opt.StepAmplitude = mean(alpha);
@@ -30,7 +30,7 @@ scatter(time, alpha/mean(alpha),70,'.')
 hold on
 scatter(time, Fy/Fy_ss,70,'.')
 
-title('18.0 x 6.0 R25B Time vs Lateral Force','FontSize',18);
+title('18.0 x 6.0 LCO Time vs Lateral Force','FontSize',18);
 xlabel('Time (s)','FontSize',15);
 ylabel('Normalized Lateral Force','FontSize',15);
 legend({'Transfer Function','Slip Angle Step Input','Lateral Force Raw Data'}...
