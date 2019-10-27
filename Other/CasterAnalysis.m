@@ -1,7 +1,7 @@
 %% B19
 Kf = 3243; % in-lb
 Kr = 8402; % in-lb
-MR = 0.75; 
+MR = 1; 
 
 spring_travel = 0.040; % spring compression on one side with max steer
 wheel_travel = spring_travel/MR;
@@ -15,10 +15,10 @@ weight_transfer = (Kf*Kr)/(Kf+Kr)*roll_caster/track_width % lbs
 
 %% B20
 Kf = 2860; % in-lb
-Kr = 5582; % in-lb
+Kr = 3896; % in-lb
 MR = 0.75; 
 
-spring_travel = 0.075; % spring compression on one side with max steer
+spring_travel = 0.063; % spring compression on one side with max steer
 wheel_travel = spring_travel/MR;
 track_width = 47; % in
 
@@ -101,7 +101,7 @@ cornering_g = 1.5;
 cg_z = 12; % in
 track_width = 50; % in
 
-caster_weight_transfer = 30; % lb
+caster_weight_transfer = 5.39; % lb
 
 total_weight_transfer = cornering_g*cg_z*weight/track_width;
 front_weight_transfer = LLTD*total_weight_transfer;

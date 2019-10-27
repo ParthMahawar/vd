@@ -83,7 +83,7 @@ function z = ParamSweep(carCells,params)
             
             %creating words
             title([events{a} ' Points'])
-            xlabel( [params{e}])
+            xlabel( [params{e} ' (lb)'])
             ylabel('Points')
             legend('FontSize',6,'Location','NorthEast')
             

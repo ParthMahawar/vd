@@ -23,7 +23,7 @@ long_accel_matrix = long_accel_matrix(1:end-1);
 [x_table_accel] = generate_table(x_matrix);
 
 % visual check
-% plot(long_vel_guess,long_accel_matrix);
+%plot(long_vel_guess,long_accel_matrix);
 
 end
 

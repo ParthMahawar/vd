@@ -47,15 +47,16 @@ fprintf("done\n");
 
 %% Plotting
 
-for i = 1
+for i = 1:5
     comp = carCell{i,1}.comp;
     points(i) = comp.points.total;
 end
 
 %plot(points)
 bar(points)
-%set(gca,'xticklabel',{'30/11' '35/11' '40/11' '45/11' '50/11'})
-%ylim([60 110])
+set(gca,'xticklabel',{'30/11' '35/11' '40/11' '45/11' '50/11'})
+%ylim([112 114])
+ylabel('Autocross Points')
 
 %% Car Plotting
 
@@ -77,13 +78,13 @@ plotter(car,g_g_vel,plot_choice);
 %% Event Plotting
 
 % select desired comp object
-comp = carCell{1,1}.comp;
+comp = carCell{3,1}.comp;
 
 % set desired plots to 1
 plot1 = 0; % autocross track distance vs curvature
 plot2 = 0; % endurance track distance vs curvature
 plot3 = 0; % max possible velocity for given radius
-plot4 = 0; % max possible long accel for given velocity
+plot4 = 1; % max possible long accel for given velocity
 plot5 = 0; % accel event longitudinal velocity vs time
 plot6 = 0; % accel event longitudinal accel vs time
 plot7 = 0; % autocross gear shifts
