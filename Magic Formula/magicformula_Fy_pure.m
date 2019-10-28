@@ -11,7 +11,7 @@ P_input = [10 12 14];
 IA_input = [0 2 4];
 FZ_input = [50 100 150 200 250 300 350];
 
-data_file_to_fit = 'A1654run24.mat';
+data_file_to_fit = 'A1965run15.mat';
 
 [alpha, Fy, Fz, ~, ~, gamma, pi, testrange] = TireParser_Cornering(P_input, IA_input, FZ_input, data_file_to_fit);
 
@@ -249,4 +249,4 @@ end
 
 %% Save Parameters
 
-save('Fy_pure_parameters_run1654run24.mat','Xbestcell');
+save('Fy_pure_parameters_1965run15.mat','Xbestcell');

@@ -8,9 +8,9 @@ setup_paths
 load('Fy_pure_parameters_1654run24.mat')
 %load('Fy_pure_parameters_run16.mat')
 parameters{1} = Xbestcell;
-load('Fy_pure_parameters_run1965run6.mat')
+load('Fy_pure_parameters_1965run6.mat')
 parameters{2} = Xbestcell;
-load('Fy_pure_parameters_run1965run15.mat')
+load('Fy_pure_parameters_1965run15.mat')
 parameters{3} = Xbestcell;
 
 %% Plot settings
@@ -22,10 +22,10 @@ label = {'Hoosier 18.0x7.5-10 R25B, 8 in rim',...
 %% Fy plotter
 
 figure
-for i = 1:1
+for i = 1:3
     Xbestcell = parameters{i};
     alpha = linspace(-13,13,1000).';
-    Fyplot = lateralforce_pure(Xbestcell,alpha,250,12,0);
+    Fyplot = lateralforce_pure(Xbestcell,alpha,250,10,0);
     plot(alpha,Fyplot,'Linewidth',3,'LineStyle',linS{i},...
         'DisplayName',label{i});
     hold on
@@ -61,6 +61,7 @@ scatter(alpha2,Fy2,'DisplayName','16 LC0 raw data');
 
 %% Peak Fy 
 
+
 figure
 for i = 1:3
     Xbestcell = parameters{i};
@@ -78,13 +79,18 @@ ylabel('Lateral Force (lb)','FontSize',15);
 title('Peak Lateral Force Comparison (P = 10, IA = 0)',...
     'FontSize',18);
 
+
 figure
 percent_reduction = (x{3}-x{1})./x{1};
-plot(FZ,percent_reduction*100);
+plot(FZ,percent_reduction*100,'DisplayName','Loss from 18" R25B to 16" LC0');
+hold on
+percent_reduction = (x{2}-x{1})./x{1};
+plot(FZ,percent_reduction*100,'DisplayName','Loss from 18" R25B to 16" R25B');
 xlabel('Normal Load (lb)','FontSize',15);
 ylabel('Percent Reduction in Peak Lateral Force','FontSize',15);
 title('Peak Lateral Force Decrease (P = 10, IA = 0)',...
     'FontSize',18);
+legend('Location','best')
 
 %% Cornering Stiffness Comparison
 
