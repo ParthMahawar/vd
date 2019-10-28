@@ -29,5 +29,7 @@ for i = 1:5
     gear_ratio = gears_350(i)*primary_reduction_450*final_drive_450;
     plot(KTM450_T(1,:)/gear_ratio,KTM450_T(2,:)*gear_ratio,'b');
 end
+
+
     
 

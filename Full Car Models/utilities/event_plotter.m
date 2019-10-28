@@ -31,7 +31,8 @@ if plot_choice(4)
 end
 
 if plot_choice(5)
-    figure
+    %figure
+    hold on
     plot(comp.accel.time_vec,comp.accel.long_vel_vector)
     title('Accel')
     xlabel('Time (s)')
