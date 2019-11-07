@@ -1,14 +1,15 @@
-function [] = plotter(vel_matrix_accel,vel_matrix_braking,max_vel,g_g_vel,plot_choice)
-%UNTITLED7 Summary of this function goes here
-%   Detailed explanation goes here
+function [] = plotter(car,g_g_vel,plot_choice)
+% plotting gg-diagram variations for car
 
-lat_g_accel = vel_matrix_accel(1,:);
-long_g_accel = vel_matrix_accel(2,:);
-vel_accel = vel_matrix_accel(3,:);
+max_vel = car.max_vel;
 
-lat_g_braking = vel_matrix_braking(1,:);
-long_g_braking = vel_matrix_braking(2,:);
-vel_braking = vel_matrix_braking(3,:);
+long_g_accel = car.longAccelLookup(:,1)'/9.81;
+lat_g_accel = car.longAccelLookup(:,2)'/9.81;
+vel_accel = car.longAccelLookup(:,3)';
+
+long_g_braking = car.longDecelLookup(:,1)'/9.81;
+lat_g_braking = car.longDecelLookup(:,2)'/9.81;
+vel_braking = car.longDecelLookup(:,3)';
     
 if plot_choice(1)
     % g-g diagram for different velocities, scatter plot    
@@ -42,49 +43,6 @@ if plot_choice(2)
 end
 
 if plot_choice(3)
-    % Finding max accel for given lat_g and velocity    
-    figure
-    
-    x = lat_g_accel;
-    y = vel_accel;
-    z = long_g_accel;
-
-    [xi,yi] = meshgrid(-2:0.05:2, 0:0.05:max_vel);
-    zi = griddata(x,y,z,xi,yi);
-    mesh(xi,yi,zi);
-    title('Max Accel','FontSize',18)    
-    xlabel('Lat G','FontSize',15)
-    ylabel('Velocity','FontSize',15)
-    zlabel('Long G','FontSize',15)
-
-    hold on
-    scatter3(x,y,z);
-    hold off
-end
-
-if plot_choice(4)
-    % Finding max braking for given lat_g and velocity    
-    figure
-    
-    x = lat_g_braking;
-    y = vel_braking;
-    z = long_g_braking;
-
-    [xi,yi] = meshgrid(-2:0.05:2, 0:0.05:max_vel);
-    zi = griddata(x,y,z,xi,yi);
-    mesh(xi,yi,zi);
-    title('Max Braking','FontSize',18)    
-    xlabel('Lat G')
-    ylabel('Velocity')
-    zlabel('Long G')
-
-    hold on
-    scatter3(x,y,z)
-    hold off
-end
-
-if plot_choice(5)
-    % scattered interpolant version of plot 3    
     figure
     
     x = lat_g_accel;
@@ -108,8 +66,7 @@ if plot_choice(5)
     hold off
 end
 
-if plot_choice(6)
-    % scattered interpolant version of plot 4
+if plot_choice(4)
     figure
     
     x = lat_g_braking;
@@ -133,11 +90,12 @@ if plot_choice(6)
     hold off
 end
 
-if plot_choice(7)
+if plot_choice(5)
     % 2D g-g diagram at specified velocity
     figure    
     
     for i = 1:numel(g_g_vel)
+        
         index_accel = vel_accel == g_g_vel(i);
         index_braking = vel_braking == g_g_vel(i);
 

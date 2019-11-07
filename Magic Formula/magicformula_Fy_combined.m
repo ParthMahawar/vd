@@ -308,10 +308,11 @@ if plot4 == 1
     legend('1','2','3','4','5','6','7','8','9');
 end
 %% Save Parameters
+load('Fy_combined_parameters_18x10x7.5_R25B.mat')
 combined_parameters = Xbestcell;
-load('Fy_pure_parameters_run15_9_27_19.mat')
+load('TemperatureCompensated_Fy_pure_parameters_1965run15.mat')
 combined_parameters(1:27) = Xbestcell(1:27);
 Xbestcell = combined_parameters;
 
-save('Fy_combined_parameters_run15_9_27_19.mat','Xbestcell');
+save('TemperatureCompensated_Fy_combined_parameters_1965run6.mat','Xbestcell');
 

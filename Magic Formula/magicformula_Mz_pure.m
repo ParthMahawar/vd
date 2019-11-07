@@ -5,9 +5,9 @@ clear all;close all;clc
 %camber values: 0,2,4
 %normal force values: 50,100,150,250,350				
 
-P_input = [10 12 14];
-IA_input = [0 2 4];
-FZ_input = [50 150 250];
+P_input = [12];
+IA_input = [0];
+FZ_input = [250];
 
 data_file_to_fit = 'A1654run24.mat';
 
@@ -109,8 +109,8 @@ MzXni = selfaligningmoment_pure(Xnicell,alpha,Fz,pi,gamma,Mz_Fycell);
 errorXi = sum((MzXi - transpose(Mz)).^2); 
 errorXni = sum((MzXni - transpose(Mz)).^2); 
 
-rmse_Xi = sqrt(errorXi / numel(FyXi));
-rmse_Xni = sqrt(errorXni / numel(FyXni));
+rmse_Xi = sqrt(errorXi / numel(MzXi));
+rmse_Xni = sqrt(errorXni / numel(MzXi));
 
 if rmse_Xni < rmse_Xi
     Xi = Xni;
@@ -183,7 +183,7 @@ plot3 = 1;    %turn on plotting
 alpha3 = linspace(-10,10,1000).';
 P_input3 = [12];
 IA_input3 = [0];
-FZ_input3 = [150];
+FZ_input3 = [250];
 
 plot2 = 0; %turn on error plot
 
@@ -215,6 +215,7 @@ if plot3 == 1
         end
     end
         
+    hold on
     figure(3)
     set(gcf,'Position',[656,194,560,420]);
     for a = 1:numel(P_input3)
