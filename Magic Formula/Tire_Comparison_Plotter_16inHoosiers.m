@@ -8,10 +8,9 @@ setup_paths
 load('Lapsim_Fy_pure_parameters_1654run24_camber2.mat')
 %load('Fy_pure_parameters_run16.mat')
 parameters{1} = Xbestcell;
-%load('Lapsim_Fy_pure_parameters_1965run6_2.mat')
-load('Lapsim_Fy_pure_parameters_1965run6_camber.mat')
+load('Fy_pure_parameters_1965run6.mat')
 parameters{2} = Xbestcell;
-load('Lapsim_Fy_pure_parameters_1965run15_camber.mat')
+load('Fy_pure_parameters_1965run15.mat')
 parameters{3} = Xbestcell;
 
 %% Plot settings
@@ -67,6 +66,7 @@ title('16x7.5-10 LC0')
 
 %% Peak Fy 
 
+
 figure
 for i = 1:3
     Xbestcell = parameters{i};
@@ -84,16 +84,18 @@ ylabel('Lateral Force (lb)','FontSize',15);
 title('Peak Lateral Force Comparison (P = 12, IA = 0)',...
     'FontSize',18);
 
+
 figure
-percent_reduction = (x{2}-x{1})./x{1};
-plot(FZ,percent_reduction*100);
 percent_reduction = (x{3}-x{1})./x{1};
+plot(FZ,percent_reduction*100,'DisplayName','Loss from 18" R25B to 16" LC0');
 hold on
-plot(FZ,percent_reduction*100);
+percent_reduction = (x{2}-x{1})./x{1};
+plot(FZ,percent_reduction*100,'DisplayName','Loss from 18" R25B to 16" R25B');
 xlabel('Normal Load (lb)','FontSize',15);
 ylabel('Percent Reduction in Peak Lateral Force','FontSize',15);
 title('Peak Lateral Force Decrease (P = 12, IA = 0)',...
     'FontSize',18);
+legend('Location','best')
 
 legend('18 R25B to 16 R25B','18 R25B to 16 LC0')
 
