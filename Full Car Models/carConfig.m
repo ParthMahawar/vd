@@ -19,7 +19,7 @@ carParams.I_zz = 83.28; %kg-m^2
 aeroParams = struct();
 aeroParams.cda = 1.73; % m^2
 aeroParams.cla = 3.77; % m^2
-aeroParams.distribution = 0.6; % proportion of downforce in front
+aeroParams.distribution = 0.4; % proportion of downforce in front
 
 % KTM engine parameters (updated 5/1/19)
 eParams = struct();

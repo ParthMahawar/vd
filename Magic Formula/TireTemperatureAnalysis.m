@@ -3,7 +3,7 @@ setup_paths
 %% Temperature and Slip Angle vs Time
 load('A1654raw24.mat')
 figure
-ax1 = subplot(3,1,1);
+%ax1 = subplot(3,1,1);
 plot(ET,TSTC)
 hold on
 
@@ -13,11 +13,12 @@ plot(ET,TSTC)
 load('A1965raw15.mat')
 plot(ET,TSTC)
 
-xlim([0 90])
+xlim([0 500])
 xlabel('Time (s)')
 ylabel('Tire Center Surface Temperature (F)')
 legend('18x7.5-10 R25B','16x7.5-10 R25B','16x7.5-10 LC0')
 
+%%
 ax2 = subplot(3,1,2);
 plot(ET,SA)
 
@@ -99,7 +100,7 @@ legend('18x7.5-10 R25B','16x7.5-10 R25B','16x7.5-10 LC0')
 
 %% Good Stuff 3
 figure
-ET_input = [400 900];
+ET_input = [0 200];
 SA_input = -11;
 
 file_name = 'A1654raw24.mat';
@@ -266,4 +267,31 @@ plot(SA_out,TSTC_out)
 
 figure
 plot(TSTC_out,-FY_out)
+
+%%
+figure
+ET_input = [0 10000];
+SA_input = [-11];
+P_input = 12;
+IA_input = 0;
+FZ_input = [50 150 250];
+
+file_name = 'A1654raw24.mat';
+[SA_out, FY_out, FZ_out, P_out, TSTC_out, ET_out, index] = TireTemperatureParser3(ET_input,P_input, IA_input, FZ_input, SA_input, file_name);
+
+scatter(TSTC_out,FY_out);
+hold on
+
+file_name = 'A1965raw6.mat';
+[SA_out, FY_out, FZ_out, P_out, TSTC_out, ET_out, index] = TireTemperatureParser3(ET_input,P_input, IA_input, FZ_input, SA_input, file_name);
+scatter(TSTC_out,FY_out);
+
+file_name = 'A1965raw15.mat';
+[SA_out, FY_out, FZ_out, P_out, TSTC_out, ET_out, index] = TireTemperatureParser3(ET_input,P_input, IA_input, FZ_input, SA_input, file_name);
+
+scatter(TSTC_out,FY_out);
+xlabel('Temperature (F)')
+ylabel('Friction Coefficient')
+legend('18x7.5-10 R25B','16x7.5-10 R25B','16x7.5-10 LC0')
+
 

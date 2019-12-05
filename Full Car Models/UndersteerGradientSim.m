@@ -94,16 +94,22 @@ end
 % xlabel('Radius (m)')
 % ylabel('Max Lat Accel (g)')
 % 
-figure
-for i = 1:numel(radius_vec)
-    plot(lat_accel_vec{i}(2:end)/9.81, K_vec{i});
-    %plot(K_vec{i});
-    hold on
-    xlabel('Lateral Accel (g)','FontSize',15)
-    ylabel('Understeer Gradient (deg/g)','FontSize',15)
-end
-legend('Radius = 5 m')
-xlim([0.2 inf]);
+
+
+% figure
+% for i = 1:numel(radius_vec)
+%     plot(lat_accel_vec{i}(2:end)/9.81, K_vec{i});
+%     %plot(K_vec{i});
+%     hold on
+%     xlabel('Lateral Accel (g)','FontSize',15)
+%     ylabel('Understeer Gradient (deg/g)','FontSize',15)
+% end
+% legend('Radius = 5 m')
+% xlim([0.2 inf]);
+
+
+
+
 % 
 % figure
 % for i = 1:numel(radius_vec)
@@ -115,15 +121,16 @@ xlim([0.2 inf]);
 % legend('Radius = 5 m')
 % xlim([0.2 inf]);
 % 
-figure
+%figure
 for i = 1:numel(radius_vec)
     max_K(i) = K_vec{i}(end);
     hold on
     xlabel('Radius','FontSize',15)
     ylabel('Understeer Gradient (deg/g)','FontSize',15)
 end
-plot(radius_vec, max_K);
-title('UG at max g')
+load('file.mat')
+plot(radius_vec, max_K-max_vec_default);
+title('Change in UG at max g from no aero car')
 
 % figure
 % for i = 1:numel(radius_vec)
@@ -135,8 +142,8 @@ title('UG at max g')
 % plot(radius_vec,linear_K);
 % title('UG at 0 g')
 
-%legend('CP = 0.45','CP = 0.5','CP = 0.55', 'CP = 0.6')
-legend('CLA = 0')
+legend('CP = 0.45','CP = 0.5','CP = 0.55', 'CP = 0.6')
+%legend('CLA = 0')
 %%
 figure
 for i = 1:numCars
