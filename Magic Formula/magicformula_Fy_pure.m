@@ -1,4 +1,4 @@
-%clear all;close all;clc
+clear all;close all;clc
 %% Measured Data
 
 %pressure values: 10,12,14
@@ -6,6 +6,14 @@
 %normal force values: 50,100,150,200,250
 
 setup_paths
+
+load('TemperatureCompensated_18R25B.mat')
+alpha = SA_out;
+Fy = FY_out;
+Fz = FZ_out;
+gamma = IA_out;
+pi = P_out;
+testrange = index;
 
 P_input = [10 12 14];
 IA_input = [0 2 4];
@@ -17,8 +25,8 @@ data_file_to_fit = 'A1965run15.mat';
 
 %% Parameters/Starting Population
 
-a = -10;           %initial interval
-b = 10;
+a = -1;           %initial interval
+b = 1;
 N = 27;          %size of chromosome = number of parameters (genes)
 NP = 200;        %size of population = number of chromosomes
 F = 0.4;         %disturbing factor
@@ -159,7 +167,7 @@ end
 
 % plotting tested parameters
 P_input2 = [12];
-IA_input2 = [0 2 4];
+IA_input2 = [0];
 FZ_input2 = [50 150 250];
 
 %plotting non-tested parameters
@@ -249,4 +257,5 @@ end
 
 %% Save Parameters
 
+save('Lapsim_Fy_pure_parameters_1654run24_camber.mat','Xbestcell');
 save('Fy_pure_parameters_1965run15.mat','Xbestcell');

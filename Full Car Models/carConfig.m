@@ -2,7 +2,7 @@ function carCell = carConfig()
 
 % car parameters (updated 5/25/19)
 carParams = struct();
-carParams.mass = [159.2 169.2 179.2 189.2 199.2]; % not including driver (395 lb)
+carParams.mass = 179.2; % not including driver (395 lb)
 carParams.driver_weight = 68; % (150 lb)
 carParams.accel_driver_weight = 68; % (150 lb)
 carParams.wheelbase = 1.5494; % 61 in
@@ -19,7 +19,7 @@ carParams.I_zz = 83.28; %kg-m^2
 aeroParams = struct();
 aeroParams.cda = 1.73; % m^2
 aeroParams.cla = 3.77; % m^2
-aeroParams.distribution = 0.5; % proportion of downforce in front
+aeroParams.distribution = 0.4; % proportion of downforce in front
 
 % KTM engine parameters (updated 5/1/19)
 eParams = struct();
@@ -51,7 +51,7 @@ tireParams.p_i = 12; % pressure
 % these parameters are non-iterable
 load('Fx_combined_parameters_run38_30.mat'); % F_x combined magic formula parameters
 tireParams.Fx_parameters = cell2mat(Xbestcell);
-load('Fy_combined_parameters_16x10x7.5_R25B.mat'); % F_y combined magic formula parameters
+load('Lapsim_Fy_combined_parameters_1654run24.mat'); % F_y combined magic formula parameters
 tireParams.Fy_parameters = cell2mat(Xbestcell);
 tireParams.friction_scaling_factor = 0.55; % scales tire forces to account for test/road surface difference
 

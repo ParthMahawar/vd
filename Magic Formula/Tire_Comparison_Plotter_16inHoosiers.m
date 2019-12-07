@@ -5,7 +5,7 @@
 
 setup_paths
 
-load('Fy_pure_parameters_1654run24.mat')
+load('Lapsim_Fy_pure_parameters_1654run24_camber2.mat')
 %load('Fy_pure_parameters_run16.mat')
 parameters{1} = Xbestcell;
 load('Fy_pure_parameters_1965run6.mat')
@@ -14,7 +14,7 @@ load('Fy_pure_parameters_1965run15.mat')
 parameters{3} = Xbestcell;
 
 %% Plot settings
-linS = {'-','-','--','--',':',':','-.','-.'};
+linS = {'-','-','-','--',':',':','-.','-.'};
 label = {'Hoosier 18.0x7.5-10 R25B, 8 in rim',...
     'Hoosier 16.0x7.5-10 R25B, 8 in rim'...
     'Hoosier 16.0x7.5-10 LC0, 8 in rim'};
@@ -23,40 +23,45 @@ label = {'Hoosier 18.0x7.5-10 R25B, 8 in rim',...
 
 figure
 for i = 1:3
+    for j = 250
     Xbestcell = parameters{i};
-    alpha = linspace(-13,13,1000).';
-    Fyplot = lateralforce_pure(Xbestcell,alpha,250,10,0);
+    alpha = linspace(-12,12,1000).';
+    Fyplot = lateralforce_pure(Xbestcell,alpha,j,12,0);
     plot(alpha,Fyplot,'Linewidth',3,'LineStyle',linS{i},...
         'DisplayName',label{i});
     hold on
+    end
 end
 
 legend
 xlabel('Slip Angle (deg)','FontSize',15);
 ylabel('Lateral Force (lb)','FontSize',15);
-title('Lateral Force Comparison (FZ = 250, P = 10, IA = 0)',...
+title('Lateral Force Comparison (FZ = 250, P = 12, IA = 0)',...
     'FontSize',18);
 
 %% 
-P_input2 = [10];
+P_input2 = [12];
 IA_input2 = [0];
-FZ_input2 = [250];
+FZ_input2 = [50 150 250];
 [alpha2, Fy2, Fz2, ~, ~, gamma2, pi2, testrange2] = TireParser_Cornering(P_input2, IA_input2, FZ_input2,'A1654run24.mat');
-scatter(alpha2,Fy2,'DisplayName','18 RB25 raw daa');
+scatter(alpha2,Fy2,'DisplayName','18 RB25 raw data');
+title('18x7.5-10 R25B')
 
 %% 
-P_input2 = [10];
+P_input2 = [12];
 IA_input2 = [0];
-FZ_input2 = [250];
+FZ_input2 = [50 150 250];
 [alpha2, Fy2, Fz2, ~, ~, gamma2, pi2, testrange2] = TireParser_Cornering(P_input2, IA_input2, FZ_input2, 'A1965run6.mat');
 scatter(alpha2,Fy2,'DisplayName','16 RB25 raw data');
+title('16x7.5-10 R25B')
 
 %% 
-P_input2 = [10];
+P_input2 = [12];
 IA_input2 = [0];
-FZ_input2 = [250];
+FZ_input2 = [50 150 250];
 [alpha2, Fy2, Fz2, ~, ~, gamma2, pi2, testrange2] = TireParser_Cornering(P_input2, IA_input2, FZ_input2, 'A1965run15.mat');
 scatter(alpha2,Fy2,'DisplayName','16 LC0 raw data');
+title('16x7.5-10 LC0')
 
 
 %% Peak Fy 
@@ -66,7 +71,7 @@ figure
 for i = 1:3
     Xbestcell = parameters{i};
     FZ = linspace(50,250,1000).';
-    Fyplot = -lateralforce_pure(Xbestcell,6,FZ,10,0);
+    Fyplot = -lateralforce_pure(Xbestcell,12,FZ,12,0);
     x{i} = Fyplot;
     plot(FZ,Fyplot,'Linewidth',3,'LineStyle',linS{i},...
         'DisplayName',label{i});
@@ -76,7 +81,7 @@ end
 legend('Location','best')
 xlabel('Normal Load (lb)','FontSize',15);
 ylabel('Lateral Force (lb)','FontSize',15);
-title('Peak Lateral Force Comparison (P = 10, IA = 0)',...
+title('Peak Lateral Force Comparison (P = 12, IA = 0)',...
     'FontSize',18);
 
 
@@ -88,9 +93,11 @@ percent_reduction = (x{2}-x{1})./x{1};
 plot(FZ,percent_reduction*100,'DisplayName','Loss from 18" R25B to 16" R25B');
 xlabel('Normal Load (lb)','FontSize',15);
 ylabel('Percent Reduction in Peak Lateral Force','FontSize',15);
-title('Peak Lateral Force Decrease (P = 10, IA = 0)',...
+title('Peak Lateral Force Decrease (P = 12, IA = 0)',...
     'FontSize',18);
 legend('Location','best')
+
+legend('18 R25B to 16 R25B','18 R25B to 16 LC0')
 
 %% Cornering Stiffness Comparison
 
@@ -107,16 +114,23 @@ end
 legend('Location','best')
 xlabel('Normal Load (lb)','FontSize',15);
 ylabel('Cornering Stiffness (lb/deg)','FontSize',15);
-title('Cornering Stiffness Comparison (P = 10, IA = 0)',...
+title('Cornering Stiffness Comparison (P = 12, IA = 0)',...
     'FontSize',18);
 
 figure
 percent_reduction = (x{2}-x{1})./x{1};
 plot(FZ,percent_reduction*100);
+hold on
+
+percent_reduction = (x{3}-x{1})./x{1};
+plot(FZ,percent_reduction*100);
+
 xlabel('Normal Load (lb)','FontSize',12);
 ylabel('Percent Reduction in Cornering Stiffness','FontSize',12);
 title('Cornering Stiffness Reduction (P = 12, IA = 0)',...
     'FontSize',15);
+
+legend('18 R25B to 16 R25B','18 R25B to 16 LC0')
 
 %% Peak Fy Tire Pressure Sensitivity
 
@@ -197,8 +211,8 @@ figure
 
 for j = [0 2 4]
     Xbestcell = parameters{2};
-    alpha = linspace(-15,15,1000).';
-    Fyplot = lateralforce_pure(Xbestcell,alpha,150,12,j);
+    alpha = linspace(-12,12,1000).';
+    Fyplot = lateralforce_pure(Xbestcell,alpha,250,12,j);
     plot(alpha,Fyplot,'Linewidth',3,'DisplayName',['Camber = ' num2str(j)]);
     hold on
 end
@@ -206,7 +220,7 @@ end
 legend
 xlabel('Slip Angle (deg)','FontSize',15);
 ylabel('Lateral Force (lb)','FontSize',15);
-title('Lateral Force (FZ = 150, P = 12, IA = 0)',...
+title('Lateral Force (FZ = 250, P = 12, IA = 0)',...
     'FontSize',18);
 
 %% Peak Fy Tire Camber Sensitivity
@@ -225,7 +239,7 @@ end
 
 legend('Location','best')
 xlabel('Camber (deg)','FontSize',15);
-ylabel('Lateral Force (lb)','FontSize',15);
-title('Peak Lateral Force (FZ = 150, P = 12)',...
+ylabel('Normalized Lateral Force','FontSize',15);
+title('Peak Lateral Force (FZ = 250, P = 12)',...
     'FontSize',18);
 

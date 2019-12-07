@@ -211,7 +211,7 @@ title('Lateral Force (FZ = 150, P = 12, IA = 0)',...
 
 figure
 
-for i = 6
+for i = 1:8
     Xbestcell = parameters{i};
     IA = linspace(-2,2,1000).';
     Fyplot = -lateralforce_pure(Xbestcell,-12,150,12,IA);

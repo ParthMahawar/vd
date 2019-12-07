@@ -1,7 +1,7 @@
 %% Inputs
 setup_paths
 
-weight_dist = 0.5; % rearwards
+weight_dist = 0.54; % rearwards
 m = 535*0.453592; % mass, kg
 L = 1.6; % wheelbase, m
 
@@ -9,7 +9,7 @@ load('Fy_pure_parameters_run24_new2.mat')
 C_f = 0.55*2*4.448*cornering_stiffness(Xbestcell,0,535*(1-weight_dist),12,0);
 C_r = 0.55*2*4.448*cornering_stiffness(Xbestcell,0,535*(weight_dist),12,0);
 
-u = 20; % forward velocity, m/s
+u = 10; % forward velocity, m/s
 
 I_zz = 83.28; % yaw inertia, kg-m^2
 %C_f = 136*4.448; % front cornering stiffness, N/deg @ 150 lb
@@ -22,8 +22,8 @@ N = 4; % steering ratio
 a = L*weight_dist; % front axle to cg, m
 b = L*(1-weight_dist); % rear axle to cg, m
 
-D_f = (g*m*b)/(L*C_f); % front cornering compliance, deg/g
-D_r = (g*m*a)/(L*C_r); % rear cornering compliance, deg/g
+D_f = 1.5*(g*m*b)/(L*C_f); % front cornering compliance, deg/g
+D_r = 1.5*(g*m*a)/(L*C_r); % rear cornering compliance, deg/g
 
 % r = yaw velocity, rad/sec
 % beta = sideslip angle, rad

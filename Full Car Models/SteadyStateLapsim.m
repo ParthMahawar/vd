@@ -43,7 +43,7 @@ end
 fprintf("done\n");
 
 %% Saving
-%save('ActiveAero4.mat','carCell');
+save('Lapsim18R25B_minus10kg.mat','carCell');
 
 %% Plotting
 

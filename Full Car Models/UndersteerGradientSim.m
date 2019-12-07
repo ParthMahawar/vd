@@ -45,7 +45,7 @@ end
 end
 
 %% Radius Sweep
-radius_vec= linspace(5,15,10); % m 
+radius_vec= linspace(5,30,10); % m 
 
 for i = 1:numel(radius_vec)
     radius = radius_vec(i);
@@ -67,69 +67,83 @@ for i = 1:numel(radius_vec)
 end
 
 %% Plotting Parameter Sweep
-figure
-for i = 1:numCars
-    plot(lat_accel_vec{i}/9.81,steer_angle_vec{i})
-    hold on
-    xlabel('Lateral Accel (g)')
-    ylabel('Steer Angle (deg)')
-end
-%legend('0.51','0.53','0.55','0.57')
-legend('LLTD = 0.3', '0.4', '0.5', '0.6')
+% figure
+% for i = 1:numCars
+%     plot(lat_accel_vec{i}/9.81,steer_angle_vec{i})
+%     hold on
+%     xlabel('Lateral Accel (g)')
+%     ylabel('Steer Angle (deg)')
+% end
+% %legend('0.51','0.53','0.55','0.57')
+% legend('LLTD = 0.3', '0.4', '0.5', '0.6')
+% 
+% figure
+% for i = 1:numCars
+%     plot(lat_accel_vec{i}(2:end)/9.81, K_vec{i});
+%     xlabel('Lateral Accel (g)','FontSize',15)
+%     ylabel('Understeer Gradient (deg/g)','FontSize',15)
+% end
+% %legend('0.51','0.53','0.55','0.57')
+% %legend('LLTD = 0.3', '0.4', '0.5', '0.6')
+% 
+% 
+% %% Plotting radius sweep
+% 
+% figure
+% plot(radius_vec,max_lat_accel_vec)
+% xlabel('Radius (m)')
+% ylabel('Max Lat Accel (g)')
+% 
 
-figure
-for i = 1:numCars
-    plot(lat_accel_vec{i}(2:end)/9.81, K_vec{i});
-    xlabel('Lateral Accel (g)','FontSize',15)
-    ylabel('Understeer Gradient (deg/g)','FontSize',15)
-end
-%legend('0.51','0.53','0.55','0.57')
-%legend('LLTD = 0.3', '0.4', '0.5', '0.6')
+
+% figure
+% for i = 1:numel(radius_vec)
+%     plot(lat_accel_vec{i}(2:end)/9.81, K_vec{i});
+%     %plot(K_vec{i});
+%     hold on
+%     xlabel('Lateral Accel (g)','FontSize',15)
+%     ylabel('Understeer Gradient (deg/g)','FontSize',15)
+% end
+% legend('Radius = 5 m')
+% xlim([0.2 inf]);
 
 
-%% Plotting radius sweep
 
-figure
-plot(radius_vec,max_lat_accel_vec)
 
-figure
+% 
+% figure
+% for i = 1:numel(radius_vec)
+%     plot(lat_accel_vec{i}/9.81, steer_angle_vec{i});
+%     hold on
+%     xlabel('Lateral Accel (g)','FontSize',15)
+%     ylabel('Steer Angle (deg)')
+% end
+% legend('Radius = 5 m')
+% xlim([0.2 inf]);
+% 
+%figure
 for i = 1:numel(radius_vec)
-    plot(lat_accel_vec{i}(2:end)/9.81, K_vec{i});
-    hold on
-    xlabel('Lateral Accel (g)','FontSize',15)
-    ylabel('Understeer Gradient (deg/g)','FontSize',15)
-end
-legend('Radius = 5 m')
-xlim([0.2 inf]);
-
-figure
-for i = 1:numel(radius_vec)
-    plot(lat_accel_vec{i}/9.81, steer_angle_vec{i});
-    hold on
-    xlabel('Lateral Accel (g)','FontSize',15)
-    ylabel('Steer Angle (deg)')
-end
-legend('Radius = 5 m')
-xlim([0.2 inf]);
-
-figure
-for i = 1:numel(radius_vec)
-    max_K(i) = max(K_vec{i});
+    max_K(i) = K_vec{i}(end);
     hold on
     xlabel('Radius','FontSize',15)
     ylabel('Understeer Gradient (deg/g)','FontSize',15)
 end
-plot(radius_vec, max_K);
+load('file.mat')
+plot(radius_vec, max_K-max_vec_default);
+title('Change in UG at max g from no aero car')
 
-figure
-for i = 1:numel(radius_vec)
-    linear_K(i) = K_vec{i}(1);
-    hold on
-    xlabel('Radius','FontSize',15)
-    ylabel('Understeer Gradient (deg/g)','FontSize',15)
-end
-plot(radius_vec,linear_K);
+% figure
+% for i = 1:numel(radius_vec)
+%     linear_K(i) = K_vec{i}(1);
+%     hold on
+%     xlabel('Radius','FontSize',15)
+%     ylabel('Understeer Gradient (deg/g)','FontSize',15)
+% end
+% plot(radius_vec,linear_K);
+% title('UG at 0 g')
 
+legend('CP = 0.45','CP = 0.5','CP = 0.55', 'CP = 0.6')
+%legend('CLA = 0')
 %%
 figure
 for i = 1:numCars
