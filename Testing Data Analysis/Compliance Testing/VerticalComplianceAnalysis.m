@@ -1,3 +1,5 @@
+clear all;close all;clc
+
 LF_Weight =	[48.3	57.7	68.3	83.7	90	98.3	114.7	183	196.4]-48.3;
 RF_Weight =	[49.3	59.5	69	85.4	90.2	101.3	117.2	186	200.2]-49.3;
 LR_Weight =	[53.3	62.9	72.5	71	76.2	83	82.1	105	135]-53.3;
@@ -37,7 +39,7 @@ hold on
 plot(x,LR_stiffness*x)
 xlabel('Corner Deflection (in)')
 ylabel('Change in Corner Weight (lb)')
-title('Front Rear')
+title('Rear Left')
 legend(['Stiffness = ' num2str(round(LR_stiffness,0)) ' (lb/in)'],'Location','Northwest')
 
 figure
@@ -47,12 +49,14 @@ hold on
 plot(x,RR_stiffness*x)
 xlabel('Corner Deflection (in)')
 ylabel('Change in Corner Weight (lb)')
-title('Right Rear')
+title('Rear Right')
 legend(['Stiffness = ' num2str(round(RR_stiffness,0)) ' (lb/in)'],'Location','Northwest')
 
 %%
-front_stiffness = round(mean([LF_stiffness RF_stiffness]),-2)
-rear_stiffness = round(mean([LR_stiffness RR_stiffness]),-2)
+
+
+front_stiffness = round(mean([LF_stiffness RF_stiffness]),-1)
+rear_stiffness = round(mean([LR_stiffness RR_stiffness]),-1)
 
 
   
