@@ -139,7 +139,6 @@ figure
 for i = 1:3
     Xbestcell = parameters{i};
     P = linspace(10,14,1000).';
-    peakFy = -lateralforce_pure(Xbestcell,12,150,10,0);
     Fyplot = -lateralforce_pure(Xbestcell,12,250,P,0);
     plot(P,Fyplot,'Linewidth',3,'LineStyle',linS{i},...
         'DisplayName',label{i});
