@@ -51,9 +51,9 @@ tireParams.p_i = 12; % pressure
 % these parameters are non-iterable
 load('Fx_combined_parameters_run38_30.mat'); % F_x combined magic formula parameters
 tireParams.Fx_parameters = cell2mat(Xbestcell);
-load('Lapsim_Fy_combined_parameters_1654run24.mat'); % F_y combined magic formula parameters
+load('Lapsim_Fy_combined_parameters_1965run15.mat'); % F_y combined magic formula parameters
 tireParams.Fy_parameters = cell2mat(Xbestcell);
-tireParams.friction_scaling_factor = 0.55; % scales tire forces to account for test/road surface difference
+tireParams.friction_scaling_factor = 1.05*0.55; % scales tire forces to account for test/road surface difference
 
 % cell array of gridded parameters
 [carCell] = parameters_loop(carParams,aeroParams,eParams,DTparams,Bparams,tireParams);

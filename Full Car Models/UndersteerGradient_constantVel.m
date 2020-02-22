@@ -1,25 +1,26 @@
 function [lat_accel,K,steer_angle,beta,alpha_f,alpha_r,Fz_f,Fz_r,yaw_rate,long_vel,Fy_f,Fy_r] = ...
-    UndersteerGradient(car,radius,max_vel_skid)
+    UndersteerGradient_constantVel(car,velocity)
 
 counter = 1;
 
-[x_table, x_guess] = constant_radius(radius,4,car);
+[x_table, x_guess] = constant_radius(30,velocity,car);
 x0 = x_guess;
 
-[~, max_vel_skid, ~] = max_skidpad_vel(radius,car);
+[x_ss,lat_accel,lat_accel_guess] = max_lat_accel_ss(velocity,0,car);
 
-velocities = 3:0.1:max_vel_skid-0.5;
-steer_angle = zeros(size(velocities));
-beta = zeros(size(velocities));
-lat_accel = zeros(size(velocities));
-long_vel = zeros(size(velocities));
-yaw_rate = zeros(size(velocities));
+radii = linspace(40,(1/(lat_accel*9.81))*velocity^2+0.5,30);
 
-for i = velocities
-    x0(3) = i;
-    x0(5) = i/radius;
+steer_angle = zeros(size(radii));
+beta = zeros(size(radii));
+lat_accel = zeros(size(radii));
+long_vel = zeros(size(radii));
+yaw_rate = zeros(size(radii));
+
+for i = radii
+    x0(3) = velocity;
+    x0(5) = velocity/i;
     
-    [x_table, x_guess] = constant_radius(radius,i,car,x0);    
+    [x_table, x_guess] = constant_radius(i,velocity,car,x0);    
     x0 = x_guess;
     steer_angle(counter) = x_table{1,'steer_angle'};
     beta(counter) = x_table{1,'beta'};
@@ -35,6 +36,6 @@ for i = velocities
     counter = counter+1;
 end
 
-K = diff(steer_angle)./diff(lat_accel/9.81);
+K = diff(steer_angle-180/pi*car.W_b*yaw_rate./long_vel)./diff(lat_accel/9.81);
 
 end

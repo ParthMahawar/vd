@@ -47,8 +47,8 @@ x0 = x0./scaling_factor;
 lb = lb./scaling_factor;
 ub = ub./scaling_factor;
 
-% objective function: longitudinal velocity times yaw rate (v*v/r = v^2/r)
-f = @(P) -P(3)*P(5);                                     
+% no minimization: fmincon used as constrained problem solver
+f = @(P) 0;                                 
 
 % longitudinal acceleration constrained to zero, velocity and yaw rate
 % constrained for given radius
@@ -61,12 +61,12 @@ options = optimoptions('fmincon','MaxFunctionEvaluations',5000,'ConstraintTolera
 [x,fval,exitflag] = fmincon(f,x0,A,b,Aeq,beq,lb,ub,constraint,options);
 
 [engine_rpm,beta,lat_accel,long_accel,yaw_accel,wheel_accel,omega,current_gear,...
-Fzvirtual,Fz,alpha,T] = car.equations(x);  
+Fzvirtual,Fz,alpha,T,Fy] = car.equations(x);  
 
 x_guess = x;
 
 % generate table of control variable values
 x_skid = [exitflag long_accel x(3)*x(5) x omega(1:4) engine_rpm current_gear beta...
-    Fz(1:4) alpha(1:4) T(1:4)];
+    Fz(1:4) alpha(1:4) T(1:4) Fy(1:4)'];
 
-x_table = generate_table(x_skid);
+x_table = generate_table2(x_skid);

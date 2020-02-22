@@ -10,7 +10,7 @@ load('Lapsim_Fy_pure_parameters_1654run24_camber2.mat')
 parameters{1} = Xbestcell;
 load('Fy_pure_parameters_1965run6.mat')
 parameters{2} = Xbestcell;
-load('Fy_pure_parameters_1965run15.mat')
+load('Fy_pure_parameters_run15.mat')
 parameters{3} = Xbestcell;
 
 %% Plot settings
@@ -243,4 +243,24 @@ xlabel('Camber (deg)','FontSize',15);
 ylabel('Normalized Lateral Force','FontSize',15);
 title('Peak Lateral Force (FZ = 250, P = 12)',...
     'FontSize',18);
+
+%% Camber Stiffness
+
+figure
+
+for i = 1:3
+    Xbestcell = parameters{i};
+    FZ = linspace(50,250,1000).';
+    [~,~,K_ygamma] = lateralforce_pure(Xbestcell,13,FZ,12,0);
+    plot(FZ,-K_ygamma,'Linewidth',3,'LineStyle',linS{i},...
+        'DisplayName',label{i});
+    hold on
+end
+
+legend('Location','best')
+xlabel('Normal Load (lb)','FontSize',15);
+ylabel('Camber Stiffness (lb/deg)','FontSize',15);
+title('Camber Stiffness vs Normal Load',...
+    'FontSize',18);
+
 

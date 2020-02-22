@@ -34,6 +34,7 @@ for i = 1:numel(arr)
     longAccelLookup = [longAccelLookup; p1];
     longDecelLookup = [longDecelLookup; p3];
 end
+
 car.ggPoints = ggpoints;
 car.ss_info = ss_info;
 car.accel_info = accel_info;

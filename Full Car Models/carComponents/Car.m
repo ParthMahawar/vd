@@ -69,7 +69,7 @@ classdef Car
         end
         
         function [engine_rpm,beta,lat_accel,long_accel,yaw_accel,wheel_accel,omega,current_gear,...
-                Fzvirtual,Fz,alpha,T] = equations(obj,P)           
+                Fzvirtual,Fz,alpha,T,Fy] = equations(obj,P)           
             
             % inputs: vehicle parameters
             % outputs: vehicle accelerations and other properties
@@ -262,7 +262,8 @@ classdef Car
                 xdot(3) = max(0,sumA(1)+psid*latVel);
             end
             
-            xdot(3) = 0; % for pure cornering studies
+            xdot(3) = 0; % for pure cornering studies ONLY
+            
             xdot(4) = sumA(2)-psid*longVel;
             %X velocity, Y velocity. Global coordinates
             xdot(5) = longVel*cos(-psi)-latVel*sin(-psi); 
@@ -437,6 +438,35 @@ classdef Car
                 Fzvirtual,Fz,alpha,T]...
                 = obj.equations(P);
             out = long_accel;
+        end
+        
+        function dxdt = PhasePlaneODE(obj,x,steer_angle)
+            
+%             % state and control matrix
+%             steer_angle = P(1);
+%             throttle = P(2); % -1 for full braking, 1 for full throttle
+%             long_vel = P(3); % m/s
+%             lat_vel = P(4); % m/s
+%             yaw_rate = P(5); % equal to long_vel/radius (v/r)            
+%             kappa = P(6:9);
+            
+            P(1) = steer_angle;
+            P(2) = 0;
+            P(3) = x(1); % m/s
+            P(4) = x(2); % m/s
+            P(5) = x(3); % equal to long_vel/radius (v/r)            
+            P(6) = 0;
+            P(7) = 0;
+            P(8) = 0;
+            P(9) = 0;
+            
+            [~,~,lat_accel,long_accel,yaw_accel,~,~,~,...
+                ~,~,~,~,~] = equations(obj,P);
+            
+            lat_accel = lat_accel+P(3)*P(5);
+                       
+            long_accel = 0;
+            dxdt = [long_accel; lat_accel; yaw_accel];
         end
         
         % maximum possible car velocity

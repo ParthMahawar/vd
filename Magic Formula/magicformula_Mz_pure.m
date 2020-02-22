@@ -7,9 +7,9 @@ clear all;close all;clc
 
 P_input = [12];
 IA_input = [0];
-FZ_input = [250];
+FZ_input = [50 150 250];
 
-data_file_to_fit = 'A1654run24.mat';
+data_file_to_fit = 'A1965run15.mat';
 
 [alpha, Fy, Fz, Mz, ~, gamma, pi, testrange] = TireParser_Cornering(P_input, IA_input, FZ_input, data_file_to_fit);
 

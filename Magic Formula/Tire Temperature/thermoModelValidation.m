@@ -6,7 +6,6 @@ setup_paths
 %load('A1965raw6.mat')
 load('A1965raw15.mat')
 
-
 %% Thermodynamic Model
 range = 1:40000;
 

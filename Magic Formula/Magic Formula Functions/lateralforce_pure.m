@@ -1,4 +1,4 @@
-function [F_y, K_y] = lateralforce_pure(Xcell,alpha,F_z,p_i,gamma)
+function [F_y, K_y, K_ygamma] = lateralforce_pure(Xcell,alpha,F_z,p_i,gamma)
 %% Inputs
 
 F_z0 = 200*ones(size(F_z)); %nominal load
@@ -54,7 +54,8 @@ F_y = transpose(D_y.*sin(C_y.*atan(B_y.*alpha_y-E_y.*(B_y.*alpha_y-atan(B_y.*alp
 % F_y(F_z==0) = 0; %zero load
 
 % Cornering Stiffness
-K_y = K_yalpha*-0.0174533;
+K_y = K_yalpha*-0.0174533; % rad to deg
+K_ygamma = K_ygamma*-0.0174533; 
 
 %F_y = -D_y;
 
