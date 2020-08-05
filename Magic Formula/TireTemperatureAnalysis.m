@@ -37,7 +37,7 @@ plot(ET,FY)
 load('A1965raw15.mat')
 plot(ET,FY)
 xlim([0 90])
-linkaxes([ax1,ax2,ax3],'x')
+linkaxes([ax2,ax3],'x')%linkaxes([ax1,ax2,ax3],'x'
 
 %%
 figure

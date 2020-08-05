@@ -48,20 +48,25 @@ for i = 1:numCars
     ylabel('Steer Angle (deg)')
 end
 %legend('0.51','0.53','0.55','0.57')
-legend('LLTD = 0.3', '0.4', '0.5', '0.6')
+%legend('LLTD = 0.3', 'LLTD = 0.4', 'LLTD = 0.5', 'LLTD = 0.6')
 
 figure
 for i = 1:numCars
     plot(lat_accel_vec{i}(2:end)/9.81, K_vec{i});
+    hold on
     xlabel('Lateral Accel (g)','FontSize',15)
     ylabel('Understeer Gradient (deg/g)','FontSize',15)
 end
-%legend('0.51','0.53','0.55','0.57')
-%legend('LLTD = 0.3', '0.4', '0.5', '0.6')
+%legend('0.4','0.5','0.6')
+legend('LLTD = 0.4', 'LLTD = 0.5', 'LLTD = 0.6')
+%title("Understeer Gradient Sensetivity to CP Location");
+title("Understeer Gradient Sensetivity to LLTD");
+
 
 figure
 for i = 1:numCars
     plot(long_vel_vec{i}, yaw_rate_vec{i});
+    hold on
     xlabel('Longitudinal Velocity (m/s)','FontSize',15)
     ylabel('Yaw Rate (rad/s)','FontSize',15)
     title('Yaw Rate Gain')
@@ -70,6 +75,7 @@ end
 figure
 for i = 1:numCars
     plot(long_vel_vec{i}, beta_vec{i});
+    hold on
     xlabel('Longitudinal Velocity (m/s)','FontSize',15)
     ylabel('Beta (deg)','FontSize',15)
     title('Beta Angle Gain')

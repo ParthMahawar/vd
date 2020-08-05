@@ -5,7 +5,7 @@
 % in the dynamic events.
 % HOW TO USE:
 % 1) carConfig.m: define the car you want to test
-% 2) run this script
+% 2) run this script2
 % 3) results are in the comp object, which is stored in the corresponding
 % car object. Index into carCell to get the car you want, then open the
 % comp object.
@@ -47,7 +47,7 @@ save('Lapsim18R25B_minus10kg.mat','carCell');
 
 %% Plotting
 
-for i = 1:5
+for i = 1:numCars
     comp = carCell{i,1}.comp;
     points(i) = comp.points.total;
 end
@@ -65,12 +65,12 @@ car = carCell{1,1};
 
 % set desired plots to 1
 plot1 = 1; % velocity-dependent g-g diagram scatter plot
-plot2 = 0; % velocity-dependent g-g diagram surface
+plot2 = 1; % velocity-dependent g-g diagram surface
 plot3 = 0; % max accel for given velocity and lateral g w/ scattered interpolant
 plot4 = 0; % max braking for given velocity and lateral w/ scattered interpolant
-plot5 = 0; % 2D g-g diagram for velocity specified below (gg_vel)
+plot5 = 1; % 2D g-g diagram for velocity specified below (gg_vel)
 
-g_g_vel = [10 15 23]; % can input vector to overlay different velocities
+g_g_vel = [14 12 26]; % can input vector to overlay different velocities
 
 plot_choice = [plot1 plot2 plot3 plot4 plot5];
 plotter(car,g_g_vel,plot_choice);
@@ -78,17 +78,18 @@ plotter(car,g_g_vel,plot_choice);
 %% Event Plotting
 
 % select desired comp object
-comp = carCell{3,1}.comp;
+comp = carCell{1,1}.comp;
 
 % set desired plots to 1
-plot1 = 0; % autocross track distance vs curvature
+plot1 = 1; % autocross track distance vs curvature
 plot2 = 0; % endurance track distance vs curvature
 plot3 = 0; % max possible velocity for given radius
-plot4 = 1; % max possible long accel for given velocity
+plot4 = 0; % max possible long accel for given velocity
 plot5 = 0; % accel event longitudinal velocity vs time
 plot6 = 0; % accel event longitudinal accel vs time
 plot7 = 0; % autocross gear shifts
+plot8 = 0; % autocross slip angle vs distance
 
-plot_choice = [plot1 plot2 plot3 plot4 plot5 plot6 plot7];
+plot_choice = [plot1 plot2 plot3 plot4 plot5 plot6 plot7 plot8];
 event_plotter(comp,plot_choice);
 

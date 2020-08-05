@@ -3,7 +3,7 @@ clear; close all; clc
 
 load('A1654raw24.mat')
 figure
-%ax1 = subplot(3,1,1);
+
 plot(ET,TSTC)
 hold on
 
@@ -87,10 +87,18 @@ f3 = fit(TSTC_3,mu_3, ft, opts );
 plot(f3,TSTC_3,mu_3)
 
 figure
-plot(f1,TSTC_1,mu_1,'go')
+plot1 = plot(f1,'g',TSTC_1,mu_1,'g.');
 hold on
-plot(f2,TSTC_2,mu_2,'bo')
-plot(f3,TSTC_3,mu_3,'ko')
+plot2 = plot(f2,'k',TSTC_2,mu_2,'k.');
+plot3 = plot(f3,'b',TSTC_3,mu_3,'b.');
+
+xline(130);%operating temperature
+xline(140);
+
+legend([plot1(2) plot2(2) plot3(2)],{'18x7.5-10 R25B','16x7.5-10 R25B','16x7.5-10 LC0'},'Location','southeast')
+title('Tire Friction Coefficient vs Temperature');
+xlabel('Temperature (F)')
+ylabel('Friction Coefficient')
 
 figure
 plot(f1)
@@ -204,3 +212,4 @@ plot(x,mu2_norm)
 plot(x,mu3_norm)
 xlabel('Temperature (F)')
 ylabel('Friction Coefficient Scaling')
+legend('18x7.5-10 R25B','16x7.5-10 R25B','16x7.5-10 LC0','Location','southeast')

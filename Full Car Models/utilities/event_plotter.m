@@ -65,3 +65,11 @@ if plot_choice(7)
 
 end
 
+
+if plot_choice(8)
+    figure
+    plot(comp.endurance_track(1,:))
+    xlabel('Distance (m)')
+    ylabel('Curvature (1/m)')
+end
+
