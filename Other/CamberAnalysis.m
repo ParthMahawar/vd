@@ -1,7 +1,7 @@
 %% Kinematic Parameters
 roll_camber = 0.58; % deg w/ 1 deg roll
 ride_camber = 0.221; % deg w/ 1 in droop
-steer_camber = 0; % deg at full steer
+steer_camber = 2; % deg at full steer
 
 roll_gradient = [0.62 1.33]; %0.67; % deg/g range (min to max)
 

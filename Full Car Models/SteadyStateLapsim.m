@@ -49,14 +49,17 @@ save('Lapsim18R25B_minus10kg.mat','carCell');
 
 for i = 1:numCars
     comp = carCell{i,1}.comp;
+    %points(i) = comp.skidpad.x_table_skid.lat_accel;
     points(i) = comp.points.total;
+    variable(i) = carCell{i,1}.powertrain.final_drive;
 end
 
-%plot(points)
-bar(points)
-set(gca,'xticklabel',{'30/11' '35/11' '40/11' '45/11' '50/11'})
+plot(variable, points);
+%bar(points)
+%set(gca,'xticklabel',{'0' '-0.1' '-0.2' '-0.3' '-0.4' '-0.5' '-0.6' '-0.7' '-0.8' '-0.9' '-1.0'})
 %ylim([112 114])
-ylabel('Autocross Points')
+ylabel('Total Points')
+xlabel('Final Drive Ratio');
 
 %% Car Plotting
 
@@ -64,11 +67,11 @@ ylabel('Autocross Points')
 car = carCell{1,1};
 
 % set desired plots to 1
-plot1 = 1; % velocity-dependent g-g diagram scatter plot
-plot2 = 1; % velocity-dependent g-g diagram surface
+plot1 = 0; % velocity-dependent g-g diagram scatter plot
+plot2 = 0; % velocity-dependent g-g diagram surface
 plot3 = 0; % max accel for given velocity and lateral g w/ scattered interpolant
 plot4 = 0; % max braking for given velocity and lateral w/ scattered interpolant
-plot5 = 1; % 2D g-g diagram for velocity specified below (gg_vel)
+plot5 = 0; % 2D g-g diagram for velocity specified below (gg_vel)
 
 g_g_vel = [14 12 26]; % can input vector to overlay different velocities
 
@@ -81,7 +84,7 @@ plotter(car,g_g_vel,plot_choice);
 comp = carCell{1,1}.comp;
 
 % set desired plots to 1
-plot1 = 1; % autocross track distance vs curvature
+plot1 = 0; % autocross track distance vs curvature
 plot2 = 0; % endurance track distance vs curvature
 plot3 = 0; % max possible velocity for given radius
 plot4 = 0; % max possible long accel for given velocity
