@@ -11,7 +11,7 @@ roll_stiffness = 754.6264; %
 
 
 %%--------%% Input Radius %%--------%%
-radius = 8.33;
+radius = 10.5;
 
 % initial guesses
 steer_angle_guess = 3; % degrees
@@ -67,10 +67,10 @@ f = @(P) -P(3);
         % maximize long_vel
 %       f = @(P) -P(3);                                 
 
-        % longitudinal acceleration constrained to equal zero
-        % velocity divided by yaw rate constrained to equal inputted radius
-        % used for solving skidpad (optimizing velocity for zero longitudinal acceleration
-      constraint = @(P) car.constraint5(P,radius); 
+% longitudinal acceleration constrained to equal zero
+% velocity divided by yaw rate constrained to equal inputted radius
+% used for solving skidpad (optimizing velocity for zero longitudinal acceleration
+constraint = @(P) car.constraint5(P,radius); 
 
 % default algorithm is interior-point
 options = optimoptions('fmincon','MaxFunctionEvaluations',5000,'ConstraintTolerance',1e-2,...
@@ -96,6 +96,8 @@ kappa = P(6:9);
 beta = atan(lat_vel/long_vel)*180/pi
 long_vel
 steer_angle
+lat_accel
+long_accel
 
 %% Corner Radius Plotter
 

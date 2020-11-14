@@ -43,9 +43,12 @@ end
 fprintf("done\n");
 
 %% Saving
-save('Lapsim18R25B_minus10kg.mat','carCell');
+save('Lapsim18R25B_non_turbo.mat','carCell');
 
 %% Plotting
+
+comp = carCell{i,1}.comp;
+points(i) = comp.points.total
 
 for i = 1:numCars
     comp = carCell{i,1}.comp;
