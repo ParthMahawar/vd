@@ -41,7 +41,7 @@ DTparams.G_d2_driving = 0; % differential torque transfer gain on power
 
 % brake parameters (updated 5/1/19)
 Bparams = struct();
-Bparams.brake_distribution = 0.7; % proportion of brake torque applied to front
+Bparams.brake_distribution = [0.55:0.05:0.85];%0.7; % proportion of brake torque applied to front
 Bparams.max_braking_torque = 800; % total braking torque
 
 % tire parameters (updated 5/1/19)

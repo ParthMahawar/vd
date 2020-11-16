@@ -11,7 +11,7 @@ IA_input = [0 2 4];
 FZ_input = [50 150 250];
 SA_input = 0;
 
-data_file_to_fit = 'A1654run24.mat';
+data_file_to_fit = 'A1464run36.mat';
 
 [kappa, ~, Fx, ~, Fz, ~, gamma, pi, testrange] = TireParser_DriveBrake(P_input, IA_input, FZ_input,SA_input, data_file_to_fit);
 
@@ -114,7 +114,7 @@ for iterations = 1:itermax
         errorXi = sum((FxXi - transpose(Fx)).^2);
         errorXni = sum((FyXni - transpose(Fx)).^2);
         
-        rmse_Xi = sqrt(errorXi / numel(FyXi));
+        rmse_Xi = sqrt(errorXi / numel(FxXi));
         rmse_Xni = sqrt(errorXni / numel(FyXni));
         
         if rmse_Xni < rmse_Xi

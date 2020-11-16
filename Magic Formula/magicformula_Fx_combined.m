@@ -13,7 +13,10 @@ IA_input = [0];
 FZ_input = [50 150 250];
 SA_input = [0 -3 -6];
 
-data_file_to_fit = 'A1654run24.mat';
+data_file_to_fit = 'A1464run36.mat';
+%A1464run36 error: 1.3180275*10^6
+%Why does some data have all 0s for SL while others do't? Data
+%documentation?
 
 [kappa, alpha, Fx, ~, Fz, ~, gamma, pi, testrange] = TireParser_DriveBrake(P_input, IA_input, FZ_input,SA_input, data_file_to_fit);
 
@@ -123,7 +126,7 @@ for iterations = 1:itermax
         errorXi = sum((FxXi - transpose(Fx)).^2);
         errorXni = sum((FyXni - transpose(Fx)).^2);
         
-        rmse_Xi = sqrt(errorXi / numel(FyXi));
+        rmse_Xi = sqrt(errorXi / numel(FxXi));
         rmse_Xni = sqrt(errorXni / numel(FyXni));
         
         if rmse_Xni < rmse_Xi
@@ -200,14 +203,14 @@ for iterations = 1:itermax
                     for d = 1:numel(SR_input4)
                         Fxplot4 = longitudinalforce_combined(Xbestcell,kappa4(:,d),Fz4(:,c),pi4(:,a),...
                             gamma4(:,b),alpha4);
-                        plot(alpha4,Fxplot4,'k','Linewidth',3);
+                        plot(kappa4,Fxplot4,'k','Linewidth',3);
                         hold on
                     end
                 end
             end
         end
         hold off
-        xlabel('Slip Angle','FontSize',15);
+        xlabel('Slip Ratio','FontSize',15);
         ylabel('Fx:Longitudinal Force','FontSize',15);
         grid on
     end
@@ -293,12 +296,14 @@ if plot4 == 1
                     Fxplot4 = longitudinalforce_combined(Xbestcell,kappa4(:,d),Fz4(:,c),pi4(:,a),...
                         gamma4(:,b),alpha4);
                     plot(alpha4,Fxplot4,'k','Linewidth',3);
+                    %plot(kappa4,Fxplot4,'k','Linewidth',3);
                     hold on
                 end
             end
         end
     end
     xlabel('Slip Angle','FontSize',15);
+    %xLabel('Slip Ratio','FontSize',15);
     ylabel('Fx:Longitudinal Force','FontSize',15);
     grid on
 end

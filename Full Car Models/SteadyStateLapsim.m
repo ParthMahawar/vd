@@ -47,14 +47,11 @@ save('Lapsim18R25B_non_turbo.mat','carCell');
 
 %% Plotting
 
-comp = carCell{i,1}.comp;
-points(i) = comp.points.total
-
 for i = 1:numCars
     comp = carCell{i,1}.comp;
     %points(i) = comp.skidpad.x_table_skid.lat_accel;
     points(i) = comp.points.total;
-    variable(i) = carCell{i,1}.powertrain.final_drive;
+    variable(i) = carCell{i,1}.powertrain.brake_distribution;
 end
 
 plot(variable, points);
