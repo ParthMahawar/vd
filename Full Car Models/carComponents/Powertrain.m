@@ -65,7 +65,7 @@ classdef Powertrain
             %engine_rpm = (omega_3+omega_4)/2*obj.final_drive(current_gear)*30/pi; %rpm          
         end            
 
-        function [T_1,T_2,T_3,T_4] = wheel_torques(obj, engine_rpm, omega_3, omega_4, throttle, current_gear)
+        function [T_1,T_2,T_3,T_4] = wheel_torques(obj, engine_rpm, omega_3, omega_4, throttle, current_gear,long_vel)
             % outputs wheel torques
             % driving torque is positive, braking is negative (opposite of SAE convention)
             
@@ -100,6 +100,10 @@ classdef Powertrain
                 
                 torque_engine = 0; % engine drag torque with 0 throttle
                 delta_t = 0; % differential has no effect when braking
+                
+                lat_A = 1;
+                
+                obj.brake_distribution = adjustableBrakeBias(long_vel,lat_A);
                 
                 T_1 = (torque_braking*obj.brake_distribution)/2;
                 T_2 = (torque_braking*obj.brake_distribution)/2;

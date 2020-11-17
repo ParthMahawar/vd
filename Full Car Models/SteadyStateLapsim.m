@@ -16,7 +16,7 @@ numCars = size(carCell,1);
 time = struct();time.prev = 0; time.curr = 0;
 tic
 % Set numWorkers to number of cores for better performance
-numWorkers = 0;
+numWorkers = 0 ;
 if numWorkers ~= 0
     disp('The parallel toolbox takes a few minutes to start.')
     disp('Set numWorkers to 0 for single-car runs')
@@ -43,9 +43,14 @@ end
 fprintf("done\n");
 
 %% Saving
-save('Lapsim18R25B_non_turbo.mat','carCell');
+%save('Lapsim18R25B_non_turbo.mat','carCell');
 
 %% Plotting
+
+points = carCell{1,1}.comp.points.total
+
+points = [];
+variable = [];
 
 for i = 1:numCars
     comp = carCell{i,1}.comp;
@@ -59,7 +64,7 @@ plot(variable, points);
 %set(gca,'xticklabel',{'0' '-0.1' '-0.2' '-0.3' '-0.4' '-0.5' '-0.6' '-0.7' '-0.8' '-0.9' '-1.0'})
 %ylim([112 114])
 ylabel('Total Points')
-xlabel('Final Drive Ratio');
+xlabel('Brake Bias');
 
 %% Car Plotting
 

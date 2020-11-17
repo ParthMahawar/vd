@@ -84,6 +84,14 @@ classdef Car
             % note: 1 = front left tire, 2 = front right tire
             %       3 = rear left tire, 4 = rear right tire
             
+            % EXPERIMENTAL AEBBS %
+            
+            radius = long_vel/yaw_rate;
+            lat_A = long_vel^2/radius;
+            
+            
+            %%%%%%%%%%%%%%%%%%%%%%%
+            
             % Powertrain
             omega = zeros(1,4);
             omega(1) = (kappa(1)+1)/obj.R*(long_vel+yaw_rate*obj.t_f/2);
@@ -92,7 +100,7 @@ classdef Car
             omega(4) = (kappa(4)+1)/obj.R*(long_vel-yaw_rate*obj.t_f/2);
                         
             [engine_rpm,current_gear] = obj.powertrain.engine_rpm(omega(3),omega(4),long_vel);
-            [T_1,T_2,T_3,T_4] = obj.powertrain.wheel_torques(engine_rpm, omega(3), omega(4), throttle, current_gear);
+            [T_1,T_2,T_3,T_4] = obj.powertrain.wheel_torques(engine_rpm, omega(3), omega(4), throttle, current_gear,long_vel);
             T = [T_1,T_2,T_3,T_4];
             
             [Fz, Fzvirtual] = ssForces(obj,long_vel,yaw_rate,T,steer_angle*pi/180);
