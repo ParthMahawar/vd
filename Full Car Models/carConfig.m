@@ -2,7 +2,7 @@ function carCell = carConfig()
 
 % car parameters (updated 5/25/19)
 carParams = struct();
-carParams.mass = 179.2; % not including driver (395 lb)
+carParams.mass = 179.2 + 5.9; % not including driver (395 lb)
 carParams.driver_weight = 68; % (150 lb)
 carParams.accel_driver_weight = 68; % (150 lb)
 carParams.wheelbase = 1.5494; % 61 in
@@ -28,7 +28,7 @@ eParams.shift_point = 8500; % approximate
 % these parameters are non-iterable
 eParams.gears = [32/16 30/18 28/20 26/22 24/24]; % updated KTM450
 eParams.primary_reduction = 76/32; % KTM450
-eParams.torque_fn = KTM450();
+eParams.torque_fn = KTM450_RecaroTurbo();
 eParams.shift_time = 0.050; % seconds FOR UPSHIFT ONLY; 150ms for downshift
 
 % drivetrain parameters (updated 5/1/19)
@@ -41,7 +41,7 @@ DTparams.G_d2_driving = 0; % differential torque transfer gain on power
 
 % brake parameters (updated 5/1/19)
 Bparams = struct();
-Bparams.brake_distribution = 1;%[0.5:0.05:0.99];%0.7; % proportion of brake torque applied to front
+Bparams.brake_distribution = 0.7;%[0.5:0.05:0.99] % proportion of brake torque applied to front
 Bparams.max_braking_torque = 800; % total braking torque
 
 % tire parameters (updated 5/1/19)

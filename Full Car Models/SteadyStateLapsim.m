@@ -43,9 +43,9 @@ end
 fprintf("done\n");
 
 %% Saving
-%save('Lapsim18R25B_non_turbo.mat','carCell');
+save('Lapsim18R25B_no_undertray.mat','carCell');
 
-%% Plotting
+%% Points Plotting
 
 points = carCell{1,1}.comp.points.total
 
@@ -56,16 +56,19 @@ for i = 1:numCars
     comp = carCell{i,1}.comp;
     %points(i) = comp.skidpad.x_table_skid.lat_accel;
     points(i) = comp.points.total;
-    variable(i) = carCell{i,1}.powertrain.brake_distribution;
+    variable(i) = carCell{i,1}.R_sf;
 end
 
-plot(variable, points);
-%bar(points)
-%set(gca,'xticklabel',{'0' '-0.1' '-0.2' '-0.3' '-0.4' '-0.5' '-0.6' '-0.7' '-0.8' '-0.9' '-1.0'})
-%ylim([112 114])
-ylabel('Total Points')
-xlabel('Brake Bias');
+plots = bar(points);
+plots.FaceColor = 'flat';
+%plots.CData(1,:) = [1 0 0]; % turns one plot red
 
+set(gca,'xticklabel',[num2cell(variable)])
+%ylim([460 480])
+ylabel('Total Points')
+xlabel('LLTD');
+
+%title('Total Lapsim Predicted Points vs Brake Bias');
 %% Car Plotting
 
 % select desired car object

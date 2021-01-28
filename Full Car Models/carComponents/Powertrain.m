@@ -101,9 +101,9 @@ classdef Powertrain
                 torque_engine = 0; % engine drag torque with 0 throttle
                 delta_t = 0; % differential has no effect when braking
                 
-                lat_A = 1;
-                
-                obj.brake_distribution = adjustableBrakeBias(long_vel,lat_A);
+                % AEBBS code
+                % lat_A = 0;%0.5 
+                % obj.brake_distribution = adjustableBrakeBias(long_vel,lat_A);
                 
                 T_1 = (torque_braking*obj.brake_distribution)/2;
                 T_2 = (torque_braking*obj.brake_distribution)/2;
