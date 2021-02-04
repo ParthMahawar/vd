@@ -81,7 +81,7 @@ classdef Powertrain
                 % differential model
                 torque_drive = torque_engine*obj.drivetrain_reduction(current_gear);
 
-                if torque_drive < 0 % overrun
+                if torque_drive < 0 % overrun - not used
                     torque_transfer = -obj.G_d1-obj.G_d2_overrun*torque_drive;
                 elseif torque_drive >= 0 % driving
                     torque_transfer = -obj.G_d1+obj.G_d2_driving*torque_drive;
