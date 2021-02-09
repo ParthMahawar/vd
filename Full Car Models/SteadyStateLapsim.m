@@ -52,7 +52,7 @@ disp("car 1 points: " + num2str(carCell{1,1}.comp.points.total));
 % options
 display_point_values_above_bar_flag = true;
 
-label_cars_automatically_flag = false;
+label_cars_automatically_flag = true;
 
 %automatic car labeling
 automatic_label_name = 'Torque Bias Ratio';
