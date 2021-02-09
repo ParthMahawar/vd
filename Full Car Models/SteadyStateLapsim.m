@@ -16,7 +16,7 @@ numCars = size(carCell,1);
 time = struct();time.prev = 0; time.curr = 0;
 tic
 % Set numWorkers to number of cores for better performance
-numWorkers = 0 ;
+numWorkers = 0;
 if numWorkers ~= 0
     disp('The parallel toolbox takes a few minutes to start.')
     disp('Set numWorkers to 0 for single-car runs')
@@ -43,32 +43,33 @@ end
 fprintf("done\n");
 
 %% Saving
-save('Lapsim18R25B_no_undertray.mat','carCell');
+%save('Lapsim_B22_no_undertray.mat','carCell');
 
 %% Points Plotting
 
-points = carCell{1,1}.comp.points.total
+disp("car 1 points: " + num2str(carCell{1,1}.comp.points.total));
 
-points = [];
-variable = [];
+% options
+display_point_values_above_bar_flag = true;
 
-for i = 1:numCars
-    comp = carCell{i,1}.comp;
-    %points(i) = comp.skidpad.x_table_skid.lat_accel;
-    points(i) = comp.points.total;
-    variable(i) = carCell{i,1}.R_sf;
-end
+label_cars_automatically_flag = false;
 
-plots = bar(points);
-plots.FaceColor = 'flat';
-%plots.CData(1,:) = [1 0 0]; % turns one plot red
+%automatic car labeling
+automatic_label_name = 'Torque Bias Ratio';
+automatic_label = @(car) (1/2+car.powertrain.G_d2_driving)/(1/2-car.powertrain.G_d2_driving);%TBR
+%automatic_label = @(car) car.M;%Car mass
 
-set(gca,'xticklabel',[num2cell(variable)])
-%ylim([460 480])
-ylabel('Total Points')
-xlabel('LLTD');
+% 1 to select, 0 to exclude
+selected_categories = find([ ... 
+     0 ... %Accel
+     0 ... %Autocross
+     0 ... %Endurance
+     0 ... %Skidpad
+     1 ... %Total
+]);
 
-%title('Total Lapsim Predicted Points vs Brake Bias');
+plot_lapsim_points(carCell, display_point_values_above_bar_flag, true,...
+    [], automatic_label_name, automatic_label, selected_categories);
 %% Car Plotting
 
 % select desired car object
