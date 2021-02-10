@@ -1,6 +1,6 @@
 function[normal_load_FL, dist_FL, normal_load_FR, dist_FR, normal_load_RL,dist_RL, normal_load_RR, dist_RR]= CamberCurve(theta, C)
 
-% %The distance the front wheels moves as a function of roll angle
+%The distance the front wheels moves as a function of roll angle
  dist_FL = (C.front_width*sind(theta))/2;
  dist_FR = -(C.front_width*sind(theta))/2;
 
