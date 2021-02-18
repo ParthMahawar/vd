@@ -22,7 +22,7 @@ clc
 
 %% test
 
-gamma_vector = 1;
+gamma_vector = -1:0.1:1;
 alpha_vector = -20:0.5:20;
 
 F_y_matrix = zeros(numel(gamma_vector), numel(alpha_vector));
