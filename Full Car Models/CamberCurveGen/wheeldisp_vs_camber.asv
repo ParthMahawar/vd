@@ -1,3 +1,13 @@
+%taken from carConfig
+load('Fx_combined_parameters_run38_30.mat'); % F_x combined magic formula parameters
+Fx_parameters = cell2mat(Xbestcell);
+load('Fy_combined_parameters_16x10x7.5_LC0.mat'); % F_y combined magic formula parameters
+Fy_parameters = cell2mat(Xbestcell);
+friction_scaling_factor = 1.05*0.55;
+p_i = 12; % pressure
+
+tire = Tire2(0,p_i,Fx_parameters,Fy_parameters,friction_scaling_factor);
+
 %Vehicle Width in inches
 C.front_width= 47;
 C.rear_width= 47;
@@ -11,11 +21,10 @@ C.front_ARB_stiff=0;
 C.rear_ARB_stiff=1493;
 
 %Car Weight Distribution
-C.front_weight_distr=0.52;
-carParams.weight_dist = 0.54; % percentage of weight in rear
+C.weight_dist = 0.54; % percentage of weight in rear
 
 %Total Car Weight
-carParams.mass = 179.2 + 5.9; % not including driver (395 lb)
+C.mass = 179.2 + 5.9; % not including driver (395 lb)
 
 roll_angle_vector=0:1:10;
 camber_vector=-5:1:5;
@@ -41,8 +50,6 @@ for i= 1:numel(roll_angle_vector)
     [normal_load_FL, dist_FL, normal_load_FR, dist_FR, normal_load_RL,dist_RL, normal_load_RR, dist_RR]= CamberCurve(roll_angle, C);
      dist_FL_array(i)= dist_FL;
      dist_FR_array(i)= dist_FR;
-     dist_RL_array(i)= dist_RL;
-     dist_RR_array(i)= dist_RR;
     
     ideal_gamma_L=0;
     ideal_gamma_R=0;
@@ -50,39 +57,10 @@ for i= 1:numel(roll_angle_vector)
     
     for gamma_L = camber_vector
             for gamma_R= camber_vector
-                [F_y_tot, F_y_L, F_y_R, M_x_L, M_x_R, alpha_val] = singleAxleCamberEvaluation(normal_load_FL, normal_load_FR, gamma_L, gamma_R, tire);
+                [F_y_tot, F_y_L, F_y_R, M_x_L, M_x_R, alpha_val] = singleAxleCamberEvaluation(normal_load_FL, normal_load_FR, -gamma_L, gamma_R, tire);
                 
                 if max_F_y_tot < F_y_tot
-                    ideal_gamma_L= gama_L;
-                    ideal_gamma_R= gamma_R;
-                    max_F_y_to=F_y_tot;
-                end
-                
-            end 
-    end
-     ideal_FLcamber_array(i)=ideal_gamma_L;  
-     ideal_FRcamber_array(i)=ideal_gamma_R;
-end
-
-
-
-
-%Loop through Roll Angles for front axle
-for i= 1:numel(roll_angle_vector)
-    roll_angle= roll_angle_vector(i);
-    
-    [normal_load_FL, dist_FL, normal_load_FR, dist_FR, normal_load_RL,dist_RL, normal_load_RR, dist_RR]= CamberCurve(roll_angle, C);
-
-    ideal_gamma_L=0;
-    ideal_gamma_R=0;
-    max_F_y_tot=0;
-    
-    for gamma_L = camber_vector
-            for gamma_R= camber_vector
-                [F_y_tot, F_y_L, F_y_R, M_x_L, M_x_R, alpha_val] = singleAxleCamberEvaluation(normal_load_RL, normal_load_RR, gamma_L, gamma_R, tire);
-                
-                if max_F_y_tot < F_y_tot
-                    ideal_gamma_L= gama_L;
+                    ideal_gamma_L= gamma_L;
                     ideal_gamma_R= gamma_R;
                     max_F_y_to=F_y_tot;
                 end
@@ -95,35 +73,31 @@ end
 
 
 %Loop through Roll Angles for rear axle
-for roll_angle= 0:1:10
-    %The distance the rear wheels moves as a function of roll angle
-    dist_RL = (C.rear_width*sind(roll_angle))/2;
-    dist_RL_array(roll_angle)= dist_RL;
+for i= 1:numel(roll_angle_vector)
+    roll_angle= roll_angle_vector(i);
     
-    %Normal Load on front wheels as a function of roll angle
-    normal_load_RL = roll_angle*((C.rear_spring_stiff)*(C.rear_width/2)+((C.rear_ARB_stiff)/(C.rear_width/2)))+(carParams.weight_dist)*(carParams.mass/2);
-    normal_load_RL_array(roll_angle)= normal_load_RL;
+    [normal_load_FL, dist_FL, normal_load_FR, dist_FR, normal_load_RL,dist_RL, normal_load_RR, dist_RR]= CamberCurve(roll_angle, C);
+    dist_RL_array(i)= dist_RL;
+    dist_RR_array(i)= dist_RR;
     
+    ideal_gamma_L=0;
+    ideal_gamma_R=0;
+    max_F_y_tot=0;
     
-    for gamma_L= -10:1:10
-        [F_y_tot, F_y_L, F_y_R, M_x_L, M_x_R, alpha_val] = singleAxleCamberEvaluation(F_z_L, F_z_R, gamma_L, gamma_R, tire);
-        
-        
-        for roll_angle=0:1:10
-            %The distance the rear wheels move as a function of roll angle
-            dist_RR = -(C.rear_width*sind(roll_angle))/2;
-            dist_RR_array(roll_angle)= dist_RR;
-            
-            %Normal Load on rear wheels as a function of roll angle
-            normal_load_RR = -roll_angle*((C.rear_spring_stiff)*(C.rear_width/2)+((C.rear_ARB_stiff)/(C.rear_width/2)))+(carParams.weight_dist)*(carParams.mass/2);
-            normal_load_RR_array(roll_angle)= normal_load_RR;
-            
-            for gamma_R= -10:1:10
-                [F_y_tot, F_y_L, F_y_R, M_x_L, M_x_R, alpha_val] = singleAxleCamberEvaluation(F_z_L, F_z_R, gamma_L, gamma_R, tire);
-            end
-        end
+    for gamma_L = camber_vector
+            for gamma_R= camber_vector
+                [F_y_tot, F_y_L, F_y_R, M_x_L, M_x_R, alpha_val] = singleAxleCamberEvaluation(normal_load_RL, normal_load_RR, -gamma_L, gamma_R, tire);
+                
+                if max_F_y_tot < F_y_tot
+                    ideal_gamma_L= gamma_L;
+                    ideal_gamma_R= gamma_R;
+                    max_F_y_to=F_y_tot;
+                end
+                
+            end 
     end
+     ideal_RLcamber_array(i)=ideal_gamma_L;  
+     ideal_RRcamber_array(i)=ideal_gamma_R;
 end
-    
-    
-  
+
+

@@ -3,19 +3,18 @@ C.front_width= 47;
 C.rear_width= 47;
 
 %Spring Roll Stiffness
-C.front_spring_stiff= 2860;
-C.rear_spring_stiff=2911;
+C.front_spring_stiff= 2860*(8.8507457676);%Converting from N-m/deg, pulled from LLTD doc
+C.rear_spring_stiff=2911*(8.8507457676);
 
 %ARB Roll Stiffness (Currently on Short)
-C.front_ARB_stiff=0;
-C.rear_ARB_stiff=1493;
+C.front_ARB_stiff=0*(8.8507457676);
+C.rear_ARB_stiff=1493*(8.8507457676);
 
 %Car Weight Distribution
-C.front_weight_distr=0.52;
-carParams.weight_dist = 0.54; % percentage of weight in rear
+C.weight_dist = 0.54; % percentage of weight in rear
 
 %Total Car Weight
-carParams.mass = 179.2 + 5.9; % not including driver (395 lb)
+C.mass = 179.2 + 5.9; % not including driver (395 lb)
 
 
 

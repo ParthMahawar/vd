@@ -9,12 +9,12 @@ dist_RL = (C.rear_width*sind(roll_angle))/2;
 dist_RR = -(C.rear_width*sind(roll_angle))/2;
  
 %Normal Load on rear wheels as a function of roll angle
-normal_load_RL = roll_angle*((C.rear_spring_stiff)*(C.rear_width/2)+((C.rear_ARB_stiff)/(C.rear_width/2)))+(carParams.weight_dist)*(carParams.mass/2);
-normal_load_RR = -roll_angle*((C.rear_spring_stiff)*(C.rear_width/2)+((C.rear_ARB_stiff)/(C.rear_width/2)))+(carParams.weight_dist)*(carParams.mass/2);
+normal_load_RL = roll_angle*((C.rear_spring_stiff)*(C.rear_width/2)+((C.rear_ARB_stiff)/(C.rear_width/2)))+(C.weight_dist)*(C.mass/2);
+normal_load_RR = -roll_angle*((C.rear_spring_stiff)*(C.rear_width/2)+((C.rear_ARB_stiff)/(C.rear_width/2)))+(C.weight_dist)*(C.mass/2);
 
 %Normal Load on front wheels as a function of roll angle
-normal_load_FL = roll_angle*((C.front_spring_stiff)*(C.front_width/2)+((C.front_ARB_stiff)/(C.front_width/2)))+(C.front_weight_distr)*(carParams.mass/2);
-normal_load_FR = -roll_angle*((C.front_spring_stiff)*(C.front_width/2)+((C.front_ARB_stiff)/(C.front_width/2)))+(C.front_weight_distr)*(carParams.mass/2);
+normal_load_FL = roll_angle*((C.front_spring_stiff)*(C.front_width/2)+((C.front_ARB_stiff)/(C.front_width/2)))+(C.weight_dist)*(C.mass/2);
+normal_load_FR = -roll_angle*((C.front_spring_stiff)*(C.front_width/2)+((C.front_ARB_stiff)/(C.front_width/2)))+(C.weight_dist)*(C.mass/2);
 
 % %difference betwwen left and right ride height
 % front_ARB_dist= dist_FL- dist_FR;

@@ -4,8 +4,7 @@ function [F_y_tot, F_y_L, F_y_R, M_x_L, M_x_R, alpha_val] = singleAxleCamberEval
     right_tire = tire;
     left_tire.gamma = gamma_L;
     right_tire.gamma = gamma_R;
-    
-    left_tire.gamma
+   
     
     % sweep through slip angles to find maximum lateral force for the
     % entire axle
