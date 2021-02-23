@@ -29,8 +29,8 @@ C.mass = 395; % not including driver (lb)
 
 %% camber curve optimization
 %roll angles and cambers to search through
-roll_angle_vector = 0:0.1:3;
-camber_vector = -10:0.01:10;
+roll_angle_vector = 0:0.5:3;
+camber_vector = -10:1:10;
 
 %arrays to store ideal camber curves 
 dist_FL_array = zeros(1,numel(roll_angle_vector));
@@ -109,7 +109,24 @@ for i= 1:numel(roll_angle_vector)
 end
 
 
-%% plotting
+%% plotting by roll
+subplot(2,2,1)
+plot(roll_angle_vector, ideal_FL_camber_array);
+title('Front Left Camber Curve');
+
+subplot(2,2,2)
+plot(roll_angle_vector, ideal_FR_camber_array);
+title('Front Right Camber Curve');
+
+subplot(2,2,3)
+plot(roll_angle_vector, ideal_RL_camber_array);
+title('Rear Left Camber Curve');
+
+subplot(2,2,4)
+plot(roll_angle_vector, ideal_RR_camber_array);
+title('Rear Right Camber Curve');
+
+%% plotting displacement
 
 subplot(2,2,1)
 plot(dist_FL_array, ideal_FL_camber_array);
