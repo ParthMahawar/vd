@@ -9,7 +9,6 @@ p_i = 12; % pressure
 tire = Tire2(0,p_i,Fx_parameters,Fy_parameters,friction_scaling_factor);
 
 %% run
-clc
 F_z_L = 100;
 F_z_R = 100;
 
@@ -19,33 +18,7 @@ gamma_R = camber;
 
 clc
 [F_y_tot, F_y_L, F_y_R, M_x_L, M_x_R, alpha_val] = ...
-    singleAxleCamberEvaluation(F_z_L, F_z_R, gamma_L, gamma_R, tire);
-F_y_tot
-F_y_L
-F_y_R
-
-%% test a
-F_z_R_vector = 0:300;
-F_z_L = 100;
-F_y_tot_vector = zeros(size(F_z_R_vector));
-F_y_L_vector = zeros(size(F_z_R_vector));
-F_y_R_vector = zeros(size(F_z_R_vector));
-alpha_vector = zeros(size(F_z_R_vector));
-for i = 1:numel(F_z_R_vector)
-    [F_y_tot, F_y_L, F_y_R, M_x_L, M_x_R, alpha_val] = ...
-    singleAxleCamberEvaluation(F_z_L, F_z_R_vector(i), gamma_L, gamma_R, tire);
-    F_y_tot_vector(i) = F_y_tot;
-    F_y_L_vector(i) = F_y_L;
-    F_y_R_vector(i) = F_y_R;
-    alpha_vector(i) = alpha_val;
-end
-
-plot(F_z_R_vector, F_y_tot_vector);
-hold on;
-%figure;
-%plot(F_z_R_vector, alpha_vector);
-
-
+    singleAxleCamberEvaluation(F_z_L, F_z_R, gamma_L, gamma_R, tire)
 
 %% test
 
@@ -69,6 +42,8 @@ end
 legend();
 xline(0);
 yline(0);
+
+
 %% test displacement code
 
 %Vehicle Width in inches
@@ -76,31 +51,27 @@ C.front_width = 47;
 C.rear_width = 47;
 
 %Spring Roll Stiffness
-C.front_spring_stiff = 2860; %numbers from LLTD Doc
-C.rear_spring_stiff = 2911;
+C.front_spring_stiff = 2860*8.8507; %convert to inch lbs; numbers from LLTD Doc
+C.rear_spring_stiff = 2911*8.8507;
 
 %ARB Roll Stiffness (Currently on Short)
-C.front_ARB_stiff = 0;
-C.rear_ARB_stiff = 699;
+C.front_ARB_stiff = 0*8.8507;
+C.rear_ARB_stiff = 1493*8.8507;
 
 %Car Weight Distribution
 C.weight_dist = 0.54; % percentage of weight in rear
 
 %Total Car Weight
-C.mass = 395; % not including driver (lb)
-
-roll_angle = 1;
+C.mass = 179.2; % not including driver (395 lb)
 
 [normal_load_FL, dist_FL, normal_load_FR, dist_FR, normal_load_RL,dist_RL, normal_load_RR, dist_RR] = calcWheelForcesAndDisplacements(roll_angle, C);
-clc
-format compact;
+
+
 normal_load_FL
 dist_FL
 normal_load_FR
 dist_FR
 normal_load_RL
-dist_RL
-normal_load_RR
-dist_RR
+dist_RLnormal_load_RR, dist_RR]
 
 

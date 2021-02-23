@@ -11,8 +11,8 @@ function [F_y_tot, F_y_L, F_y_R, M_x_L, M_x_R, alpha_val] = singleAxleCamberEval
     F_y_tot = 0;
     F_y_L = 0;
     F_y_R = 0;
-    alpha_max = 0;
-    for alpha = -(0:1:15)
+    alpha_val = 0;
+    for alpha = -(5:2:20)
         kappa = 0;
         % turning right - for sign convention | F_y -> + | alpha -> - 
         F_y_L_temp = F_y(left_tire, alpha, kappa, F_z_L);
@@ -21,9 +21,9 @@ function [F_y_tot, F_y_L, F_y_R, M_x_L, M_x_R, alpha_val] = singleAxleCamberEval
             F_y_L = F_y_L_temp;
             F_y_R = F_y_R_temp;
             F_y_tot = F_y_L + F_y_R;
+            alpha_val = alpha;
         end
     end
-    alpha_val = alpha_max;
     
     %still have to add overturning moment
     M_x_L = 0;
