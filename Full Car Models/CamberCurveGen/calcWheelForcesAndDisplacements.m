@@ -2,8 +2,8 @@ function [normal_load_vector, wheel_displacement_vector] = calcWheelForcesAndDis
     % + roll angle => car rolls to the left
     
     % 1-FL, 2-FR, 3-RL, 4-RR
-    wheel_displacement_vector = zeroes(4,1);
-    normal_load_vector = zeroes(4,1);
+    wheel_displacement_vector = zeros(4,1);
+    normal_load_vector = zeros(4,1);
     
     %The distance the front wheels move as a function of roll angle
     wheel_displacement_vector(1) = (C.front_width*sind(roll_angle))/2;
