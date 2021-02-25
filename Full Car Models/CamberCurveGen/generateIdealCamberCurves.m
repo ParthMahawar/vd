@@ -29,26 +29,28 @@ C.mass = 395; % not including driver (lb)
 
 %% camber curve optimization
 %roll angles and cambers to search through
-roll_angle_vector = 0:0.5:3;
-camber_vector = -10:1:10;
+roll_angle_vector = 0:0.05:1;
+camber_vector = -5:0.05:3;
 
 %arrays to store ideal camber curves 
-dist_FL_array = zeros(1,numel(roll_angle_vector));
-ideal_FL_camber_array= zeros(1,numel(roll_angle_vector));
+dist_FL_vector = zeros(1,numel(roll_angle_vector));
+ideal_FL_camber_vector = zeros(1,numel(roll_angle_vector));
 
-dist_FR_array = zeros(numel(roll_angle_vector));
-ideal_FR_camber_array= zeros(1,numel(roll_angle_vector));
+dist_FR_vector = zeros(numel(roll_angle_vector));
+ideal_FR_camber_vector = zeros(1,numel(roll_angle_vector));
 
-dist_RL_array = zeros(numel(roll_angle_vector));
-ideal_RL_camber_array= zeros(1,numel(roll_angle_vector));
+dist_RL_vector = zeros(numel(roll_angle_vector));
+ideal_RL_camber_vector = zeros(1,numel(roll_angle_vector));
 
-dist_RR_array = zeros(numel(roll_angle_vector));
-ideal_RR_camber_array= zeros(1,numel(roll_angle_vector));
+dist_RR_vector = zeros(numel(roll_angle_vector));
+ideal_RR_camber_vector = zeros(1,numel(roll_angle_vector));
 
+max_Fy_front_vector = zeros(1,numel(roll_angle_vector));
+max_Fy_rear_vector = zeros(1,numel(roll_angle_vector));
 
 
 %Loop through Roll Angles for front axle
-for i= 1:numel(roll_angle_vector)
+for i = 1:numel(roll_angle_vector)
     
     %car roll angle
     roll_angle = roll_angle_vector(i)
@@ -57,10 +59,10 @@ for i= 1:numel(roll_angle_vector)
     [normal_load_FL, dist_FL, normal_load_FR, dist_FR, normal_load_RL,dist_RL, normal_load_RR, dist_RR] =...
         calcWheelForcesAndDisplacements(roll_angle, C);
     
-    dist_FL_array(i)= dist_FL;
-    dist_FR_array(i)= dist_FR;
-    dist_RL_array(i)= dist_RL;
-    dist_RR_array(i)= dist_RR;
+    dist_FL_vector(i)= dist_FL;
+    dist_FR_vector(i)= dist_FR;
+    dist_RL_vector(i)= dist_RL;
+    dist_RR_vector(i)= dist_RR;
     
     %keep track of best lateral force and cambers
     ideal_gamma_L=0;
@@ -84,8 +86,9 @@ for i= 1:numel(roll_angle_vector)
         end
     end
     %store ideal camber for front tires
-    ideal_FL_camber_array(i) = ideal_gamma_L;
-    ideal_FR_camber_array(i) = ideal_gamma_R;
+    ideal_FL_camber_vector(i) = ideal_gamma_L;
+    ideal_FR_camber_vector(i) = ideal_gamma_R;
+    max_Fy_front_vector(i) = F_y_tot;
     
     %front axle, search through camber combinations for ideal combination
     for gamma_L = camber_vector
@@ -104,45 +107,98 @@ for i= 1:numel(roll_angle_vector)
         end
     end
     %store ideal camber for front tires
-    ideal_RL_camber_array(i) = ideal_gamma_L;
-    ideal_RR_camber_array(i) = ideal_gamma_R;
+    ideal_RL_camber_vector(i) = ideal_gamma_L;
+    ideal_RR_camber_vector(i) = ideal_gamma_R;
+    max_Fy_rear_vector(i) = F_y_tot;
+end
+
+%% plotting by roll
+subplot(3,1,1)
+plot([-flip(roll_angle_vector) roll_angle_vector], [flip(ideal_FL_camber_vector) ideal_FR_camber_vector]);
+title('Front Camber Curve');
+xlabel('roll angle');
+ylabel('ideal camber');
+
+subplot(3,1,2)
+plot([-flip(roll_angle_vector) roll_angle_vector], [flip(ideal_RL_camber_vector) ideal_RR_camber_vector]);
+title('Rear Camber Curve');
+xlabel('roll angle');
+ylabel('ideal camber');
+
+subplot(3,1,3)
+plot(roll_angle_vector, max_Fy_front_vector);
+hold on;
+plot(roll_angle_vector, max_Fy_rear_vector);
+legend('front_Fy', 'rear Fy');
+title('Lateral Force');
+xlabel('roll angle');
+ylabel('max_lateral_force');
+
+
+%% compare to existing
+
+existing_camber_FL_vector = 
+existing_camber_FR_vector = 
+existing_camber_RL_vector = 
+existing_camber_RR_vector = 
+
+existing_Fy_front_vector = zeros(1,numel(roll_angle_vector));
+existing_Fy_rear_vector = zeros(1,numel(roll_angle_vector));
+
+for i = 1:numel(roll_angle_vector)
+    %car roll angle
+    roll_angle = roll_angle_vector(i)
+    
+    %calculate normal loads and wheel displacements at each wheel
+    [normal_load_FL, ~, normal_load_FR, ~, normal_load_RL, ~, normal_load_RR, ~] =...
+        calcWheelForcesAndDisplacements(roll_angle, C);
+    
+    
+    [existing_Fy_front_vector(i), ~, ~, ~, ~, ~] = ...
+        singleAxleCamberEvaluation(normal_load_FL, normal_load_FR, -existing_camber_FL_vector(i), existing_camber_FR_vector(i), tire);
+    
+    [existing_Fy_rear_vector(i), ~, ~, ~, ~, ~] = ...
+        singleAxleCamberEvaluation(normal_load_RL, normal_load_RR, -existing_camber_RL_vector(i), existing_camber_RR_vector(i), tire);
 end
 
 
+
+
+
 %% plotting by roll
-subplot(2,2,1)
-plot(roll_angle_vector, ideal_FL_camber_array);
-title('Front Left Camber Curve');
-
-subplot(2,2,2)
-plot(roll_angle_vector, ideal_FR_camber_array);
-title('Front Right Camber Curve');
-
-subplot(2,2,3)
-plot(roll_angle_vector, ideal_RL_camber_array);
-title('Rear Left Camber Curve');
-
-subplot(2,2,4)
-plot(roll_angle_vector, ideal_RR_camber_array);
-title('Rear Right Camber Curve');
+% subplot(2,2,1)
+% plot(roll_angle_vector, ideal_FL_camber_array);
+% title('Front Left Camber Curve');
+% 
+% subplot(2,2,2)
+% plot(roll_angle_vector, ideal_FR_camber_array);
+% title('Front Right Camber Curve');
+% 
+% subplot(2,2,3)
+% plot(roll_angle_vector, ideal_RL_camber_array);
+% title('Rear Left Camber Curve');
+% 
+% subplot(2,2,4)
+% plot(roll_angle_vector, ideal_RR_camber_array);
+% title('Rear Right Camber Curve');
 
 %% plotting displacement
-
-subplot(2,2,1)
-plot(dist_FL_array, ideal_FL_camber_array);
-title('Front Left Camber Curve');
-
-subplot(2,2,2)
-plot(dist_FR_array, ideal_FR_camber_array);
-title('Front Right Camber Curve');
-
-subplot(2,2,3)
-plot(dist_RL_array, ideal_RL_camber_array);
-title('Rear Left Camber Curve');
-
-subplot(2,2,4)
-plot(dist_RR_array, ideal_RR_camber_array);
-title('Rear Right Camber Curve');
+% 
+% subplot(2,2,1)
+% plot(dist_FL_array, ideal_FL_camber_array);
+% title('Front Left Camber Curve');
+% 
+% subplot(2,2,2)
+% plot(dist_FR_array, ideal_FR_camber_array);
+% title('Front Right Camber Curve');
+% 
+% subplot(2,2,3)
+% plot(dist_RL_array, ideal_RL_camber_array);
+% title('Rear Left Camber Curve');
+% 
+% subplot(2,2,4)
+% plot(dist_RR_array, ideal_RR_camber_array);
+% title('Rear Right Camber Curve');
 
 
 

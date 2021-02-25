@@ -14,12 +14,12 @@ C.front_width = 47;
 C.rear_width = 47;
 
 %Spring Roll Stiffness
-C.front_spring_stiff = 2860; %numbers from LLTD Doc
-C.rear_spring_stiff = 2911;
+C.front_spring_roll_stiffness = 2860; %numbers from LLTD Doc
+C.rear_spring_roll_stiffness = 2911;
 
 %ARB Roll Stiffness (Currently on Short)
-C.front_ARB_stiff = 0;
-C.rear_ARB_stiff = 1493;
+C.front_ARB_roll_stiffness = 0;
+C.rear_ARB_roll_stiffness = 1493;
 
 %Car Weight Distribution
 C.weight_dist = 0.54; % percentage of weight in rear
@@ -33,17 +33,8 @@ roll_angle_vector = 0:0.05:1;
 camber_vector = -5:0.05:3;
 
 %arrays to store ideal camber curves 
-dist_FL_vector = zeros(1,numel(roll_angle_vector));
-ideal_FL_camber_vector = zeros(1,numel(roll_angle_vector));
-
-dist_FR_vector = zeros(numel(roll_angle_vector));
-ideal_FR_camber_vector = zeros(1,numel(roll_angle_vector));
-
-dist_RL_vector = zeros(numel(roll_angle_vector));
-ideal_RL_camber_vector = zeros(1,numel(roll_angle_vector));
-
-dist_RR_vector = zeros(numel(roll_angle_vector));
-ideal_RR_camber_vector = zeros(1,numel(roll_angle_vector));
+wheel_displacement_matrix = zeros(4,numel(roll_angle_vector)); % 1-FL, 2-FR, 3-RL, 4-RR
+ideal_camber_matrix = zeros(4,numel(roll_angle_vector));
 
 max_Fy_front_vector = zeros(1,numel(roll_angle_vector));
 max_Fy_rear_vector = zeros(1,numel(roll_angle_vector));
@@ -56,13 +47,10 @@ for i = 1:numel(roll_angle_vector)
     roll_angle = roll_angle_vector(i)
     
     %calculate normal loads and wheel displacements at each wheel
-    [normal_load_FL, dist_FL, normal_load_FR, dist_FR, normal_load_RL,dist_RL, normal_load_RR, dist_RR] =...
+    [normal_load_vector, wheel_displacement_vector] =...
         calcWheelForcesAndDisplacements(roll_angle, C);
     
-    dist_FL_vector(i)= dist_FL;
-    dist_FR_vector(i)= dist_FR;
-    dist_RL_vector(i)= dist_RL;
-    dist_RR_vector(i)= dist_RR;
+    wheel_displacement_matrix(:,i) = wheel_displacement_vector;
     
     %keep track of best lateral force and cambers
     ideal_gamma_L=0;
@@ -72,7 +60,7 @@ for i = 1:numel(roll_angle_vector)
     %front axle, search through camber combinations for ideal combination
     for gamma_L = camber_vector
         for gamma_R = camber_vector
-            [F_y_tot, F_y_L, F_y_R, M_x_L, M_x_R, alpha_val] = singleAxleCamberEvaluation(normal_load_FL, normal_load_FR, -gamma_L, gamma_R, tire);
+            [F_y_tot, F_y_L, F_y_R, M_x_L, M_x_R, alpha_val] = singleAxleCamberEvaluation(normal_load_vector(1), normal_load_vector(2), -gamma_L, gamma_R, tire);
             
             F_y_L;
             F_y_R;
@@ -86,14 +74,14 @@ for i = 1:numel(roll_angle_vector)
         end
     end
     %store ideal camber for front tires
-    ideal_FL_camber_vector(i) = ideal_gamma_L;
-    ideal_FR_camber_vector(i) = ideal_gamma_R;
+    ideal_camber_matrix(1, i) = ideal_gamma_L;
+    ideal_camber_matrix(2, i) = ideal_gamma_R;
     max_Fy_front_vector(i) = F_y_tot;
     
     %front axle, search through camber combinations for ideal combination
     for gamma_L = camber_vector
         for gamma_R = camber_vector
-            [F_y_tot, F_y_L, F_y_R, M_x_L, M_x_R, alpha_val] = singleAxleCamberEvaluation(normal_load_RL, normal_load_RR, -gamma_L, gamma_R, tire);
+            [F_y_tot, F_y_L, F_y_R, M_x_L, M_x_R, alpha_val] = singleAxleCamberEvaluation(normal_load_vector(3), normal_load_vector(4), -gamma_L, gamma_R, tire);
             
             F_y_L;
             F_y_R;
@@ -107,20 +95,20 @@ for i = 1:numel(roll_angle_vector)
         end
     end
     %store ideal camber for front tires
-    ideal_RL_camber_vector(i) = ideal_gamma_L;
-    ideal_RR_camber_vector(i) = ideal_gamma_R;
+    ideal_camber_matrix(3, i) = ideal_gamma_L;
+    ideal_camber_matrix(4, i) = ideal_gamma_R;
     max_Fy_rear_vector(i) = F_y_tot;
 end
 
 %% plotting by roll
 subplot(3,1,1)
-plot([-flip(roll_angle_vector) roll_angle_vector], [flip(ideal_FL_camber_vector) ideal_FR_camber_vector]);
+plot([-flip(roll_angle_vector) roll_angle_vector], [flip(ideal_camber_matrix(1,:)) ideal_camber_matrix(2,:)]);
 title('Front Camber Curve');
 xlabel('roll angle');
 ylabel('ideal camber');
 
 subplot(3,1,2)
-plot([-flip(roll_angle_vector) roll_angle_vector], [flip(ideal_RL_camber_vector) ideal_RR_camber_vector]);
+plot([-flip(roll_angle_vector) roll_angle_vector], [flip(ideal_camber_matrix(3,:)) ideal_camber_matrix(4,:)]);
 title('Rear Camber Curve');
 xlabel('roll angle');
 ylabel('ideal camber');
@@ -135,7 +123,31 @@ xlabel('roll angle');
 ylabel('max_lateral_force');
 
 
-%% ev
+%% compare to existing
+
+existing_camber_matrix = physicalRollCamber(roll_angle_vector);
+existing_Fy_front_vector = zeros(1,numel(roll_angle_vector));
+existing_Fy_rear_vector = zeros(1,numel(roll_angle_vector));
+
+for i = 1:numel(roll_angle_vector)
+    %car roll angle
+    roll_angle = roll_angle_vector(i);
+    
+    %calculate normal loads and wheel displacements at each wheel
+    [normal_load_FL, ~, normal_load_FR, ~, normal_load_RL, ~, normal_load_RR, ~] =...
+        calcWheelForcesAndDisplacements(roll_angle, C);
+    
+    
+    [existing_Fy_front_vector(i), ~, ~, ~, ~, ~] = ...
+        singleAxleCamberEvaluation(normal_load_FL, normal_load_FR, -existing_camber_matrix(1,i), existing_camber_matrix(2,i), tire);
+    
+    [existing_Fy_rear_vector(i), ~, ~, ~, ~, ~] = ...
+        singleAxleCamberEvaluation(normal_load_RL, normal_load_RR, -existing_camber_matrix(3,i), existing_camber_matrix(4,i), tire);
+end
+
+
+
+
 
 %% plotting by roll
 % subplot(2,2,1)
