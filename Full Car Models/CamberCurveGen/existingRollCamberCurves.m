@@ -30,6 +30,4 @@ function[camber_matrix] = existingRollCamberCurves(roll_angle_vector)
         end
 
     end
-    
-    camber_matrix = camber_matrix;
 end
