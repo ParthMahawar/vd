@@ -115,7 +115,7 @@ ylabel('lateral force');
 
 %% compare to existing
 
-existing_camber_matrix = physicalRollCamber(roll_angle_vector);
+existing_camber_matrix = existingRollCamberCurves(roll_angle_vector);
 existing_Fy_front_vector = zeros(1,numel(roll_angle_vector));
 existing_Fy_rear_vector = zeros(1,numel(roll_angle_vector));
 
