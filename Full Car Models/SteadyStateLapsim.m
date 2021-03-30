@@ -55,9 +55,9 @@ display_point_values_above_bar_flag = true;
 label_cars_automatically_flag = true;
 
 %automatic car labeling
-automatic_label_name = 'Torque Bias Ratio';
-automatic_label = @(car) (1/2+car.powertrain.G_d2_driving)/(1/2-car.powertrain.G_d2_driving);%TBR
-%automatic_label = @(car) car.M;%Car mass
+automatic_label_name = 'Car Mass (Kg)';
+%automatic_label = @(car) (1/2+car.powertrain.G_d2_driving)/(1/2-car.powertrain.G_d2_driving);%TBR
+automatic_label = @(car) car.M;%Car mass
 
 % 1 to select, 0 to exclude
 selected_categories = find([ ... 

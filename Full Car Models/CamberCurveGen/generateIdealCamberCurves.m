@@ -25,7 +25,7 @@ C.rear_spring_roll_stiffness = 2911;
 
 %ARB Roll Stiffness (Currently on Short)
 C.front_ARB_roll_stiffness = 0;
-C.rear_ARB_roll_stiffness = 1493;
+C.rear_ARB_roll_stiffness = 699;986;1493;
 
 %Car Weight Distribution
 C.weight_dist = 0.54; % percentage of weight in rear
@@ -36,7 +36,7 @@ C.mass = 395 + 150; % lbs
 %% camber curve optimization
 %roll angles and cambers to search through
 roll_angle_vector = 0:0.1:1;
-camber_vector = -5:0.05:3;
+camber_vector = -5:0.1:3;
 
 %arrays to store ideal camber curves 
 wheel_displacement_matrix = zeros(4, numel(roll_angle_vector)); % 1-FL, 2-FR, 3-RL, 4-RR
@@ -89,28 +89,35 @@ for i = 1:numel(roll_angle_vector)
     end
 end
 
-%% plotting by roll
-subplot(3,1,1)
+%% plotting ideal results
+subplot(4,1,1)
 plot([-flip(roll_angle_vector) roll_angle_vector], [flip(ideal_camber_matrix(1,:)) ideal_camber_matrix(2,:)],'displayName', 'front camber ideal');
 hold on;
 title('Front Roll Camber');
 xlabel('roll angle');
 ylabel('camber (deg)');
 
-subplot(3,1,2)
+subplot(4,1,2)
 plot([-flip(roll_angle_vector) roll_angle_vector], [flip(ideal_camber_matrix(3,:)) ideal_camber_matrix(4,:)], 'displayName', 'rear camber ideal');
 hold on;
 title('Rear Roll Camber');
 xlabel('roll angle');
 ylabel('camber (deg)');
 
-subplot(3,1,3)
+subplot(4,1,3)
 plot(roll_angle_vector, max_Fy_front_vector, 'displayName', 'front Fy ideal');
 hold on;
 plot(roll_angle_vector, max_Fy_rear_vector, 'displayName', 'rear Fy ideal');
 title('Lateral Force');
 xlabel('roll angle');
 ylabel('lateral force');
+
+subplot(4,1,4)
+plot(roll_angle_vector, max_Fy_rear_vector./(max_Fy_front_vector + max_Fy_rear_vector), 'displayName', 'ideal ratio');
+hold on;
+title('% Lateral Force in Rear');
+xlabel('roll angle');
+ylabel('rear Fy / total Fy');
 
 
 %% compare to existing
@@ -135,41 +142,28 @@ for i = 1:numel(roll_angle_vector)
         singleAxleCamberEvaluation(normal_load_vector(3), normal_load_vector(4), -existing_camber_matrix(3,i), existing_camber_matrix(4,i), tire);
 end
 
-%% plotting
+%% plotting comparison camber curves
 
-subplot(3,1,1);
+% front camber curve
+subplot(4,1,1);
 plot([-flip(roll_angle_vector) roll_angle_vector], [flip(existing_camber_matrix(1,:)) existing_camber_matrix(2,:)], '--', 'displayName', 'front camber existing');
 legend('Location','southeast');
 
-subplot(3,1,2);
+% rear camber curve
+subplot(4,1,2);
 plot([-flip(roll_angle_vector) roll_angle_vector], [flip(existing_camber_matrix(3,:)) existing_camber_matrix(4,:)], '--', 'displayName', 'rear camber existing');
 legend('Location','southeast');
 
-subplot(3,1,3)
+% Fy plots
+subplot(4,1,3)
 plot(roll_angle_vector, existing_Fy_front_vector,'--', 'displayName', 'front Fy existing');
-hold on;
 plot(roll_angle_vector, existing_Fy_rear_vector,'--', 'displayName', 'rear Fy existing');
 %ylim([0,425]);
 legend('Location','southeast');
 
-%% plotting displacement
-% 
-% subplot(2,2,1)
-% plot(dist_FL_array, ideal_FL_camber_array);
-% title('Front Left Camber Curve');
-% 
-% subplot(2,2,2)
-% plot(dist_FR_array, ideal_FR_camber_array);
-% title('Front Right Camber Curve');
-% 
-% subplot(2,2,3)
-% plot(dist_RL_array, ideal_RL_camber_array);
-% title('Rear Left Camber Curve');
-% 
-% subplot(2,2,4)
-% plot(dist_RR_array, ideal_RR_camber_array);
-% title('Rear Right Camber Curve');
-
-
-
-
+% Car balance plot
+subplot(4,1,4)
+plot(roll_angle_vector, existing_Fy_rear_vector./(existing_Fy_rear_vector + existing_Fy_front_vector),'--', 'displayName', 'existing ratio');
+yline(C.weight_dist, 'displayName', '% of weight in the rear');
+ylim([0.4,0.6]);
+legend('Location','southeast');
