@@ -6,7 +6,7 @@ friction_scaling_factor = 1.05*0.55;
 p_i = 12; % tire pressure
 
 %initialize tire object, used for camber evaluation
-tire = Tire2(0,p_i,Fx_parameters,Fy_parameters,friction_scaling_factor);
+tire = Tire2(3,p_i,Fx_parameters,Fy_parameters,friction_scaling_factor);
 
 F_z_vec = 0:1:250;
 F_y_max_vec = 0*F_z_vec;
@@ -16,14 +16,15 @@ for i = 1:numel(F_z_vec)
     for j = 1:numel(alpha_vec)
         F_y_vec(j) = F_y(tire, alpha_vec(j), 0, F_z_vec(i));
     end
-    plot(alpha_vec, F_y_vec, 'displayName', string(F_z_vec(i)));
+    %plot(alpha_vec, F_y_vec, 'displayName', string(F_z_vec(i)));
     hold on;
     F_y_max_vec(i) = max(F_y_vec);
 end
 
-figure;
+%figure;
 
-plot(F_z_vec,F_y_max_vec);
+plot(F_z_vec,F_y_max_vec./F_z_vec);
+hold on;
 
 
 

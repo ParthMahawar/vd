@@ -439,7 +439,7 @@ classdef Car
                 Fzvirtual,Fz,alpha,T]...
                 = obj.equations(P);
             c = [engine_rpm-13000,abs(beta)-20,-Fzvirtual(1:2)];
-            ceq = [P(3)*P(5)-lat_accel_value,(P(4)^2)/radius - lat_accel_value, yaw_accel];
+            ceq = [P(3)*P(5)-lat_accel_value,P(3)/P(5)-radius, yaw_accel, wheel_accel(1:4)];
         end
         
         % objective function

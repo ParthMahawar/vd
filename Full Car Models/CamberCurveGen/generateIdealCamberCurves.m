@@ -30,7 +30,7 @@ C.front_ARB_roll_stiffness = 0;
 C.rear_ARB_roll_stiffness = 0;%699;986;1493;
 
 %Car Weight Distribution
-C.weight_dist = 0.51; % percentage of weight in rear
+C.weight_dist = 0.54; % percentage of weight in rear
 
 %Total Car Weight
 C.mass = (395 + 150); % lbs
@@ -52,6 +52,7 @@ camber_vector = -5:0.1:3;
 
 %arrays to store ideal camber curves 
 wheel_displacement_matrix = zeros(4, numel(roll_angle_vector)); % 1-FL, 2-FR, 3-RL, 4-RR
+normal_load_matrix = zeros(4, numel(roll_angle_vector)); % 1-FL, 2-FR, 3-RL, 4-RR
 ideal_camber_matrix = zeros(4, numel(roll_angle_vector));
 
 max_Fy_front_vector = zeros(3, numel(roll_angle_vector));
@@ -67,13 +68,13 @@ for i = 1:numel(roll_angle_vector)
     %calculate normal loads and wheel displacements at each wheel
     [normal_load_vector, wheel_displacement_vector] =...
         calcWheelForcesAndDisplacements(roll_angle, C);
-    normal_load_vector;
     
+    normal_load_matrix(:,i) = normal_load_vector;
     wheel_displacement_matrix(:,i) = wheel_displacement_vector;
        
     %front axle, search through camber combinations for ideal combination
-    for camber_FL = camber_vector
-        for camber_FR = camber_vector
+    for camber_FL = 0%camber_vector
+        for camber_FR = 0%camber_vector
             [F_y_tot, F_y_L, F_y_R, M_x_L, M_x_R, alpha_val] = ....
                 singleAxleCamberEvaluation(normal_load_vector(1), normal_load_vector(2), -camber_FL*0, camber_FR*0, tire);
             
@@ -130,11 +131,11 @@ legend('Location','southeast');
 
 
 subplot(4,1,3);
-plot(roll_angle_vector, max_Fy_front_vector(2,:), 'displayName', 'front left Fy ideal');
+plot(roll_angle_vector, max_Fy_front_vector(2,:)./normal_load_matrix(1,:), 'displayName', 'front left Fy ideal');
 hold on;
-plot(roll_angle_vector, max_Fy_front_vector(3,:), 'displayName', 'front right Fy ideal');
-plot(roll_angle_vector, max_Fy_rear_vector(2,:), 'displayName', 'rear left Fy ideal');
-plot(roll_angle_vector, max_Fy_rear_vector(3,:), 'displayName', 'rear right Fy ideal');
+plot(roll_angle_vector, max_Fy_front_vector(3,:)./normal_load_matrix(2,:), 'displayName', 'front right Fy ideal');
+plot(roll_angle_vector, max_Fy_rear_vector(2,:)./normal_load_matrix(3,:), 'displayName', 'rear left Fy ideal');
+plot(roll_angle_vector, max_Fy_rear_vector(3,:)./normal_load_matrix(4,:), 'displayName', 'rear right Fy ideal');
 title('Lateral Force');
 xlabel('roll angle');
 ylabel('lateral force');
