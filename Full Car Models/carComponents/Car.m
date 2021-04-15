@@ -429,6 +429,19 @@ classdef Car
                 long_accel, yaw_accel,wheel_accel(1:4)];
         end
         
+        function [c,ceq] = constraint9(obj,P,lat_accel_value, radius) 
+            % lateral acceleration constrained to equal lat_accel_value and
+            % v^2/r
+            % used for optimizing longitudinal acceleration for given
+            % lateral acceleration AND radius
+            
+            [engine_rpm,beta,lat_accel,long_accel,yaw_accel,wheel_accel,omega,current_gear,...
+                Fzvirtual,Fz,alpha,T]...
+                = obj.equations(P);
+            c = [engine_rpm-13000,abs(beta)-20,-Fzvirtual(1:2)];
+            ceq = [P(3)*P(5)-lat_accel_value,(P(4)^2)/radius - lat_accel_value, yaw_accel];
+        end
+        
         % objective function
         function out = long_accel(obj,P)
             % used for optimizing longitudinal acceleration            
