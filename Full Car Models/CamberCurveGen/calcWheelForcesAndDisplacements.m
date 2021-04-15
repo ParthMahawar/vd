@@ -25,6 +25,8 @@ function [normal_load_vector, wheel_displacement_vector] = calcWheelForcesAndDis
         roll_angle / C.rear_width * ( C.rear_spring_roll_stiffness + C.rear_ARB_roll_stiffness );
     normal_load_vector(4) = (C.weight_dist) * (C.mass/2) - ...
         roll_angle / C.rear_width * ( C.rear_spring_roll_stiffness + C.rear_ARB_roll_stiffness );
+    
+    %rear_load_transfer = roll_angle / C.rear_width * ( C.rear_spring_roll_stiffness + C.rear_ARB_roll_stiffness )
 end
 
 
