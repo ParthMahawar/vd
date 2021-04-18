@@ -64,7 +64,6 @@ classdef Powertrain
             engine_rpm = (omega_3+omega_4)/2*obj.drivetrain_reduction(current_gear)*30/pi; %rpm      
             %engine_rpm = (omega_3+omega_4)/2*obj.final_drive(current_gear)*30/pi; %rpm          
         end            
-
         function [T_1,T_2,T_3,T_4] = wheel_torques(obj, engine_rpm, omega_3, omega_4, throttle, current_gear,long_vel)
             % outputs wheel torques
             % driving torque is positive, braking is negative (opposite of SAE convention)
@@ -77,17 +76,16 @@ classdef Powertrain
                 torque_engine = torque_engine*1.35581795; %ft-lb to nm
                 
                 torque_engine = torque_engine*obj.drivetrain_efficiency; 
-
                 % differential model
                 torque_drive = torque_engine*obj.drivetrain_reduction(current_gear);
 
+                if torque_drive < 0 % overrun
                 if torque_drive < 0 % overrun - not used
                     torque_transfer = -obj.G_d1-obj.G_d2_overrun*torque_drive;
                 elseif torque_drive >= 0 % driving
                     torque_transfer = -obj.G_d1+obj.G_d2_driving*torque_drive;
                     %(obj.G_d1+obj.G_d2_driving*torque_drive
                 end
-
                 delta_t = torque_transfer*sign(omega_4-omega_3); % torque transfer
                 
                 T_1 = 0;
@@ -116,4 +114,3 @@ classdef Powertrain
     end
     
 end
-
