@@ -2,7 +2,7 @@ function carCell = carConfig()
 
 % car parameters (updated 2/4/21)
 carParams = struct();
-carParams.mass = 179.2 + 5.9 + [-30:10:30]; % not including driver (395 lb)
+carParams.mass = 179.2 + 5.9; % not including driver (395 lb)
 carParams.driver_weight = 68; % (150 lb)
 carParams.accel_driver_weight = 68; % (150 lb)
 carParams.wheelbase = 1.5494; % 61 in
@@ -37,8 +37,8 @@ DTparams.final_drive = 40/11; % drivetrain sprocket ratio
 DTparams.drivetrain_efficiency = 0.87; % scales torque value
 DTparams.G_d1 = 0; % differential torque transfer offset due to internal friction
 DTparams.G_d2_overrun = 0; % differential torque transfer gain in overrun (not used right now)
-TBR = [1:0.1:2];
-DTparams.G_d2_driving = 0;%(TBR-1)./(2+2*TBR); % differential torque transfer gain on power
+TBR = [4];
+DTparams.G_d2_driving = (TBR-1)./(2+2*TBR); % differential torque transfer gain on power
 
 % brake parameters (updated 5/1/19)
 Bparams = struct();

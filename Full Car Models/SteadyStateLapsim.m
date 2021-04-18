@@ -43,7 +43,7 @@ end
 fprintf("done\n");
 
 %% Saving
-%save('Lapsim_B22_no_undertray.mat','carCell');
+save('TBR testing.mat','carCell');
 
 %% Points Plotting
 
@@ -55,16 +55,16 @@ display_point_values_above_bar_flag = true;
 label_cars_automatically_flag = true;
 
 %automatic car labeling
-automatic_label_name = 'Car Mass (Kg)';
-%automatic_label = @(car) (1/2+car.powertrain.G_d2_driving)/(1/2-car.powertrain.G_d2_driving);%TBR
-automatic_label = @(car) car.M;%Car mass
+automatic_label_name = 'TBR';
+automatic_label = @(car) (1/2+car.powertrain.G_d2_driving)/(1/2-car.powertrain.G_d2_driving);%TBR
+%automatic_label = @(car) car.M;%Car mass
 
 % 1 to select, 0 to exclude
 selected_categories = find([ ... 
-     0 ... %Accel
-     0 ... %Autocross
-     0 ... %Endurance
-     0 ... %Skidpad
+     1 ... %Accel
+     1 ... %Autocross
+     1 ... %Endurance
+     1 ... %Skidpad
      1 ... %Total
 ]);
 
@@ -76,11 +76,11 @@ plot_lapsim_points(carCell, display_point_values_above_bar_flag, true,...
 car = carCell{1,1};
 
 % set desired plots to 1
-plot1 = 0; % velocity-dependent g-g diagram scatter plot
-plot2 = 0; % velocity-dependent g-g diagram surface
-plot3 = 0; % max accel for given velocity and lateral g w/ scattered interpolant
-plot4 = 0; % max braking for given velocity and lateral w/ scattered interpolant
-plot5 = 0; % 2D g-g diagram for velocity specified below (gg_vel)
+plot1 = 1; % velocity-dependent g-g diagram scatter plot
+plot2 = 1; % velocity-dependent g-g diagram surface
+plot3 = 1; % max accel for given velocity and lateral g w/ scattered interpolant
+plot4 = 1; % max braking for given velocity and lateral w/ scattered interpolant
+plot5 = 1; % 2D g-g diagram for velocity specified below (gg_vel)
 
 g_g_vel = [14 12 26]; % can input vector to overlay different velocities
 
@@ -90,13 +90,13 @@ plotter(car,g_g_vel,plot_choice);
 %% Event Plotting
 
 % select desired comp object
-comp = carCell{1,1}.comp;
+comp = carCell{4,1}.comp;
 
 % set desired plots to 1
 plot1 = 0; % autocross track distance vs curvature
 plot2 = 0; % endurance track distance vs curvature
 plot3 = 0; % max possible velocity for given radius
-plot4 = 0; % max possible long accel for given velocity
+plot4 = 1; % max possible long accel for given velocity
 plot5 = 0; % accel event longitudinal velocity vs time
 plot6 = 0; % accel event longitudinal accel vs time
 plot7 = 0; % autocross gear shifts

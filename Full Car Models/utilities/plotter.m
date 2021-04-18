@@ -3,7 +3,7 @@ function [] = plotter(car,g_g_vel,plot_choice)
 
 max_vel = car.max_vel;
 
-long_g_accel = car.longAccelLookup(:,1)'/9.81;
+long_g_accel = car.longAccelLookup(:,1)'/9.81
 lat_g_accel = car.longAccelLookup(:,2)'/9.81;
 vel_accel = car.longAccelLookup(:,3)';
 

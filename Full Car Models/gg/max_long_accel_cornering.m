@@ -5,7 +5,7 @@ function [x_accel,long_accel,long_accel_guess] = max_long_accel_cornering(long_v
 if nargin == 3 % no initial guess supplied
     % initial guesses
     steer_angle_guess = 1;
-    throttle_guess = 0.1;
+    throttle_guess = 0.2;%0.1
     lat_vel_guess = -0.1;
     yaw_rate_guess = 0.1;
 
@@ -72,6 +72,11 @@ long_accel_guess = x;
 % generate vector of control variable values
 x_accel = [exitflag long_accel lat_accel x omega(1:4) engine_rpm current_gear beta...
     Fz(1:4) alpha(1:4) T(1:4)];
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+if (exitflag ~= 1)
+    exitflag
+end
     
 long_accel = long_accel;
 
