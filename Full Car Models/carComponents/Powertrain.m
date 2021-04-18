@@ -88,6 +88,10 @@ classdef Powertrain
                 end
                 delta_t = torque_transfer*sign(omega_4-omega_3); % torque transfer
                 
+                if omega_3 / omega_4 > 0.95 && omega_3 / omega_4 < 1.055 % wheel speeds close
+                    delta_t = 0;
+                end
+                
                 T_1 = 0;
                 T_2 = 0;
                 T_3 = (torque_engine*obj.drivetrain_reduction(current_gear))/2+delta_t;
