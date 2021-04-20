@@ -1,12 +1,16 @@
+clc
+clear all;
 load('fmincon inputs.mat');
 long_vel_guess = C.long_vel_guess;
 lat_accel_value = C.lat_accel_value;
 car = C.car;
 
+car.powertrain.G_d2_driving = 0;
+
 
 % initial guesses
-steer_angle_guess = -2;%1
-throttle_guess = 1;%0.1
+steer_angle_guess = 1;%1
+throttle_guess = 0.1;%0.1
 lat_vel_guess = -0.1;
 yaw_rate_guess = lat_accel_value/long_vel_guess;
 
@@ -70,10 +74,10 @@ options = optimoptions('fmincon','MaxFunctionEvaluations',5000,'ConstraintTolera
 [engine_rpm,beta,lat_accel,long_accel,yaw_accel,wheel_accel,omega,current_gear,...
 Fzvirtual,Fz,alpha,T] = car.equations(x);
 
-long_accel_guess = x;
+long_accel_guess = x
 
 % generate vector of control variable values
 x_accel = [exitflag long_accel lat_accel x omega(1:4) engine_rpm current_gear beta...
-    Fz(1:4) alpha(1:4) T(1:4)]
+    Fz(1:4) alpha(1:4) T(1:4)];
 
 long_accel = long_accel;
