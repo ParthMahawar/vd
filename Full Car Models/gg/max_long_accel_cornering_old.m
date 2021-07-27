@@ -1,18 +1,13 @@
 function [x_accel,long_accel,long_accel_guess] = max_long_accel_cornering(long_vel_guess,lat_accel_value,car,x0)
-C.long_vel_guess = long_vel_guess;
-C.lat_accel_value = lat_accel_value;
-C.car = car;
-
-
 % uses fmincon to minimize the objective function subject to constraints
 % optimizes longitudinal acceleration with given lateral acceleration constraint
 % disp('max_long_accel_corner');
 if nargin == 3 % no initial guess supplied
     % initial guesses
-    steer_angle_guess = -2;%1
+    steer_angle_guess = 25;%1
     throttle_guess = 1;%0.1
     lat_vel_guess = -0.1;
-    yaw_rate_guess = lat_accel_value/long_vel_guess;
+    yaw_rate_guess = 0.1;
 
     kappa_1_guess = 0;
     kappa_2_guess = 0;
@@ -37,7 +32,7 @@ steer_angle_bounds = [0,25];
 throttle_bounds = [0,1];
 long_vel_bounds = [long_vel_guess,long_vel_guess];
 lat_vel_bounds = [-3,3];
-yaw_rate_bounds = [lat_accel_value/long_vel_guess,lat_accel_value/long_vel_guess];
+yaw_rate_bounds = [0,2];
 kappa_1_bounds = [0,0];
 kappa_2_bounds = [0,0];
 kappa_3_bounds = [0,0.2];
@@ -65,9 +60,7 @@ constraint = @(P) car.constraint4(P,lat_accel_value);
 
 % default algorithm is interior-point
 
-%options = setOptimoptions(1000);
-options = optimoptions('fmincon','MaxFunctionEvaluations',5000,'ConstraintTolerance',1e-2,...
-    'StepTolerance',1e-10,'Display','notify-detailed');
+options = setOptimoptions(1000);
 % fval: objective function value (v^2/r) 
 [x,fval,exitflag] = fmincon(f,x0,A,b,Aeq,beq,lb,ub,constraint,options);
 
@@ -83,8 +76,7 @@ x_accel = [exitflag long_accel lat_accel x omega(1:4) engine_rpm current_gear be
 long_accel = long_accel;
 
 if(exitflag ~= 1)
-    x_accel
-    save('fmincon inputs.mat','C');
+    exitflag
 end
 
 end
