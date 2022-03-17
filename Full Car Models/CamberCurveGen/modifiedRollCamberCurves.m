@@ -1,5 +1,5 @@
 function[camber_matrix] = modifiedRollCamberCurves(roll_angle_vector)
-    % Returns phyical camber givn a vector of roll angles
+    % Returns physical camber given a vector of roll angles
     % Convention: 1 = front left, 2 = front right, 
     %             3 = rear left, 4 = rear right
 
