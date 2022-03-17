@@ -89,17 +89,17 @@
   <MathExpression Id="Understeer Angle" DisplayDPS="2" DisplayColorIndex="3" Interpolate="1" Script="'Corr Steer Angle'-('Wheelbase' [in]*0.0254*'Inverse Corner Radius'*(180/3.14))" SampleRate="0" Unit=""/>
   <MathExpression Id="Corr Steer Angle" DisplayDPS="2" DisplayColorIndex="4" Interpolate="1" Script="0" SampleRate="0" Unit=""/>
   <MathExpression Id="G Force Combined" DisplayDPS="2" DisplayColorIndex="0" Interpolate="1" Script="sqrt((sqr('G Force Lat' [G]) +sqr('G Force Long' [G])))" SampleRate="0" Unit=""/>
-  <MathExpression Id="G Force Lat 10-20mph" DisplayUnit="" DisplayDPS="2" DisplayColorIndex="1" Interpolate="1" EnumerationName="" Script="'G Force Lat' [G]*('Corr Speed' [mph]  &gt; 10  AND 'Corr Speed' [mph] &lt;= 20)" SampleRate="0" Unit=""/>
-  <MathExpression Id="G Force Lon 10-20mph" DisplayUnit="" DisplayDPS="2" DisplayColorIndex="2" Interpolate="1" EnumerationName="" Script="'G Force Long' [G]*('Corr Speed' [mph]  &gt; 10  AND 'Corr Speed' [mph] &lt;= 20)" SampleRate="0" Unit=""/>
-  <MathExpression Id="G Force Lat 20-30mph" DisplayUnit="" DisplayDPS="2" DisplayColorIndex="3" Interpolate="1" EnumerationName="" Script="'G Force Lat' [G]*('Corr Speed' [mph]  &gt; 20  AND 'Corr Speed' [mph] &lt;= 30)" SampleRate="0" Unit=""/>
-  <MathExpression Id="G Force Lon 20-30mph" DisplayUnit="" DisplayDPS="2" DisplayColorIndex="4" Interpolate="1" EnumerationName="" Script="'G Force Long' [G]*('Corr Speed' [mph]  &gt; 20  AND 'Corr Speed' [mph] &lt;= 30)" SampleRate="0" Unit=""/>
-  <MathExpression Id="G Force Lat 30-40mph" DisplayUnit="" DisplayDPS="2" DisplayColorIndex="5" Interpolate="1" EnumerationName="" Script="'G Force Lat' [G]*('Corr Speed' [mph]  &gt; 30  AND 'Corr Speed' [mph] &lt;= 40)" SampleRate="0" Unit=""/>
-  <MathExpression Id="G Force Lon 30-40mph" DisplayUnit="" DisplayDPS="2" DisplayColorIndex="6" Interpolate="1" EnumerationName="" Script="'G Force Long' [G]*('Corr Speed' [mph]  &gt; 30  AND 'Corr Speed' [mph] &lt;= 40)" SampleRate="0" Unit=""/>
-  <MathExpression Id="G Force Lat 40-50mph" DisplayUnit="" DisplayDPS="2" DisplayColorIndex="7" Interpolate="1" EnumerationName="" Script="'G Force Lat' [G]*('Corr Speed' [mph]  &gt; 40  AND 'Corr Speed' [mph] &lt;= 50)" SampleRate="0" Unit=""/>
-  <MathExpression Id="G Force Lon 40-50mph" DisplayUnit="" DisplayDPS="2" DisplayColorIndex="0" Interpolate="1" EnumerationName="" Script="'G Force Long' [G]*('Corr Speed' [mph]  &gt; 40  AND 'Corr Speed' [mph] &lt;= 50)" SampleRate="0" Unit=""/>
-  <MathExpression Id="G Force Lat 50-60mph" DisplayUnit="" DisplayDPS="2" DisplayColorIndex="1" Interpolate="1" EnumerationName="" Script="'G Force Lat' [G]*('Corr Speed' [mph]  &gt; 50  AND 'Corr Speed' [mph] &lt;= 60)" SampleRate="0" Unit=""/>
-  <MathExpression Id="G Force Lon 50-60mph" DisplayUnit="" DisplayDPS="2" DisplayColorIndex="2" Interpolate="1" EnumerationName="" Script="'G Force Long' [G]*('Corr Speed' [mph]  &gt; 50  AND 'Corr Speed' [mph] &lt;= 60)" SampleRate="0" Unit=""/>
-  <MathExpression Id="G Force Lat &gt; 60mph" DisplayUnit="" DisplayDPS="2" DisplayColorIndex="3" Interpolate="1" EnumerationName="" Script="'G Force Lat' [G]*('Corr Speed' [mph] &gt; 60)" SampleRate="0" Unit=""/>
-  <MathExpression Id="G force lon &gt; 60mph" DisplayUnit="" DisplayDPS="2" DisplayColorIndex="4" Interpolate="1" EnumerationName="" Script="'G Force Long' [G]*('Corr Speed' [mph] &gt; 60)" SampleRate="0" Unit=""/>
+  <MathExpression Id="G Force Lat 10-20mph" DisplayDPS="2" DisplayColorIndex="1" Interpolate="1" Script="'G Force Lat' [G]*('Corr Speed' [mph]  &gt; 10  AND 'Corr Speed' [mph] &lt;= 20)" SampleRate="0" Unit=""/>
+  <MathExpression Id="G Force Lon 10-20mph" DisplayDPS="2" DisplayColorIndex="2" Interpolate="1" Script="'G Force Long' [G]*('Corr Speed' [mph]  &gt; 10  AND 'Corr Speed' [mph] &lt;= 20)" SampleRate="0" Unit=""/>
+  <MathExpression Id="G Force Lat 20-30mph" DisplayDPS="2" DisplayColorIndex="3" Interpolate="1" Script="'G Force Lat' [G]*('Corr Speed' [mph]  &gt; 20  AND 'Corr Speed' [mph] &lt;= 30)" SampleRate="0" Unit=""/>
+  <MathExpression Id="G Force Lon 20-30mph" DisplayDPS="2" DisplayColorIndex="4" Interpolate="1" Script="'G Force Long' [G]*('Corr Speed' [mph]  &gt; 20  AND 'Corr Speed' [mph] &lt;= 30)" SampleRate="0" Unit=""/>
+  <MathExpression Id="G Force Lat 30-40mph" DisplayDPS="2" DisplayColorIndex="5" Interpolate="1" Script="'G Force Lat' [G]*('Corr Speed' [mph]  &gt; 30  AND 'Corr Speed' [mph] &lt;= 40)" SampleRate="0" Unit=""/>
+  <MathExpression Id="G Force Lon 30-40mph" DisplayDPS="2" DisplayColorIndex="6" Interpolate="1" Script="'G Force Long' [G]*('Corr Speed' [mph]  &gt; 30  AND 'Corr Speed' [mph] &lt;= 40)" SampleRate="0" Unit=""/>
+  <MathExpression Id="G Force Lat 40-50mph" DisplayDPS="2" DisplayColorIndex="7" Interpolate="1" Script="'G Force Lat' [G]*('Corr Speed' [mph]  &gt; 40  AND 'Corr Speed' [mph] &lt;= 50)" SampleRate="0" Unit=""/>
+  <MathExpression Id="G Force Lon 40-50mph" DisplayDPS="2" DisplayColorIndex="0" Interpolate="1" Script="'G Force Long' [G]*('Corr Speed' [mph]  &gt; 40  AND 'Corr Speed' [mph] &lt;= 50)" SampleRate="0" Unit=""/>
+  <MathExpression Id="G Force Lat 50-60mph" DisplayDPS="2" DisplayColorIndex="1" Interpolate="1" Script="'G Force Lat' [G]*('Corr Speed' [mph]  &gt; 50  AND 'Corr Speed' [mph] &lt;= 60)" SampleRate="0" Unit=""/>
+  <MathExpression Id="G Force Lon 50-60mph" DisplayDPS="2" DisplayColorIndex="2" Interpolate="1" Script="'G Force Long' [G]*('Corr Speed' [mph]  &gt; 50  AND 'Corr Speed' [mph] &lt;= 60)" SampleRate="0" Unit=""/>
+  <MathExpression Id="G Force Lat &gt; 60mph" DisplayDPS="2" DisplayColorIndex="3" Interpolate="1" Script="'G Force Lat' [G]*('Corr Speed' [mph] &gt; 60)" SampleRate="0" Unit=""/>
+  <MathExpression Id="G force lon &gt; 60mph" DisplayDPS="2" DisplayColorIndex="4" Interpolate="1" Script="'G Force Long' [G]*('Corr Speed' [mph] &gt; 60)" SampleRate="0" Unit=""/>
  </MathItems>
 </Maths>

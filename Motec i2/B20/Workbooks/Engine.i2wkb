@@ -26,8 +26,8 @@
         <Line Index="2" Enabled="0" Value="0" Color="248,0,0"/>
        </Lines>
        <Traces ActiveTrace="Air Temp Inlet">
-        <Trace Id="Air Temp Inlet" DisplayUnit="C" DisplayDPS="1" Visible="1"/>
-        <Trace Id="Engine Temp" DisplayUnit="C" DisplayDPS="1" Visible="1"/>
+        <Trace Id="Air Temp Inlet" DisplayUnit="F" DisplayDPS="1" Visible="1"/>
+        <Trace Id="Engine Temp" DisplayUnit="F" DisplayDPS="1" Visible="1"/>
        </Traces>
       </Graph>
       <Graph Name="Group 4" ScaleMode="2" ScaleMin="0" ScaleMax="1">

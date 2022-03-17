@@ -40,13 +40,14 @@ steerDeg = 5;
 %steer = deg2rad(steerDeg)*[zeros(1,n/8) ones(1,7*n/8)];
 
 time = 0:car.TSmpc:car.TSmpc*(n-1);
+steer = (time>car.TSmpc*(n-1)/2)*deg2rad(steerDeg);
 % steer = steer.*sin((2*pi)*time);
 % steer(1:3000) = 0;
 % 
-steer = chirp(time,0,time(end),2,'linear',-90);
+%steer = chirp(time,0,time(end),2,'linear',-90);
 %steer =  deg2rad(steerDeg)*[zeros(1,3000) steer(1:end-3000)];
 
-throttle = zeros(1,n);
+throttle = (time>car.TSmpc*(n-1)*3/4)*-1;
 %throttle = 0.1*ones(1,n);
 %throttle = [0*ones(1,n/2) 1*ones(1,n/4) -0.3*ones(1,n/4)];
 % throttle = [zeros(1,n/4) ones(1,2*n/4) -ones(1,n/4)];
@@ -94,7 +95,7 @@ bounce = yArr(1,:);
 phi = yArr(2,:);
 theta = yArr(3,:);
 
-ic = 600;
+ic = 3;
 figure(1);clf
 plot(xArr(5,:),xArr(6,:));
 hold on

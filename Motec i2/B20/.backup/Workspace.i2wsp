@@ -3,12 +3,18 @@
  <Resources/>
  <LatGTrackGen/>
  <DataSelect SelectFastestOnLoad="1" DefaultShowDisabled="0" MainColorSource="0">
-  <Explore HRef="C:\Users\khnay\Dropbox\2018 Testing\test day data\3_25_19 Crows with B19 + B18 (COTG)"/>
-  <DataSources/>
-  <View Name="Laps" Color="128,240,0" View="Laps"/>
-  <View Name="Outings" Color="240,128,0" View="Outings"/>
+  <Explore HRef="C:\Users\scruf\Dropbox\BFR\2018 Testing\test day data\6_20_2019_COMP\Data"/>
+  <DataSources>
+   <LoggedDataSource Name="C:\Users\scruf\Dropbox\BFR\2018 Testing\test day data\6_20_2019_COMP\Data\20190620-0011601.ld"/>
+  </DataSources>
+  <View Name="Laps" Color="128,240,0" View="Laps">
+   <Main Range.Id="C:\Users\scruf\Dropbox\BFR\2018 Testing\test day data\6_20_2019_COMP\Data\20190620-0011601.ld::::No Lap"/>
+  </View>
+  <View Name="Outings" Color="240,128,0" View="Outings">
+   <Main Range.Id="C:\Users\scruf\Dropbox\BFR\2018 Testing\test day data\6_20_2019_COMP\Data\20190620-0011601.ld::::6:07:43 PM,  "/>
+  </View>
  </DataSelect>
- <ChannelsWindow/>
+ <ChannelsWindow Method="2"/>
  <CAN/>
  <MoTeC.TrackPos Version="100" Name="TrackPosCtrl.inner" PosPC="0,0,225,200" ShowCaption="0" AutoCaption="0" LinkZoom="1" ModeId="" ShowDataLegend="1" TelemetryZoom="0" ShowSectLabels="0" ShowSectMarks="1" LinkCursor="1" UseLocalColors="0">
   <ComponentColorScheme>
@@ -64,7 +70,7 @@
   <Key Name="F7" Customised="0" Prompted="0"/>
   <Key Name="F8" Customised="0" Prompted="1"/>
  </QuickSelectKeys>
- <Workbooks Version="100" Name="My Workbooks" Active="Aero">
+ <Workbooks Version="100" Name="My Workbooks" Active="Engine">
   <Workbook Name="Driver" XRef="Workbooks\Driver.i2wkb"/>
   <Workbook Name="Engine" XRef="Workbooks\Engine.i2wkb"/>
   <Workbook Name="Transmission" XRef="Workbooks\Transmission.i2wkb"/>
@@ -82,7 +88,7 @@
  <DockWindows>
   <DockWindow Id="Alarms" Visible="0" IsDocked="1" IsPinned="1" DockOffset="0.25" DockSide="0" DockIndex="0" Height="160" Width="220"/>
   <DockWindow Id="Data" Visible="1" IsDocked="1" IsPinned="1" DockOffset="0" DockSide="35" DockIndex="0" Height="110" Width="495"/>
-  <DockWindow Id="Channels" Visible="1" IsDocked="1" IsPinned="1" DockOffset="0" DockSide="35" DockIndex="1" Height="110" Width="219"/>
+  <DockWindow Id="Channels" Visible="1" IsDocked="1" IsPinned="1" DockOffset="0" DockSide="35" DockIndex="1" Height="110" Width="236"/>
   <DockWindow Id="Reports" Visible="1" IsDocked="1" IsPinned="1" DockOffset="0" DockSide="35" DockIndex="2" Height="110" Width="220"/>
   <DockWindow Id="Layouts" Visible="1" IsDocked="1" IsPinned="1" DockOffset="0" DockSide="35" DockIndex="3" Height="110" Width="220"/>
   <DockWindow Id="Track" Visible="0" IsDocked="0" Position="460,323,701,491"/>

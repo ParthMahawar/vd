@@ -82,11 +82,11 @@ classdef Powertrain
                 if torque_drive < 0 % overrun - not used
                     torque_transfer = 0;%-obj.G_d1-obj.G_d2_overrun*torque_drive;
                 elseif torque_drive >= 0 % driving
-%                    torque_transfer = -obj.G_d1+obj.G_d2_driving*torque_drive; % original clutch plate LSD
+                    %torque_transfer = -obj.G_d1+obj.G_d2_driving*torque_drive; % original clutch plate LSD
                     %(obj.G_d1+obj.G_d2_driving*torque_drive
                     
                     omega_difference = abs(omega_4-omega_3); % updated LSD model
-                    scaling_factor = min(omega_difference/3, 1); % idk what this is supposed to be
+                    scaling_factor = min(omega_difference/10, 1); %limit torque transfer to TBR
                     torque_transfer = scaling_factor*torque_drive*obj.G_d2_driving;
                     
                     if torque_transfer >= obj.G_d2_driving*torque_drive % cap transfer at max for input TBR
@@ -94,10 +94,6 @@ classdef Powertrain
                     end
                 end
                 delta_t = torque_transfer*sign(omega_4-omega_3); % torque transfer
-                
-%                 if omega_3 / omega_4 > 0.95 && omega_3 / omega_4 < 1.055 % wheel speeds close
-%                    delta_t = 0;
-%                 end
                 
                 T_1 = 0;
                 T_2 = 0;

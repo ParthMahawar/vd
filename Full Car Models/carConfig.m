@@ -37,7 +37,7 @@ DTparams.final_drive = 40/11; % drivetrain sprocket ratio
 DTparams.drivetrain_efficiency = 0.87; % scales torque value
 DTparams.G_d1 = 0; % differential torque transfer offset due to internal friction
 DTparams.G_d2_overrun = 0; % differential torque transfer gain in overrun (not used right now)
-TBR = [4];
+TBR = 1;%1:0.5:4;
 DTparams.G_d2_driving = (TBR-1)./(2+2*TBR); % differential torque transfer gain on power
 
 % brake parameters (updated 5/1/19)

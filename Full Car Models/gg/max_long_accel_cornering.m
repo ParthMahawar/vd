@@ -65,9 +65,9 @@ constraint = @(P) car.constraint4(P,lat_accel_value);
 
 % default algorithm is interior-point
 
-%options = setOptimoptions(1000);
-options = optimoptions('fmincon','MaxFunctionEvaluations',5000,'ConstraintTolerance',1e-2,...
-    'StepTolerance',1e-10,'Display','notify-detailed');
+options = setOptimoptions(1000);
+%options = optimoptions('fmincon','MaxFunctionEvaluations',5000,'ConstraintTolerance',1e-2,...
+%    'StepTolerance',1e-10,'Display','notify-detailed');
 % fval: objective function value (v^2/r) 
 [x,fval,exitflag] = fmincon(f,x0,A,b,Aeq,beq,lb,ub,constraint,options);
 
@@ -79,13 +79,11 @@ long_accel_guess = x;
 % generate vector of control variable values
 x_accel = [exitflag long_accel lat_accel x omega(1:4) engine_rpm current_gear beta...
     Fz(1:4) alpha(1:4) T(1:4)];
-
-long_accel = long_accel;
-
-if(exitflag ~= 1)
-    x_accel
-    save('fmincon inputs.mat','C');
-end
+% 
+% if(exitflag ~= 1)
+%     x_accel
+%     save('fmincon inputs.mat','C');
+% end
 
 end
 

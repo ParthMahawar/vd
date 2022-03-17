@@ -314,5 +314,5 @@ load('TemperatureCompensated_Fy_pure_parameters_1965run15.mat')
 combined_parameters(1:27) = Xbestcell(1:27);
 Xbestcell = combined_parameters;
 
-save('TemperatureCompensated_Fy_combined_parameters_1965run6.mat','Xbestcell');
+%save('TemperatureCompensated_Fy_combined_parameters_1965run6.mat','Xbestcell');
 

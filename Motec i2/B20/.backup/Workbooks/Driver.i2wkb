@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <Workbook Locale="English_United States.1252" DefaultLocale="C" Version="200" Name="Driver" Profile="Circuit" Active="Worksheets">
- <Worksheets Version="100" Name="Worksheets" PosPC="0,0,1000,1000" Active="blank">
+ <Worksheets Version="100" Name="Worksheets" PosPC="0,0,1000,1000" Active="Car Health">
   <Worksheet Version="200" Name="Driver General" LinkTo="Laps" LockByGPSTime="0">
    <Controls Active="Copy (1) of Copy (1) of Time/Distance [1]">
     <MoTeC.TimeDistance Version="100" Name="Copy (1) of Copy (1) of Time/Distance [1]" PosPC="0,0,1000,760" ShowCaption="0" AutoCaption="0" LinkZoom="1" ModeId="0" ShowDataLegend="1" ShowColorLegend="1" TelemetryZoom="0" TraceLineWidth="1" TracePointSize="3" TraceStyle="0" LinkCursor="1" LinkDatum="1" ShowKeyValues="1" ShowKeyStats="1" KeyMode="0" KeyPos="1" ShowGridLines="1" ShowXAxis="1" ShowXAxisScrollBar="0" ShowYAxis="1" ShowYAxisScrollBar="1" ShowMarkers="1" ShowVSP="0" ShowDeviveEvents="1" ShowBands="1" BandGroup="Outings:Laps:Track Sections:Default" BandMode="1" OverlapMode="0" VariancePos="0.25" VarianceAutoScale="1">
@@ -245,9 +245,9 @@
   <Worksheet Version="200" Name="Car Health" LinkTo="Laps" LockByGPSTime="0">
    <Controls Active="Time/Distance Graph">
     <MoTeC.TimeDistance Version="100" Name="Time/Distance Graph" PosPC="0,0,1000,1000" ShowCaption="0" AutoCaption="0" LinkZoom="1" ModeId="0" ShowDataLegend="1" ShowColorLegend="1" TelemetryZoom="0" TraceLineWidth="1" TracePointSize="3" TraceStyle="0" LinkCursor="1" LinkDatum="1" ShowKeyValues="1" ShowKeyStats="1" KeyMode="0" KeyPos="1" ShowGridLines="1" ShowXAxis="1" ShowXAxisScrollBar="0" ShowYAxis="1" ShowYAxisScrollBar="1" ShowMarkers="1" ShowVSP="0" ShowDeviveEvents="1" ShowBands="1" BandGroup="Outings:Laps:Track Sections:Default" BandMode="1" OverlapMode="0" VariancePos="0.25" VarianceAutoScale="1">
-     <Graphs ActivateChild="Group 4">
+     <Graphs ActivateChild="Group 2">
       <Graph Name="Group 1" ScaleMode="2" ScaleMin="0" ScaleMax="1">
-       <Edges Mode="0" TopEdge="0" BottomEdge="190"/>
+       <Edges Mode="0" TopEdge="0" BottomEdge="118"/>
        <Edges Mode="1" TopEdge="0" BottomEdge="1000"/>
        <Lines>
         <Line Index="0" Enabled="1" Value="0" Color="210,210,210"/>
@@ -259,7 +259,7 @@
        </Traces>
       </Graph>
       <Graph Name="Group 3" ScaleMode="2" ScaleMin="0" ScaleMax="1">
-       <Edges Mode="0" TopEdge="190" BottomEdge="399"/>
+       <Edges Mode="0" TopEdge="118" BottomEdge="248"/>
        <Edges Mode="1" TopEdge="0" BottomEdge="1000"/>
        <Lines>
         <Line Index="0" Enabled="1" Value="0" Color="210,210,210"/>
@@ -271,7 +271,7 @@
        </Traces>
       </Graph>
       <Graph Name="Group 4" ScaleMode="2" ScaleMin="0" ScaleMax="1">
-       <Edges Mode="0" TopEdge="399" BottomEdge="599"/>
+       <Edges Mode="0" TopEdge="248" BottomEdge="373"/>
        <Edges Mode="1" TopEdge="0" BottomEdge="1000"/>
        <Lines>
         <Line Index="0" Enabled="1" Value="0" Color="210,210,210"/>
@@ -283,7 +283,7 @@
        </Traces>
       </Graph>
       <Graph Name="Group 5" ScaleMode="2" ScaleMin="0" ScaleMax="1">
-       <Edges Mode="0" TopEdge="599" BottomEdge="799"/>
+       <Edges Mode="0" TopEdge="373" BottomEdge="501"/>
        <Edges Mode="1" TopEdge="0" BottomEdge="1000"/>
        <Lines>
         <Line Index="0" Enabled="1" Value="0" Color="210,210,210"/>
@@ -291,11 +291,11 @@
         <Line Index="2" Enabled="0" Value="0" Color="248,0,0"/>
        </Lines>
        <Traces ActiveTrace="Engine Temp">
-        <Trace Id="Engine Temp" DisplayUnit="C" DisplayDPS="1" Visible="1"/>
+        <Trace Id="Engine Temp" DisplayUnit="F" DisplayDPS="1" Visible="1"/>
        </Traces>
       </Graph>
       <Graph Name="Group 6" ScaleMode="2" ScaleMin="0" ScaleMax="1">
-       <Edges Mode="0" TopEdge="799" BottomEdge="1000"/>
+       <Edges Mode="0" TopEdge="501" BottomEdge="563"/>
        <Edges Mode="1" TopEdge="0" BottomEdge="1000"/>
        <Lines>
         <Line Index="0" Enabled="1" Value="0" Color="210,210,210"/>
@@ -304,6 +304,44 @@
        </Lines>
        <Traces ActiveTrace="Battery Volts">
         <Trace Id="Battery Volts" DisplayUnit="V" DisplayDPS="2" Visible="1"/>
+       </Traces>
+      </Graph>
+      <Graph Name="Group 2" ScaleMode="2" ScaleMin="0" ScaleMax="1">
+       <Edges Mode="0" TopEdge="563" BottomEdge="749"/>
+       <Edges Mode="1" TopEdge="0" BottomEdge="1000"/>
+       <Lines>
+        <Line Index="0" Enabled="1" Value="0" Color="210,210,210"/>
+        <Line Index="1" Enabled="0" Value="0" Color="0,0,248"/>
+        <Line Index="2" Enabled="0" Value="0" Color="248,0,0"/>
+       </Lines>
+       <Traces ActiveTrace="4th gear">
+        <Trace Id="2nd gear" DisplayUnit="" DisplayDPS="2" Visible="1"/>
+        <Trace Id="4th gear" DisplayUnit="" DisplayDPS="2" Visible="1"/>
+        <Trace Id="Accel And Cornering Grip" DisplayUnit="" DisplayDPS="2" Visible="1"/>
+       </Traces>
+      </Graph>
+      <Graph Name="Group 7" ScaleMode="2" ScaleMin="0" ScaleMax="1">
+       <Edges Mode="0" TopEdge="749" BottomEdge="875"/>
+       <Edges Mode="1" TopEdge="0" BottomEdge="1000"/>
+       <Lines>
+        <Line Index="0" Enabled="1" Value="0" Color="210,210,210"/>
+        <Line Index="1" Enabled="0" Value="0" Color="0,0,248"/>
+        <Line Index="2" Enabled="0" Value="0" Color="248,0,0"/>
+       </Lines>
+       <Traces ActiveTrace="Accel Calc Work 2">
+        <Trace Id="Accel Calc Work 2" DisplayUnit="kJ" DisplayDPS="2" Visible="1"/>
+       </Traces>
+      </Graph>
+      <Graph Name="Group 8" ScaleMode="2" ScaleMin="0" ScaleMax="1">
+       <Edges Mode="0" TopEdge="875" BottomEdge="1000"/>
+       <Edges Mode="1" TopEdge="0" BottomEdge="1000"/>
+       <Lines>
+        <Line Index="0" Enabled="1" Value="0" Color="210,210,210"/>
+        <Line Index="1" Enabled="0" Value="0" Color="0,0,248"/>
+        <Line Index="2" Enabled="0" Value="0" Color="248,0,0"/>
+       </Lines>
+       <Traces ActiveTrace="Thr Pos Driver 2">
+        <Trace Id="Thr Pos Driver 2" DisplayUnit="%" DisplayDPS="1" Visible="1"/>
        </Traces>
       </Graph>
      </Graphs>

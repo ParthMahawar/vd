@@ -48,7 +48,7 @@ C.mass = (395 + 150); % lbs
 %% camber curve optimization
 %roll angles and cambers to search through
 roll_angle_vector = 0:0.25:1;
-camber_vector = -5:0.25:5;
+camber_vector = -5:0.1:5;
 
 %arrays to store ideal camber curves 
 wheel_displacement_matrix = zeros(4, numel(roll_angle_vector)); % 1-FL, 2-FR, 3-RL, 4-RR
@@ -143,12 +143,12 @@ xlabel('roll angle');
 ylabel('lateral force');
 legend('Location','southeast');
 
-% subplot(4,1,4);
-% plot(roll_angle_vector, max_Fy_rear_vector(1,:)./(max_Fy_front_vector(1,:) + max_Fy_rear_vector(1,:))-0.53, 'displayName', 'ratio');
-% hold on;
-% %yline(C.weight_dist, 'displayName', '% of weight in the rear');
-% %ylim([0.4,0.6]);
-% title('% Lateral Force in Rear');
-% xlabel('roll angle');
-% ylabel('rear Fy / total Fy');
-% legend('Location','southeast');
+subplot(4,1,4);
+plot(roll_angle_vector, max_Fy_rear_vector(1,:)./(max_Fy_front_vector(1,:) + max_Fy_rear_vector(1,:))-0.53, 'displayName', 'ratio');
+hold on;
+%yline(C.weight_dist, 'displayName', '% of weight in the rear');
+%ylim([0.4,0.6]);
+title('% Lateral Force in Rear');
+xlabel('roll angle');
+ylabel('rear Fy / total Fy');
+legend('Location','southeast');

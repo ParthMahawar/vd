@@ -43,7 +43,7 @@ end
 fprintf("done\n");
 
 %% Saving
-save('TBR testing.mat','carCell');
+%save('TBR testing slope 10.mat','carCell');
 
 %% Points Plotting
 
@@ -55,16 +55,17 @@ display_point_values_above_bar_flag = true;
 label_cars_automatically_flag = true;
 
 %automatic car labeling
-automatic_label_name = 'TBR';
-automatic_label = @(car) (1/2+car.powertrain.G_d2_driving)/(1/2-car.powertrain.G_d2_driving);%TBR
+automatic_label_name = 'CDA';
+%automatic_label = @(car) (1/2+car.powertrain.G_d2_driving)/(1/2-car.powertrain.G_d2_driving);%TBR
 %automatic_label = @(car) car.M;%Car mass
+automatic_label = @(car) car.aero.cda;%Car cda
 
 % 1 to select, 0 to exclude
 selected_categories = find([ ... 
-     1 ... %Accel
-     1 ... %Autocross
-     1 ... %Endurance
-     1 ... %Skidpad
+     0 ... %Accel
+     0 ... %Autocross
+     0 ... %Endurance
+     0 ... %Skidpad
      1 ... %Total
 ]);
 
@@ -73,16 +74,16 @@ plot_lapsim_points(carCell, display_point_values_above_bar_flag, true,...
 %% Car Plotting
 
 % select desired car object
-car = carCell{1,1};
+car = carCell{3,1};
 
 % set desired plots to 1
-plot1 = 1; % velocity-dependent g-g diagram scatter plot
-plot2 = 1; % velocity-dependent g-g diagram surface
-plot3 = 1; % max accel for given velocity and lateral g w/ scattered interpolant
-plot4 = 1; % max braking for given velocity and lateral w/ scattered interpolant
+plot1 = 0; % velocity-dependent g-g diagram scatter plot
+plot2 = 0; % velocity-dependent g-g diagram surface
+plot3 = 0; % max accel for given velocity and lateral g w/ scattered interpolant
+plot4 = 0; % max braking for given velocity and lateral w/ scattered interpolant
 plot5 = 1; % 2D g-g diagram for velocity specified below (gg_vel)
 
-g_g_vel = [14 12 26]; % can input vector to overlay different velocities
+g_g_vel = [12 14 26]; % can input vector to overlay different velocities
 
 plot_choice = [plot1 plot2 plot3 plot4 plot5];
 plotter(car,g_g_vel,plot_choice);
@@ -90,16 +91,16 @@ plotter(car,g_g_vel,plot_choice);
 %% Event Plotting
 
 % select desired comp object
-comp = carCell{4,1}.comp;
+comp = carCell{1,1}.comp;
 
 % set desired plots to 1
-plot1 = 0; % autocross track distance vs curvature
+plot1 = 1; % autocross track distance vs curvature
 plot2 = 0; % endurance track distance vs curvature
 plot3 = 0; % max possible velocity for given radius
-plot4 = 1; % max possible long accel for given velocity
+plot4 = 0; % max possible long accel for given velocity
 plot5 = 0; % accel event longitudinal velocity vs time
 plot6 = 0; % accel event longitudinal accel vs time
-plot7 = 0; % autocross gear shifts
+plot7 = 1; % autocross gear shifts
 plot8 = 0; % autocross slip angle vs distance
 
 plot_choice = [plot1 plot2 plot3 plot4 plot5 plot6 plot7 plot8];
