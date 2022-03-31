@@ -55,17 +55,17 @@ display_point_values_above_bar_flag = true;
 label_cars_automatically_flag = true;
 
 %automatic car labeling
-automatic_label_name = 'CDA';
+automatic_label_name = 'Gamma (Deg)';
 %automatic_label = @(car) (1/2+car.powertrain.G_d2_driving)/(1/2-car.powertrain.G_d2_driving);%TBR
 %automatic_label = @(car) car.M;%Car mass
-automatic_label = @(car) car.aero.cda;%Car cda
+automatic_label = @(car) car.tire.gamma;%Car cda
 
 % 1 to select, 0 to exclude
 selected_categories = find([ ... 
-     0 ... %Accel
-     0 ... %Autocross
-     0 ... %Endurance
-     0 ... %Skidpad
+     1 ... %Accel
+     1 ... %Autocross
+     1 ... %Endurance
+     1 ... %Skidpad
      1 ... %Total
 ]);
 

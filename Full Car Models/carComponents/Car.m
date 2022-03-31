@@ -192,7 +192,7 @@ classdef Car
             k2 = (obj.R*x(10)/(x(3)+x(2)*obj.t_f/2))-1;
             k3 = (obj.R*x(12)/(x(3)-x(2)*obj.t_f/2))-1;
             k4 = (obj.R*x(14)/(x(3)+x(2)*obj.t_f/2))-1;
-            kappa = [k1; k2; k3; k4]
+            kappa = [k1; k2; k3; k4];
             
             % calculate tire forces
             [Fx,Fy,Fxw] = tireForce(obj,steerAngle,alphaD,kappa,Fz);
