@@ -13,7 +13,8 @@ IA_input = [0 2 4];
 FZ_input = [50 100 150 200 250];
 SA_input = [0 -3 -6];
 
-data_file_to_fit = 'A1654run24.mat';
+% 16" LC0s are 24 & 25
+data_file_to_fit = 'A1965run25.mat';
 
 [kappa, alpha, ~, Fy, Fz, ~, gamma, pi, testrange] = TireParser_DriveBrake(P_input, IA_input, FZ_input,SA_input, data_file_to_fit);
 
@@ -208,7 +209,7 @@ if plot3 == 1
     gamma3 = repmat(IA_input3,numel(kappa3),1);
     alpha3 = repmat(SA_input3,numel(kappa3),1);
     
-    %figure(3)
+    figure(3)
     set(gcf,'Position',[656,194,560,420]);
     for a = 1:numel(P_input3)
         for b = 1:numel(IA_input3)
@@ -286,7 +287,7 @@ if plot4 == 1
     gamma4 = repmat(IA_input4,numel(FZ4),1);
     
     %tony = 1;
-    figure(4)
+    figure(5)
     set(gcf,'Position',[656,194,560,420]);
     for a = 1:numel(P_input4)
         for b = 1:numel(IA_input4)
@@ -314,5 +315,5 @@ load('TemperatureCompensated_Fy_pure_parameters_1965run15.mat')
 combined_parameters(1:27) = Xbestcell(1:27);
 Xbestcell = combined_parameters;
 
-save('TemperatureCompensated_Fy_combined_parameters_1965run6.mat','Xbestcell');
-
+%save('TemperatureCompensated_Fy_combined_parameters_1965run6.mat','Xbestcell');
+save('Fy_pure_parameters_1965run25_camber_sweep.mat','Xbestcell')

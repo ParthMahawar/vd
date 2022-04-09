@@ -9,8 +9,8 @@ clear
 %change Fx parameters currently here - Aeden.
 load('Fx_combined_parameters_run38_30.mat'); % F_x combined magic formula parameters
 Fx_parameters = cell2mat(Xbestcell);
-%load('Fy_combined_parameters_16x10x7.5_LC0.mat'); % F_y combined magic formula parameters
-load('Fy_combined_parameters_run38_30.mat');
+load('Fy_pure_parameters_1965run24.mat'); % F_y combined magic formula parameters
+%load('Lapsim_Fy_combined_parameters_1965run15.mat');
 Fy_parameters = cell2mat(Xbestcell);
 
 friction_scaling_factor = 1.05*0.55;
@@ -50,8 +50,7 @@ rear_anti_squat = .457;
 roll_angle_vector = 0:0.05:1;
 %-.143431, .5
 pitch_angle_vector = linspace(-.143431,.5,100);
-camber_vector = -90:10:90;
-
+camber_vector = -10:.5:10;
 
 
 %arrays to store ideal camber curves 
