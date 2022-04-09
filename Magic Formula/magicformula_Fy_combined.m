@@ -316,4 +316,3 @@ combined_parameters(1:27) = Xbestcell(1:27);
 Xbestcell = combined_parameters;
 
 %save('TemperatureCompensated_Fy_combined_parameters_1965run6.mat','Xbestcell');
-save('Fy_pure_parameters_1965run25_camber_sweep.mat','Xbestcell')

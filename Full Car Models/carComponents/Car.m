@@ -111,9 +111,6 @@ classdef Car
             % Tire Forces
             steer_angle = steer_angle_1*pi/180;
             [Fx,Fy,Fxw] = obj.tireForce(steer_angle,alpha,kappa,Fz);
-            
-            %Fy(1) = Fy(1)*1.05;
-            %Fy(2) = Fy(2)*1.05;
                         
             % Equations of Motion
             lat_accel = sum(Fy)*(1/obj.M)-yaw_rate*long_vel;
@@ -262,7 +259,7 @@ classdef Car
                 xdot(3) = max(0,sumA(1)+psid*latVel);
             end
             
-            xdot(3) = 0; % for pure cornering studies ONLY
+            %xdot(3) = 0; % for pure cornering studies ONLY
             
             xdot(4) = sumA(2)-psid*longVel;
             %X velocity, Y velocity. Global coordinates
@@ -373,7 +370,7 @@ classdef Car
         function [c,ceq] = constraint4(obj,P,lat_accel_value) 
             % lateral acceleration constrained to equal lat_accel_value
             % used for optimizing longitudinal acceleration for given lateral acceleration
-            
+                        
             [engine_rpm,beta,lat_accel,long_accel,yaw_accel,wheel_accel,omega,current_gear,...
                 Fzvirtual,Fz,alpha,T]...
                 = obj.equations(P);
