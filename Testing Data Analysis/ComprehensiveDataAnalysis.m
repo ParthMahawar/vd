@@ -12,6 +12,8 @@ T = readtable(filename, opt);
 
 T = T(2:end,:); % remove first row
 
+time = [0,inf]; %time range to be plotted
+
 %% Car Data
 
 C = carConfig();
@@ -53,6 +55,71 @@ plot(T.Time, T.wheelPosFR);
 plot(T.Time, T.wheelPosRL);
 plot(T.Time, T.wheelPosRR);
 
+%% heave, roll, pitch, front heave, rear heave
+
+T.Heave = (T.SuspPosFL + T.SuspPosFR + T.SuspPosRL + T.SuspPosRR)/4;
+T.Front_Heave = (T.SuspPosFL + T.SuspPosFR)/2;
+T.Rear_Heave = (T.SuspPosRL + T.SuspPosRR)/2;
+T.Pitch = asin((T.Front_Heave-T.Rear_Heave)/car.W_b);
+T.Roll = (T.SuspPosFL + T.SuspPosFR + T.SuspPosRL + T.SuspPosRR)/(2*car.t_f);
+
+%% time selection
+figure
+subplot(3,1,1)
+plotLine(T,time,'Heave')
+hold on
+yyaxis right
+plotLine(T,time,'Pitch')
+plotLine(T,time,'Roll')
+legend
+
+subplot(3,1,2)
+plotLine(T,time,'Front_Heave')
+hold on
+plotLine(T,time,'Rear_Heave')
+legend('Interpreter','latex')
+
+subplot(3,1,3)
+plotLine(T,time,'SuspPosFL')
+hold on
+plotLine(T,time,'SuspPosFR')
+plotLine(T,time,'SuspPosRL')
+plotLine(T,time,'SuspPosRR')
+legend
+
+figure
+subplot(3,1,1)
+plotLine(T,time,'SteeredAngle')
+legend
+
+subplot(3,1,2)
+plotLine(T,time,'AccelY')
+legend
+
+subplot(3,1,3)
+plotLine(T,time,'Roll')
+legend
+
+figure
+subplot(4,1,1)
+plotLine(T,time,'BrakePres_F')
+hold on
+plotLine(T,time,'BrakePres_R')
+T.BrakePres_Tot = T.BrakePres_F + T.BrakePres_R;
+plotLine(T,time,'BrakePres_Tot')
+legend('Interpreter','latex')
+
+subplot(4,1,2)
+%plotLine(T,time,'Throttle')
+legend
+
+subplot(4,1,3)
+plotLine(T,time,'AccelX')
+legend
+
+subplot(4,1,4)
+plotLine(T,time,'Pitch')
+legend
 
 % start_t = 250;
 % end_t = 1350;
@@ -99,3 +166,22 @@ plot(T.Time, T.wheelPosRR);
 % figure(6)
 % scatter(str_a,roll), title('Steering agle vs roll'),...
 %     xlabel('Steering angle'),ylabel('Roll angle'),grid
+
+
+
+%% FUNctions :D
+
+function [] = plotLine(T, timeRange, name, varargin)
+    y = T.(name);
+    y = y(T.Time>timeRange(1)&T.Time<timeRange(2));
+    x = T.Time(T.Time>timeRange(1)&T.Time<timeRange(2));
+
+    plot(x,y,...
+        'displayName', name, varargin{:});
+    
+
+end
+
+
+
+
