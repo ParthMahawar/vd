@@ -25,7 +25,8 @@ car.MR_R = 1;
 %% Filter Data
 
 % moving mean filter on selected data values
-variablesToFilter = {'SuspPosFL','SuspPosFR','SuspPosRL','SuspPosRR', 'SteeredAngle'};
+variablesToFilter = {'SuspPosFL','SuspPosFR','SuspPosRL','SuspPosRR',...
+    'SteeredAngle', 'WheelSpdRL','WheelSpdRR','WheelSpdFL','WheelSpdFR'};
 meanRangeSeconds = 0.25; % s
 meanTimestep = mean(diff(T.Time));
 order = meanRangeSeconds/meanTimestep;
@@ -54,6 +55,7 @@ hold on
 plot(T.Time, T.wheelPosFR);
 plot(T.Time, T.wheelPosRL);
 plot(T.Time, T.wheelPosRR);
+title('Wheel position vs time'), grid
 
 %% heave, roll, pitch, front heave, rear heave
 
@@ -120,7 +122,57 @@ legend
 subplot(4,1,4)
 plotLine(T,time,'Pitch')
 legend
+%% Math channels damper velocity + histogram
 
+damperVelFL = diff(T.SuspPosFL);
+damperVelFR = diff(T.SuspPosFR);
+damperVelRL = diff(T.SuspPosRL);
+damperVelRR = diff(T.SuspPosRR);
+
+figure
+plot(T.Time(1:end-1), damperVelFL);
+hold on
+plot(T.Time(1:end-1), damperVelFR);
+plot(T.Time(1:end-1), damperVelRL);
+plot(T.Time(1:end-1), damperVelRR);
+title('Damper velocity vs time'), grid
+hold off
+
+damperVelAvg = mean([damperVelFL,damperVelFR,damperVelRL,damperVelRR]');
+figure
+histogram(damperVelAvg),title('Damper velocity histogram')
+%% Understeer gradient fitting (with filtering) & polyfit  Under construction 
+t01 = 15;
+select1 = (T.Time>t01 & T.Time<(T.Time(end)-t01));
+% Ug.wheelspeed_avg = mean([T.WheelSpdRL,T.WheelSpdRR,...
+%     T.WheelSpdFL,T.WheelSpdFR]');
+% Ug.wheelspeed_avg = Ug.wheelspeed_avg(select1);
+% Ug.wheelspeed_avg(Ug.wheelspeed_avg==NaN) = 0;
+% Ug.wheelspeed_avg = Ug.wheelspeed_avg';
+% f= fit(Ug.wheelspeed_avg,...
+%     T.SteeredAngle(select1),'poly2')
+% 
+% figure
+% plot(f,Ug.wheelspeed_avg,T.SteeredAngle(select1))
+% title('Steering agle vs Wheel speed'),...
+%     xlabel('Wheel speed'),ylabel('Steering angle'),grid
+% 
+% Gradeant_average = polyval([f.p1,f.p2,f.p3],T.Time(end)) - polyval([f.p1,f.p2,f.p3],t0)
+
+wheelspeed_avg = (mean([T.WheelSpdRL,T.WheelSpdRR,...
+    T.WheelSpdFL,T.WheelSpdFR]'));
+wheelspeed_avg = wheelspeed_avg(select1);
+wheelspeed_avg = wheelspeed_avg';
+f = fit(wheelspeed_avg,T.SteeredAngle(select1),'poly1');
+
+figure
+plot(f,wheelspeed_avg,T.SteeredAngle(select1)),...
+    title('Steering agle vs Wheel speed'),...
+    xlabel('Wheel speed'),ylabel('Steering angle'),grid
+
+Gradeant_average = f.p1;
+disp('The average under steer grad = '+ string(Gradeant_average))
+    
 % start_t = 250;
 % end_t = 1350;
 % m_k = 40;
@@ -166,10 +218,13 @@ legend
 % figure(6)
 % scatter(str_a,roll), title('Steering agle vs roll'),...
 %     xlabel('Steering angle'),ylabel('Roll angle'),grid
+%% GG plot
+figure
+scatter(T,'AccelY','AccelX'), title('GG plot'), xlabel('Lateral Gs')
+ylabel('Longitudinal Gs')
 
-
-
-%% FUNctions :D
+%% FUNctions :D 
+% this has to have been greg
 
 function [] = plotLine(T, timeRange, name, varargin)
     y = T.(name);
