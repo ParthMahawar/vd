@@ -89,7 +89,8 @@ T = setUnits(T, {'damperVelFL', 'damperVelFR', 'damperVelRL', 'damperVelRR'},...
 % speed
 T.Speed = (T.WheelSpdRL + T.WheelSpdRL + T.WheelSpdRL + T.WheelSpdRL)/4 * 1000/3600; % m/s
 T = setUnits(T, 'Speed', 'm/s');
-
+% corner radius channel using r= v^2/at
+T.cornerRadius = T.Speed.^2./T.AccelY;
 %% time selection plots
 if bodyMovementPlot
     figure
@@ -152,15 +153,15 @@ if longitudinalPlot
     
     subplot(4,1,3)
     plotLine(T,timeRange,'AccelX')
-    legend('Interpreter','none')
-    
-    subplot(4,1,4)
     plotLine(T,timeRange,'SuspPitch')
     legend('Interpreter','none')
 
     sgtitle('Longitudinal Plot')
 end
 %% damper velocity histogram
+    legend('Interpreter','none')    
+    subplot(4,1,4)
+    
 if damperVelocityHistogram
     figure
     subplot(3,2,1)
@@ -236,7 +237,6 @@ end
 
 % CLA = 2*F/(rho v^2)
 % F = (CLA*rho/2)*v^2
-
 
 %% FUNctions :D 
 % this has to have been greg
