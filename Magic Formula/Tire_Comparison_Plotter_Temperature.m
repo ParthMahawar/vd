@@ -96,7 +96,7 @@ legend('18 R25B to 16 R25B','18 R25B to 16 LC0')
 for i = 1:3
     Xbestcell = parameters{i};
     FZ = linspace(50,250,1000).';
-    [~, Ky] = lateralforce_pure(Xbestcell,13,FZ,12,0);
+    [~, Ky, ~] = lateralforce_pure(Xbestcell,13,FZ,12,0);
     x{i} = Ky;
     plot(FZ,Ky,'Linewidth',3,'LineStyle',linS{i},...
         'DisplayName',label{i});
@@ -153,7 +153,7 @@ figure
 for i = 1:3
     Xbestcell = parameters{i};
     P = linspace(10,14,1000).';
-    [~,Ky] = lateralforce_pure(Xbestcell,12,250,P,0);
+    [~,Ky,~] = lateralforce_pure(Xbestcell,12,250,P,0);
     plot(P,Ky,'Linewidth',3,'LineStyle',linS{i},...
         'DisplayName',label{i});
     hold on

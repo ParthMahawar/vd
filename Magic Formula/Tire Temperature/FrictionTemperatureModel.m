@@ -92,7 +92,9 @@ hold on
 plot2 = plot(f2,'k',TSTC_2,mu_2,'k.');
 plot3 = plot(f3,'b',TSTC_3,mu_3,'b.');
 
-xline(130);%operating temperature
+%operating temperature
+xline(130,'-',{'Operating Temperature'},...
+    'LabelVerticalAlignment', 'bottom', 'fontSize', 12);
 xline(140);
 
 legend([plot1(2) plot2(2) plot3(2)],{'18x7.5-10 R25B','16x7.5-10 R25B','16x7.5-10 LC0'},'Location','southeast')

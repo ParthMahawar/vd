@@ -47,7 +47,7 @@ Bparams.max_braking_torque = 800; % total braking torque
 
 % tire parameters (updated 5/1/19)
 tireParams = struct();
-tireParams.gamma = [-1,0,1]; % camber angle
+tireParams.gamma = 0; % camber angle
 tireParams.p_i = 12; % pressure
 % these parameters are non-iterable
 load('Fx_combined_parameters_run38_30.mat'); % F_x combined magic formula parameters

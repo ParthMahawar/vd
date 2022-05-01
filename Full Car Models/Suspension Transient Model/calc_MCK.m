@@ -1,6 +1,6 @@
 function [m,c,k] = calc_MCK(car,tirePos,tireVel)
 
-for i=1:2 %calculate motion ratios by interp of data
+for i=1:2 %calculate motion ratios by interp of data - questionable, since actual tire positions are dependent on roll, pitch, heave
     tireX = tirePos(i)*39.3701; %get current tire pos (m to in)
     MRArr(i) = lininterp1(car.MR_F(:,1),car.MR_F(:,2),tireX); %MR data within damping mat
 end
@@ -22,19 +22,19 @@ for i =1:4 %calculate damping coeff by interp of dampingcurves.mat data
     end
 end
 
-k_tf = car.k_tf;
+k_tf = car.k_tf; % tire stiffness
 k_tr = car.k_tr;
 m = car.M;
-m_f = m/10;
+m_f = m/10; % unsprung mass
 m_r = m_f;
-k_rf = car.k_rf;
+k_rf = car.k_rf; % anti roll bars
 k_rr = car.k_rr;
 Ix = car.Ixx;
 Iy = car.Iyy;
-a_1 = car.l_f;
+a_1 = car.l_f; % distances from CG to 
 a_2 = car.l_r;
-b_1 = car.t_f/2;
-b_2 = car.t_f/2;
+b_1 = car.t_f/2; % half track
+b_2 = car.t_r/2;
 w = car.t_f;
 
 k_1 = car.k*MRArr(1)^2; %tire k = spring k * MR^2

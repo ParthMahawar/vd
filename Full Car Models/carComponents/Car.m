@@ -16,6 +16,7 @@ classdef Car
         h_g %cg height
         R_sf %roll stiffness in front
         I_zz %polar moment of inertia, z axis
+
         aero
         powertrain
         tire
@@ -32,8 +33,14 @@ classdef Car
         c_rebound % damper curves ([in/s, lbf])
         MR_F % front motion ratio curve ([in,MR])
         MR_R % rear motion ratio curve ([in,MR])
-        TSmpc %mpc timestep
-        TSdyn %dynamics timestep
+        TSmpc % mpc timestep
+        TSdyn % dynamics timestep
+
+        % Decoupled Suspension Parameters
+        k_f_r % front roll spring stiffness (N/m)
+        k_f_b % front bounce spring stiffness (N/m)
+        k_r_r % rear roll spring stiffness (N/m)
+        k_r_b % rear bounce spring stiffness (N/m)
         
         Jm %engine polar moi
         Jw %wheel polar moi

@@ -2,9 +2,26 @@ function outputs = fullDynamics(car,uArr,x0,n)
 
 % state vectors
 FzArr = zeros(4,n); % vertical forces on tires
-xArr = zeros(14,n); % state array
+
+% state array x (vector of 14 values)
+xArr = zeros(14,n); 
 xdotArr = zeros(14,n);
-yArr = zeros(14,n);
+% 1: yaw angle 2: yaw rate 3: long velocity 4: lat velocity
+% 5: x position of cg 6: y position of cg
+% 7:  FL angular position 8:  FL angular velocity
+% 9:  FR angular position 10: FR angular velocity
+% 11: RL angular position 12: RL angular velocity
+% 13: RR angular position 14: RR angular velocity
+
+
+yArr = zeros(14,n); % state array y: [x phi theta x1 x2 x3 x4 x' phi' theta' x1' x2' x3' x4']'
+% 1: x - bounce 
+% 2: phi - roll angle
+% 3: theta - pitch (?)
+% 4: x1 - FL Wheel Position
+% 5: x2 - FR Wheel Position
+% 7: x3 - RL Wheel Position
+% 7: x4 - RR Wheel Position
 xArr(:,1) = x0;
 dt = car.TSmpc;
 g = 9.81;

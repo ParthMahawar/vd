@@ -12,7 +12,7 @@ load('dampingcurves.mat');
 carCell = carConfig();
 car = carCell{1,1};
 car.k = 200*4.45*39.37; % N/m
-car.k_tf = car.k*4; % tire stiffness (N/m)
+car.k_tf = 724 /0.0057101; % tire stiffness (N/m), 16" LC0, https://www.hoosiertire.com/contingency_rates/fsae/
 car.k_tr = car.k_tf;
 
 % LSC-HSC, LSR_HSR
@@ -26,13 +26,16 @@ car.c_rebound = rdamp{6}([1 2 10:10:end],:);
 
 car.k_rf = 3000*6.474; % Nm/rad
 car.k_rr = 7000*6.474; % Nm/rad
+
 car.Ixx = 60;
 car.Iyy = 82;
-car.TSmpc = .003; %has to be multiple of TSdyn
-car.TSdyn = .0005;
+
 car.MR_F = MR18Front;
 car.MR_R = MR18Front;
 car.Jm = 0; car.Jw = 1;
+
+car.TSmpc = .003; %has to be multiple of TSdyn
+car.TSdyn = .0005;
 n = 3000; % number of timesteps
 
 % steering/throttle input
@@ -157,6 +160,24 @@ legend('Steer','Roll','Lat Accel','Yaw Rate','Sideslip Angle')
 figure(10); clf
 plot(time,beta)
 title('Beta')
+
+figure(11); clf
+hold on
+plot(time,yArr(4,:),'DisplayName','FL Wheel Position')
+plot(time,yArr(5,:),'DisplayName','FR Wheel Position')
+plot(time,yArr(6,:),'DisplayName','RL Wheel Position')
+plot(time,yArr(7,:),'DisplayName','RR Wheel Position')
+title('Wheel Positions')
+legend()
+
+figure(12); clf
+hold on
+plot(time, mean(yArr(4:7,:),1), 'DisplayName','Mean Wheel Positions')
+plot(time, mean(yArr(1,:),1), 'DisplayName','Heave')
+title('Wheel Positions')
+legend()
+
+
 
 
 

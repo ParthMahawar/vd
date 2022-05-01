@@ -74,7 +74,8 @@ plot_lapsim_points(carCell, display_point_values_above_bar_flag, true,...
 %% Car Plotting
 
 % select desired car object
-car = carCell{3,1};
+desiredCarIndex = 1;
+car = carCell{desiredCarIndex,1};
 
 % set desired plots to 1
 plot1 = 0; % velocity-dependent g-g diagram scatter plot
@@ -94,13 +95,13 @@ plotter(car,g_g_vel,plot_choice);
 comp = carCell{1,1}.comp;
 
 % set desired plots to 1
-plot1 = 1; % autocross track distance vs curvature
+plot1 = 0; % autocross track distance vs curvature
 plot2 = 0; % endurance track distance vs curvature
 plot3 = 0; % max possible velocity for given radius
 plot4 = 0; % max possible long accel for given velocity
-plot5 = 0; % accel event longitudinal velocity vs time
-plot6 = 0; % accel event longitudinal accel vs time
-plot7 = 1; % autocross gear shifts
+plot5 = 1; % accel event longitudinal velocity vs time
+plot6 = 1; % accel event longitudinal accel vs time
+plot7 = 0; % autocross gear shifts
 plot8 = 0; % autocross slip angle vs distance
 
 plot_choice = [plot1 plot2 plot3 plot4 plot5 plot6 plot7 plot8];

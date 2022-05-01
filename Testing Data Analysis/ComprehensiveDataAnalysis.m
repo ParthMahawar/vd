@@ -4,7 +4,7 @@ clc
 set(0,'DefaultTextInterpreter','none')
 %% Import Data
 
-filename = 'skidpad2_50hz.csv';
+filename = 'autocross_3.csv';
 
 % include units
 opt = detectImportOptions(filename);
@@ -24,7 +24,7 @@ lateralPlot = 0;
 longitudinalPlot = 0;
 understeerPlot = 0;
 damperVelocityHistogram = 0;
-GGPlot = 0;
+GGPlot = 1;
 aeroPlot = 0;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -43,7 +43,7 @@ car.k = 200*4.45*39.37; % N/m ---add k front and k rear
 
 % moving mean filter on selected data values
 variablesToFilter = {'SuspPosFL','SuspPosFR','SuspPosRL','SuspPosRR',...
-    'SteeredAngle', 'WheelSpdRL','WheelSpdRR','WheelSpdFL','WheelSpdFR'};
+    'StAngle', 'WheelSpdRL','WheelSpdRR','WheelSpdFL','WheelSpdFR'};
 meanRangeSeconds = 0.25; % s
 meanTimestep = mean(diff(T.Time));
 order = meanRangeSeconds/meanTimestep;
@@ -189,11 +189,11 @@ end
 t01 = 15;
 select1 = (T.Time>t01 & T.Time<(T.Time(end)-t01));
 
-f1 = fit(T.Speed(select1),T.SteeredAngle(select1),'poly1');
+f1 = fit(T.Speed(select1),T.StAngle(select1),'poly1');
 
 if understeerPlot
     figure
-    plot(f1, T.Speed(select1), T.SteeredAngle(select1)),...
+    plot(f1, T.Speed(select1), T.StAngle(select1)),...
         title(['Steering Angle vs Wheel Speed | Understeer Gradient = ' num2str(f1.p1)]),...
         xlabel('Wheel speed'), ylabel('Steering angle'), grid
 end
