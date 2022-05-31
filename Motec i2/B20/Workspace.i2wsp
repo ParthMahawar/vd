@@ -5,13 +5,13 @@
  <DataSelect SelectFastestOnLoad="1" DefaultShowDisabled="0" MainColorSource="0">
   <Explore HRef="C:\Users\scruf\Dropbox\BFR\2018 Testing\test day data\6_20_2019_COMP\Data"/>
   <DataSources>
-   <LoggedDataSource Name="C:\Users\scruf\Dropbox\BFR\2018 Testing\test day data\6_20_2019_COMP\Data\20190620-0011601.ld"/>
+   <LoggedDataSource Name="C:\Users\scruf\Dropbox\BFR\vd\Testing Data Analysis\Logs\alameda-04-02\alameda-4-2_firstrun_skippad.ld"/>
   </DataSources>
   <View Name="Laps" Color="128,240,0" View="Laps">
-   <Main Range.Id="C:\Users\scruf\Dropbox\BFR\2018 Testing\test day data\6_20_2019_COMP\Data\20190620-0011601.ld::::No Lap"/>
+   <Main Range.Id="C:\Users\scruf\Dropbox\BFR\vd\Testing Data Analysis\Logs\alameda-04-02\alameda-4-2_firstrun_skippad.ld::::No Lap"/>
   </View>
   <View Name="Outings" Color="240,128,0" View="Outings">
-   <Main Range.Id="C:\Users\scruf\Dropbox\BFR\2018 Testing\test day data\6_20_2019_COMP\Data\20190620-0011601.ld::::6:07:43 PM,  "/>
+   <Main Range.Id="C:\Users\scruf\Dropbox\BFR\vd\Testing Data Analysis\Logs\alameda-04-02\alameda-4-2_firstrun_skippad.ld::::10:18:14 AM,  "/>
   </View>
  </DataSelect>
  <ChannelsWindow Method="2"/>

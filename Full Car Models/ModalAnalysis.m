@@ -1,5 +1,5 @@
 %% Car Parameters
-clear; %close all; clc
+clear; close all; clc
 
 setup_paths
 
@@ -79,7 +79,7 @@ for n = 1:7
     [maximum,index] = max(abs(Vs(:,n)));
     plot(Vs(:,n)/maximum*sign(Vs(index,n)),'--o');
     title(['\omega_n =' num2str(round(omega_n(n),2)) ' \omega_d ='...
-        num2str(round(omega_d(n),2)) ' \zeta =' num2str(round(zeta(n),2))])
+        num2str(round(omega_d(n),2)) ' \zeta =' num2str(round(zeta(n),2))], 'Interpreter','tex')
     set(gcf,'Position',[184 66 600 714]);
     set(gca,'XTick',1:7,'XTickLabel',{'Bounce','Roll','Pitch',...
         'FL Tire' 'FR Tire' 'RL Tire' 'RR Tire'})

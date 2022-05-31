@@ -7,8 +7,8 @@
  <Override Id="Battery Volts" DisplayColorIndex="7"/>
  <Override Id="Brake Pressure Front" AutoScale="0" DisplayMin="-34473.795433876846801" DisplayMax="2068427.726032610749826"/>
  <Override Id="Brake Pressure Rear" AutoScale="0" DisplayMin="-34473.795433876846801" DisplayMax="2068427.726032610749826"/>
- <Override Id="Brake Temp FR" DisplayMin="255.000000000000000" DisplayUnit="K" AutoScale="0" DisplayMax="573.000000000000000"/>
- <Override Id="Brake Temp RR" AutoScale="0" DisplayUnit="K" DisplayMin="255.000000000000000" DisplayMax="573.000000000000000"/>
+ <Override Id="Brake Temp FR" DisplayUnit="K" DisplayMin="255.000000000000000" AutoScale="0" DisplayMax="573.000000000000000"/>
+ <Override Id="Brake Temp RR" AutoScale="0" DisplayMin="255.000000000000000" DisplayUnit="K" DisplayMax="573.000000000000000"/>
  <Override Id="CLA" AutoScale="0" DisplayMin="0.000000000000000" DisplayMax="5.000000000000000"/>
  <Override Id="Corr Dist" DisplayUnit="m"/>
  <Override Id="Corr Speed" DisplayMax="26.822403501933000" DisplayMin="0.000000000000000" AutoScale="1"/>
@@ -17,17 +17,17 @@
  <Override Id="Eng Oil Pres" DisplayMax="600000.000000000000000" DisplayMin="0.000000000000000" AutoScale="0"/>
  <Override Id="Eng Oil Temp" DisplayMax="382.149993999999992" DisplayMin="272.149993999999992" AutoScale="0"/>
  <Override Id="Engine RPM" DisplayMax="1361.356816557532966" DisplayMin="0.000000000000000" AutoScale="0"/>
- <Override Id="Engine Temp" DisplayMax="382.149999999999977" DisplayMin="272.149999999999977" DisplayColorIndex="1" AutoScale="0"/>
+ <Override Id="Engine Temp" DisplayMax="382.149999999999977" DisplayMin="272.149999999999977" AutoScale="0" DisplayColorIndex="1"/>
  <Override Id="Fuel Pres" DisplayMax="600000.000000000000000" DisplayMin="0.000000000000000" AutoScale="0"/>
  <Override Id="G Force Lat" DisplayMax="19.613304096434696" DisplayMin="-19.613304096434696" AutoScale="0"/>
  <Override Id="G Force Long" DisplayMax="9.806652048217348" DisplayMin="-9.806652048217348" AutoScale="0"/>
  <Override Id="G Force Vert" AutoScale="0" DisplayMin="0.000000000000000" DisplayMax="14.709978072326020"/>
  <Override Id="GP Volts 5" DisplayColorIndex="2"/>
- <Override Id="Ground Speed Left" AutoScale="0" DisplayColorIndex="1" DisplayMin="0.000000000000000" DisplayMax="60.000000000000000"/>
+ <Override Id="Ground Speed Left" DisplayColorIndex="1" AutoScale="0" DisplayMin="0.000000000000000" DisplayMax="60.000000000000000"/>
  <Override Id="Ground Speed Right" AutoScale="0" DisplayMin="0.000000000000000" DisplayMax="70.000000000000000"/>
- <Override Id="Lambda 1" DisplayMax="1.300000000000000" DisplayMin="0.800000000000000" DisplayColorIndex="5" AutoScale="0"/>
+ <Override Id="Lambda 1" DisplayMax="1.300000000000000" DisplayMin="0.800000000000000" AutoScale="0" DisplayColorIndex="5"/>
  <Override Id="Lambda 2" DisplayMax="1.100000000000000" DisplayMin="0.800000000000000" AutoScale="0"/>
- <Override Id="Manifold Pres" DisplayMax="110000.000000000000000" DisplayUnit="kPa" DisplayMin="0.000000000000000" AutoScale="0"/>
+ <Override Id="Manifold Pres" DisplayMax="110000.000000000000000" DisplayMin="0.000000000000000" DisplayUnit="kPa" AutoScale="0"/>
  <Override Id="Oversteer" DisplayMax="0.104720000000000" DisplayMin="-0.104720000000000" AutoScale="0"/>
  <Override Id="Speed Calced Accel" AutoScale="0" DisplayMin="-19.613304096434696" DisplayMax="19.613304096434696"/>
  <Override Id="Steered Angle" DisplayMax="1.745329267623711" DisplayMin="-1.745329267623711" AutoScale="0"/>

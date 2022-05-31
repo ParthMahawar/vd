@@ -4,7 +4,12 @@ clc
 set(0,'DefaultTextInterpreter','none')
 %% Import Data
 
-filename = 'autocross_3.csv';
+filename = 'AllDay_DamperTuning.csv';
+%filename = 'autocross_3.csv';
+
+%filename = 'full_skidpad1.csv';
+%filename = 'full_skidpad2.csv';
+%filename = 'skidpad2_50hz.csv';
 
 % include units
 opt = detectImportOptions(filename);
@@ -19,12 +24,18 @@ T = T(2:end,:); % remove first row
 timeRange = [0,Inf]; %time range to be plotted
 
 % plot selection
-bodyMovementPlot = 0;
+overviewPlot = 0;
 lateralPlot = 0;
 longitudinalPlot = 0;
-understeerPlot = 0;
+bodyMovementPlot = 0;
 damperVelocityHistogram = 0;
-GGPlot = 1;
+
+understeerPlot = 1;
+understeerPlotRadiusDependent = 1;
+
+GGPlot = 0;
+GGVPlot = 0;
+
 aeroPlot = 0;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -38,13 +49,35 @@ car.MR_F = 0.74;
 car.MR_R = 1;
 car.k = 200*4.45*39.37; % N/m ---add k front and k rear
 
+%% ADL vs Telemetry Unit
+
+if ~any(strcmp(T.Properties.VariableNames,'StAngle')) % if data is from ADL
+    T.StAngle = T.SteeredAngle;
+
+    T.WheelSpdFL = T.GroundSpeedLeft;
+    T.WheelSpdFR = T.GroundSpeedRight;
+    T.WheelSpdRL = T.DriveSpeedLeft;
+    T.WheelSpdRR = T.DriveSpeedRight;
+    
+    T.AccelX = 0*T.Time;
+    T.AccelY = 0*T.Time;
+    T.AccelZ = 0*T.Time;
+    
+    T.BrakePres_F = 0*T.Time;
+    T.BrakePres_R = 0*T.Time;
+    
+    T.TPS = 0*T.Time;
+    T.RPM = T.EngineRPM;
+end
 
 %% Filter Data
+
+T.StAngle = T.StAngle * 20/45;
 
 % moving mean filter on selected data values
 variablesToFilter = {'SuspPosFL','SuspPosFR','SuspPosRL','SuspPosRR',...
     'StAngle', 'WheelSpdRL','WheelSpdRR','WheelSpdFL','WheelSpdFR'};
-meanRangeSeconds = 0.25; % s
+meanRangeSeconds = 0.25; % length of averaging window (s)
 meanTimestep = mean(diff(T.Time));
 order = meanRangeSeconds/meanTimestep;
 T(:,variablesToFilter) = ...
@@ -87,53 +120,60 @@ T = setUnits(T, {'damperVelFL', 'damperVelFR', 'damperVelRL', 'damperVelRR'},...
     [getUnits(T, 'wheelPosRR') '/s']);
 
 % speed
-T.Speed = (T.WheelSpdRL + T.WheelSpdRL + T.WheelSpdRL + T.WheelSpdRL)/4 * 1000/3600; % m/s
+T = setUnits(T, {'WheelSpdFL', 'WheelSpdFR', 'WheelSpdRL', 'WheelSpdRR'}, 'km/h');
+T.Speed = (T.WheelSpdFL + T.WheelSpdFR + T.WheelSpdRL + T.WheelSpdRR)/4 * 1000/3600; % km/h -> m/s
 T = setUnits(T, 'Speed', 'm/s');
-% corner radius channel using r= v^2/at
-T.cornerRadius = T.Speed.^2./T.AccelY;
+% corner radius channel using r= v^2/Ay
+T.cornerRadius = T.Speed.^2./(T.AccelY*9.8);
+T = setUnits(T, 'cornerRadius', 'm');
 %% time selection plots
-if bodyMovementPlot
+
+if overviewPlot
     figure
-    subplot(3,1,1)
-    plotLine(T,timeRange,'SuspHeave')
+    subplot(4,1,1)
+    plotLine(T,timeRange,'WheelSpdFL')
     hold on
-    yyaxis right
-    plotLine(T,timeRange,'SuspPitch')
-    plotLine(T,timeRange,'SuspRoll')
+    plotLine(T,timeRange,'WheelSpdFR')
+    plotLine(T,timeRange,'WheelSpdRL')
+    plotLine(T,timeRange,'WheelSpdRR')
     legend('Interpreter','none')
-    grid
 
-    subplot(3,1,2)
-    plotLine(T,timeRange,'FrontHeave')
+    subplot(4,1,2)
+    plotLine(T,timeRange,'BrakePres_F')
     hold on
-    plotLine(T,timeRange,'RearHeave')
+    plotLine(T,timeRange,'BrakePres_R')
     legend('Interpreter','none')
-    grid
     
-    subplot(3,1,3)
-    plotLine(T,timeRange,'wheelPosFL')
-    hold on
-    plotLine(T,timeRange,'wheelPosFR')
-    plotLine(T,timeRange,'wheelPosRL')
-    plotLine(T,timeRange,'wheelPosRR')
+    subplot(4,1,3)
+    plotLine(T,timeRange,'TPS')
     legend('Interpreter','none')
-    grid
 
-    sgtitle('Body Movement')
+    
+    subplot(4,1,4)
+    plotLine(T,timeRange,'StAngle')
+    legend('Interpreter','none')
+    
+    sgtitle('Lockup Plot')
 end
 
 if lateralPlot
     figure
-    subplot(3,1,1)
-    plotLine(T,timeRange,'SteeredAngle')
+    subplot(4,1,1)
+    plotLine(T,timeRange,'StAngle')
     legend('Interpreter','none')
     
-    subplot(3,1,2)
+    subplot(4,1,2)
     plotLine(T,timeRange,'AccelY')
     legend('Interpreter','none')
     
-    subplot(3,1,3)
+    subplot(4,1,3)
     plotLine(T,timeRange,'SuspRoll')
+    legend('Interpreter','none')
+
+    subplot(4,1,4)
+    plotLine(T,timeRange,'Speed')
+    yyaxis right
+    plotLine(T,timeRange,'cornerRadius')
     legend('Interpreter','none')
 
     sgtitle('Lateral Plot')
@@ -156,11 +196,52 @@ if longitudinalPlot
     plotLine(T,timeRange,'SuspPitch')
     legend('Interpreter','none')
 
-    sgtitle('Longitudinal Plot')
-end
-%% damper velocity histogram
-    legend('Interpreter','none')    
     subplot(4,1,4)
+    plotLine(T,timeRange,'Speed')
+    yyaxis right
+    ylim([-20,20])
+    plotLine(T,timeRange,'RPM')
+    legend('Interpreter','none')
+
+    subplot(4,1,1)
+    plotLine(T,timeRange,'StAngle')
+    legend('Interpreter','none')
+
+    sgtitle('Lockup Plot')
+end
+
+if bodyMovementPlot
+    figure
+    subplot(3,1,1)
+    plotLine(T,timeRange,'SuspHeave')
+    hold on
+    yyaxis right
+    plotLine(T,timeRange,'SuspPitch')
+    plotLine(T,timeRange,'SuspRoll')
+    legend('Interpreter','none')
+    grid
+
+    subplot(3,1,2)
+    plotLine(T,timeRange,'FrontHeave')
+    hold on
+    plotLine(T,timeRange,'RearHeave')
+    legend('Interpreter','none')
+    grid
+
+    subplot(3,1,3)
+    scatter([1 2], [1 2])
+    plotLine(T,timeRange,'wheelPosFL')
+    hold on
+    plotLine(T,timeRange,'wheelPosFR')
+    plotLine(T,timeRange,'wheelPosRL')
+    plotLine(T,timeRange,'wheelPosRR')
+    legend('Interpreter','none')
+    grid
+
+    sgtitle('Body Movement')
+end
+
+%% damper velocity histogram
     
 if damperVelocityHistogram
     figure
@@ -185,18 +266,135 @@ if damperVelocityHistogram
     plotLine(T, timeRange, 'damperVelRR')
     title('Damper velocity vs time'), ylabel('velocity (mm/s)'), grid
 end
-%% Understeer gradient fitting (with filtering) & polyfit  Under construction 
-% add radius calculation and filtering
-t01 = 15;
-select1 = (T.Time>t01 & T.Time<(T.Time(end)-t01));
 
-f1 = fit(T.Speed(select1),T.StAngle(select1),'poly1');
-
+%% Understeer gradient fitting
 if understeerPlot
+    cornerRadiusBounds = [5,7]; % m
+
+    t01 = 20; % s
+    minAy = 0.2; % g
+    
+    % moving mean filter on data
+    meanRangeSeconds = 1; % s
+    meanTimestep = mean(diff(T.Time));
+    order = meanRangeSeconds/meanTimestep;
+    
+    delta = abs(movmean(T.StAngle, order));
+    latAccel = abs(movmean(T.AccelY, order));
+    cornerRadius = abs(movmean(T.cornerRadius, order));
+
+    % select only some of data
+    select1 = (T.Time>t01 & T.Time<(T.Time(end)-t01)) & (abs(latAccel) > minAy);
+
+    delta = delta(select1);
+    latAccel = latAccel(select1);
+    cornerRadius = cornerRadius(select1);
+
+    % exlcude data with corner radii out of bounds   
+    exclude =  (cornerRadius < cornerRadiusBounds(1) | ...
+        cornerRadius > cornerRadiusBounds(2));
+    
+    [f1, gof1] = fit(latAccel, delta,'poly1', 'Exclude', exclude);
+    b1 = confint(f1);
+
     figure
-    plot(f1, T.Speed(select1), T.StAngle(select1)),...
-        title(['Steering Angle vs Wheel Speed | Understeer Gradient = ' num2str(f1.p1)]),...
-        xlabel('Wheel speed'), ylabel('Steering angle'), grid
+    subplot(2,1,1)
+    plot(f1, latAccel, delta, exclude),...
+        title(['Steering Angle vs A_y | Understeer Gradient = '...
+        num2str(f1.p1) ' (' num2str(b1(1,1)) ', ' num2str(b1(2,1)) ')'],...
+        'Interpreter','tex')
+    legend('Location','NorthWest')
+    xlim([0 2]), ylim([-20, 20])
+    xlabel('Lateral Acceleration (G)'), ylabel('Steering angle (deg)'), grid
+    
+    % corner radius histogram
+    subplot(2,1,2)
+    histogram(T.cornerRadius(abs(T.cornerRadius)<20),50)
+    xline(cornerRadiusBounds), xline(-cornerRadiusBounds)
+    xlabel(['Corner Radius (' getUnits(T, 'cornerRadius') ')'])
+    title('Corner Radius')
+end
+
+%% Understeer gradient fitting (Corner Radius Dependent)
+if understeerPlotRadiusDependent
+
+    % disregard first and last <t01> seconds 
+    t01 = 20; % s
+    minAy = 0.2; % G
+    
+    % moving mean filter on data
+    meanRangeSeconds = 1; % s
+    meanTimestep = mean(diff(T.Time));
+    order = meanRangeSeconds/meanTimestep;
+
+    delta = abs(movmean(T.StAngle, order));
+    latAccel = abs(movmean(T.AccelY, order));
+    cornerRadius = abs(movmean(T.cornerRadius, order)); % average corner radius over 3x the time
+
+    select1 = (T.Time>t01 & T.Time<(T.Time(end)-t01)) & (abs(latAccel) > minAy);
+
+    delta = delta(select1);
+    latAccel = latAccel(select1);
+    cornerRadius = cornerRadius(select1);
+
+    % break up data by corner radius, fit understeer gradient to each group
+    numZones = 4;
+
+    cornerRadiusBounds = linspace(3,30, numZones+1);
+    fits = cell(2, 10);
+
+    % 1-UG, 2- 95% interval, 3- 95% interval, 4- r^2
+    understeerGradient = zeros(4,numZones); 
+
+    figure
+    for i = 1:numZones
+        bounds = cornerRadiusBounds([i,(i+1)]);
+        exclude =  (cornerRadius < bounds(1) | ...
+            cornerRadius > bounds(2));
+    
+        [f1, gof1] = fit(latAccel, delta,'poly1', 'Exclude', exclude);
+        b1 = confint(f1);
+
+        understeerGradient(1,i) = f1.p1;
+        understeerGradient(2,i) = b1(1,1);
+        understeerGradient(3,i) = b1(2,1);
+        understeerGradient(4,i) = gof1.rsquare;
+
+        understeerGradient(5,i) = mean(bounds);
+    
+        subplot(3,numZones,i)
+        scatter(latAccel(~exclude), delta(~exclude))
+        hold on
+        plot(f1)
+
+        legend('off')
+        xlabel('A_y (G)', 'Interpreter', 'tex'), ylabel('\delta (deg)', 'Interpreter', 'tex'), grid
+        title([num2str(round(bounds(1))) ' < R < ' num2str(round(bounds(2))) ' UG = ' num2str(f1.p1)])
+
+        ylim([-20, 20]);
+        xlim([0,2]);
+    end
+    
+
+    subplot(3,1,2)
+    hold on
+    errorbar(understeerGradient(5,:), understeerGradient(1,:), ...
+        understeerGradient(2,:)-understeerGradient(1,:), '-s')
+
+    ylabel('UG (deg/G)')
+    xlabel(['Corner Radius (' getUnits(T, 'cornerRadius') ')'])
+
+    title('Understeer Gradient vs Corner Radius (95% Confidence Bounds)')
+
+    
+    % corner radius histogram
+    subplot(3,1,3)
+    histogram(T.cornerRadius(abs(T.cornerRadius)<20),50)
+    xline(cornerRadiusBounds), xline(-cornerRadiusBounds)
+    xlabel(['Corner Radius (' getUnits(T, 'cornerRadius') ')'])
+    title('Corner Radius')
+
+    sgtitle('Understeer Gradient')
 end
 
 %% GG plot
@@ -210,26 +408,35 @@ if GGPlot
     xline(0),yline(0)
 end
 
+if GGVPlot
+    figure
+    scatter3(T.AccelY, T.AccelX, T.Speed), title('GG Plot')
+    xlabel('Lateral Gs'), ylabel('Longitudinal Gs'), zlabel('Speed (km/h)')
+    xlim([-2,2]), ylim([-2,2])
+    hold on
+    xline(0),yline(0)
+end
+
 %% Aero, plots downforce vs speed, fits CLA
-include = ~or(isnan(T.Speed), isnan(T.SuspHeave));
-exclude =  T.Speed(include)<1;
-
-%obj.rho/2*(long_vel^2)*obj.cla;
-
-% calculate downforce
-totalHeaveStiffness = 2*(350*4.45*39.37)*car.MR_F^2 + ... 
-                      2*(250*4.45*39.37)*car.MR_R^2; % N/m
-FzTotal = T.SuspHeave(include)/1000*totalHeaveStiffness; % N
-
-ft = fittype(@(a, x) -(a*car.aero.rho/2)*x.^2); 
-f2 = fit(T.Speed(include), FzTotal, ft, 'Exclude', exclude);
-totalHeaveStiffness = 2*car.k/car.MR_F^2 + 2*car.k/car.MR_R^2;
-CLA = round(f2.a);
-
 if aeroPlot
+    include = ~or(isnan(T.Speed), isnan(T.SuspHeave));
+    exclude =  T.Speed(include)<1;
+    
+    %obj.rho/2*(long_vel^2)*obj.cla;
+    
+    % calculate downforce
+    totalHeaveStiffness = 2*(350*4.45*39.37)*car.MR_F^2 + ... 
+                          2*(250*4.45*39.37)*car.MR_R^2; % N/m
+    FzTotal = T.SuspHeave(include)/1000*totalHeaveStiffness; % N
+    
+    ft = fittype(@(a, x) -(a*car.aero.rho/2)*x.^2); 
+    f2 = fit(T.Speed(include), FzTotal, ft, 'Exclude', exclude);
+    totalHeaveStiffness = 2*car.k/car.MR_F^2 + 2*car.k/car.MR_R^2;
+    CLA = round(f2.a);
+
     figure
     plot(f2,T.Speed(include), FzTotal, exclude)
-    title(['Steering Angle vs Wheel Speed | CLA = ' num2str(CLA) 'm^2'])
+    title(['Speed Vs Downforce | CLA = ' num2str(CLA) 'm^2'])
     xlabel('Speed (m/s)');
     ylabel('Force (N)');
     grid

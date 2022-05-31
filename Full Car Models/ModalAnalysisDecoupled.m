@@ -50,7 +50,7 @@ for n = 1:7
     plot(Vs(:,n)/maximum*sign(Vs(index,n)),'--o');
     title(['\omega_n =' num2str(round(omega_n(n),2)) ' \zeta =' num2str(round(zeta(n),2))])
     set(gcf,'Position',[184 66 600 714]);
-    set(gca,'XTick',1:7,'XTickLabel',{'Bounce','Roll','Pitch',...
+    set(gca,'XTick',1:8,'XTickLabel',{'Bounce','Roll Front', 'Roll Rear','Pitch',...
         'FL Tire' 'FR Tire' 'RL Tire' 'RR Tire'})
 end
 

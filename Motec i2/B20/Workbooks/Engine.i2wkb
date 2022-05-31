@@ -56,7 +56,7 @@
         <Line Index="2" Enabled="0" Value="0" Color="248,0,0"/>
        </Lines>
        <Traces ActiveTrace="Corr Speed">
-        <Trace Id="Corr Speed" DisplayUnit="mph" DisplayDPS="1" Visible="1"/>
+        <Trace Id="Corr Speed" DisplayUnit="km/h" DisplayDPS="1" Visible="1"/>
        </Traces>
       </Graph>
      </Graphs>
