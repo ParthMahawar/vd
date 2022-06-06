@@ -4,12 +4,14 @@ clc
 set(0,'DefaultTextInterpreter','none')
 %% Import Data
 
-filename = 'AllDay_DamperTuning.csv';
+%filename = 'braketests-alameda-09.csv';
 %filename = 'autocross_3.csv';
 
 %filename = 'full_skidpad1.csv';
 %filename = 'full_skidpad2.csv';
-%filename = 'skidpad2_50hz.csv';
+filename = 'skidpad2_50hz.csv';
+
+% filename = 'skippad_alex_5runs_with_start.csv';
 
 % include units
 opt = detectImportOptions(filename);
@@ -30,13 +32,13 @@ longitudinalPlot = 0;
 bodyMovementPlot = 0;
 damperVelocityHistogram = 0;
 
-understeerPlot = 1;
-understeerPlotRadiusDependent = 1;
+understeerPlot = 0;
+understeerPlotRadiusDependent = 0;
 
 GGPlot = 0;
 GGVPlot = 0;
 
-aeroPlot = 0;
+aeroPlot = 1;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -52,7 +54,7 @@ car.k = 200*4.45*39.37; % N/m ---add k front and k rear
 %% ADL vs Telemetry Unit
 
 if ~any(strcmp(T.Properties.VariableNames,'StAngle')) % if data is from ADL
-    T.StAngle = T.SteeredAngle;
+    T.StAngle = T.SteeringAngle;
 
     T.WheelSpdFL = T.GroundSpeedLeft;
     T.WheelSpdFR = T.GroundSpeedRight;
@@ -420,26 +422,56 @@ end
 %% Aero, plots downforce vs speed, fits CLA
 if aeroPlot
     include = ~or(isnan(T.Speed), isnan(T.SuspHeave));
-    exclude =  T.Speed(include)<1;
-    
-    %obj.rho/2*(long_vel^2)*obj.cla;
-    
+    exclude =  T.Speed(include)<1; % m/s
+        
     % calculate downforce
     totalHeaveStiffness = 2*(350*4.45*39.37)*car.MR_F^2 + ... 
                           2*(250*4.45*39.37)*car.MR_R^2; % N/m
-    FzTotal = T.SuspHeave(include)/1000*totalHeaveStiffness; % N
     
-    ft = fittype(@(a, x) -(a*car.aero.rho/2)*x.^2); 
-    f2 = fit(T.Speed(include), FzTotal, ft, 'Exclude', exclude);
+    % moving mean filter on data
+    meanRangeSeconds = 1; % s
+    meanTimestep = mean(diff(T.Time));
+    order = meanRangeSeconds/meanTimestep;
+    
+    FzTotalSprings = T.SuspHeave(include)/1000*totalHeaveStiffness; % N
+    FzTotalSprings = abs(movmean(FzTotalSprings, order));
+
+    ft = fittype(@(a, b, x) -(a*car.aero.rho/2)*x.^2 + b); 
+    f2 = fit(T.Speed(include), FzTotalSprings, ft, 'Exclude', exclude, 'start', [0 0]);
     totalHeaveStiffness = 2*car.k/car.MR_F^2 + 2*car.k/car.MR_R^2;
-    CLA = round(f2.a);
+    CLA = round(f2.a, 2);
 
     figure
-    plot(f2,T.Speed(include), FzTotal, exclude)
-    title(['Speed Vs Downforce | CLA = ' num2str(CLA) 'm^2'])
+    if any(strcmp(T.Properties.VariableNames,'SuspForceFL'))
+        subplot(2,1,1);
+    end
+    plot(f2,T.Speed(include), FzTotalSprings, exclude)
+    title(['Speed Vs Downforce (suspension compression) | CLA = ' num2str(CLA) 'm^2'])
     xlabel('Speed (m/s)');
     ylabel('Force (N)');
-    grid
+    %ylim([0, Inf])
+    grid    
+
+
+    if any(strcmp(T.Properties.VariableNames,'SuspForceFL'))
+        FzTotalLoadCells = (T.SuspForceFL + T.SuspForceFR + T.SuspForceRL + T.SuspForceRR)/4 * 9.8; % N
+        FzTotalLoadCells = abs(movmean(FzTotalLoadCells, order));
+
+        ft = fittype(@(a, b, x) -(a*car.aero.rho/2)*x.^2 + b); 
+        f2 = fit(T.Speed(include), FzTotalLoadCells, ft, 'Exclude', exclude, 'start', [0 0]);
+        totalHeaveStiffness = 2*car.k/car.MR_F^2 + 2*car.k/car.MR_R^2;
+        CLA = round(f2.a, 2);
+    
+        subplot(2,1,2);
+        plot(f2,T.Speed(include), FzTotalLoadCells, exclude)
+        title(['Speed Vs Downforce (load cells) | CLA = ' num2str(CLA) 'm^2'])
+        xlabel('Speed (m/s)');
+        ylabel('Force (N)');
+        %ylim([0, Inf])
+        grid
+    end
+    
+    
 end
 
 % CLA = 2*F/(rho v^2)
