@@ -43,7 +43,7 @@ end
 fprintf("done\n");
 
 %% Saving
-%save('TBR testing slope 10.mat','carCell');
+save('CDAsweep6-6-2022.mat','carCell');
 
 %% Points Plotting
 
@@ -55,17 +55,17 @@ display_point_values_above_bar_flag = true;
 label_cars_automatically_flag = true;
 
 %automatic car labeling
-automatic_label_name = 'Gamma (Deg)';
+automatic_label_name = 'CDA (m^2)';
 %automatic_label = @(car) (1/2+car.powertrain.G_d2_driving)/(1/2-car.powertrain.G_d2_driving);%TBR
-%automatic_label = @(car) car.M;%Car mass
-automatic_label = @(car) car.tire.gamma;%Car cda
+automatic_label = @(car) car.aero.cda;%Car mass
+%automatic_label = @(car) car.tire.gamma;%Car cda
 
 % 1 to select, 0 to exclude
 selected_categories = find([ ... 
-     1 ... %Accel
-     1 ... %Autocross
-     1 ... %Endurance
-     1 ... %Skidpad
+     0 ... %Accel
+     0 ... %Autocross
+     0 ... %Endurance
+     0 ... %Skidpad
      1 ... %Total
 ]);
 
@@ -82,7 +82,7 @@ plot1 = 0; % velocity-dependent g-g diagram scatter plot
 plot2 = 0; % velocity-dependent g-g diagram surface
 plot3 = 0; % max accel for given velocity and lateral g w/ scattered interpolant
 plot4 = 0; % max braking for given velocity and lateral w/ scattered interpolant
-plot5 = 1; % 2D g-g diagram for velocity specified below (gg_vel)
+plot5 = 0; % 2D g-g diagram for velocity specified below (gg_vel)
 
 g_g_vel = [12 14 26]; % can input vector to overlay different velocities
 
@@ -99,8 +99,8 @@ plot1 = 0; % autocross track distance vs curvature
 plot2 = 0; % endurance track distance vs curvature
 plot3 = 0; % max possible velocity for given radius
 plot4 = 0; % max possible long accel for given velocity
-plot5 = 1; % accel event longitudinal velocity vs time
-plot6 = 1; % accel event longitudinal accel vs time
+plot5 = 0; % accel event longitudinal velocity vs time
+plot6 = 0; % accel event longitudinal accel vs time
 plot7 = 0; % autocross gear shifts
 plot8 = 0; % autocross slip angle vs distance
 

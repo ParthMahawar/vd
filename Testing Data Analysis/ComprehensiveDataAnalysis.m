@@ -4,14 +4,18 @@ clc
 set(0,'DefaultTextInterpreter','none')
 %% Import Data
 
-%filename = 'braketests-alameda-09.csv';
-%filename = 'autocross_3.csv';
+filename = '20220402-0011602.csv';
+filename = 'braketests-alameda-09.csv';
+filename = 'autocross_3.csv';
 
 %filename = 'full_skidpad1.csv';
 %filename = 'full_skidpad2.csv';
-filename = 'skidpad2_50hz.csv';
+filename = 'skidpad2_50hz.csv'; % shows accel granularity - also good tire temp
 
-% filename = 'skippad_alex_5runs_with_start.csv';
+%filename = 'skippad_alex_5runs_with_start.csv';
+
+%filename = 'damper_testing_rebounds_50hz.csv';
+%filename = 'AllDay_DamperTuning.csv';
 
 % include units
 opt = detectImportOptions(filename);
@@ -30,6 +34,7 @@ overviewPlot = 0;
 lateralPlot = 0;
 longitudinalPlot = 0;
 bodyMovementPlot = 0;
+tireTemperaturePlot = 1;
 damperVelocityHistogram = 0;
 
 understeerPlot = 0;
@@ -38,7 +43,9 @@ understeerPlotRadiusDependent = 0;
 GGPlot = 0;
 GGVPlot = 0;
 
-aeroPlot = 1;
+aeroPlot = 0;
+
+powerPlot = 0;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -74,11 +81,12 @@ end
 
 %% Filter Data
 
-T.StAngle = T.StAngle * 20/45;
+T.StAngle = T.StAngle * 20/45; % max steering angle is 20 deg, sensors read -45 -> 45 deg
+T.AccelX = -T.AccelX; % long acceleration reverse (+ should be increasing forward speed)
 
 % moving mean filter on selected data values
 variablesToFilter = {'SuspPosFL','SuspPosFR','SuspPosRL','SuspPosRR',...
-    'StAngle', 'WheelSpdRL','WheelSpdRR','WheelSpdFL','WheelSpdFR'};
+    'StAngle', 'WheelSpdRL','WheelSpdRR','WheelSpdFL','WheelSpdFR', 'AccelX', 'AccelY', 'AccelZ'};
 meanRangeSeconds = 0.25; % length of averaging window (s)
 meanTimestep = mean(diff(T.Time));
 order = meanRangeSeconds/meanTimestep;
@@ -128,6 +136,13 @@ T = setUnits(T, 'Speed', 'm/s');
 % corner radius channel using r= v^2/Ay
 T.cornerRadius = T.Speed.^2./(T.AccelY*9.8);
 T = setUnits(T, 'cornerRadius', 'm');
+
+%% Use Aero parameters to calculate expected Drag and Lift
+
+T.TheoreticalDrag = (car.aero.cda * car.aero.rho/2)* T.Speed.^2;
+T.TheoreticalLift = (car.aero.cla * car.aero.rho/2) * T.Speed.^2;
+T = setUnits(T, {'TheoreticalDrag', 'TheoreticalDrag'} , 'N');
+
 %% time selection plots
 
 if overviewPlot
@@ -139,77 +154,94 @@ if overviewPlot
     plotLine(T,timeRange,'WheelSpdRL')
     plotLine(T,timeRange,'WheelSpdRR')
     legend('Interpreter','none')
+    grid
 
     subplot(4,1,2)
     plotLine(T,timeRange,'BrakePres_F')
     hold on
     plotLine(T,timeRange,'BrakePres_R')
     legend('Interpreter','none')
+    grid
     
     subplot(4,1,3)
     plotLine(T,timeRange,'TPS')
     legend('Interpreter','none')
+    grid
 
     
     subplot(4,1,4)
     plotLine(T,timeRange,'StAngle')
     legend('Interpreter','none')
+    grid
     
     sgtitle('Lockup Plot')
 end
 
 if lateralPlot
     figure
-    subplot(4,1,1)
+    subplot(5,1,1)
     plotLine(T,timeRange,'StAngle')
     legend('Interpreter','none')
+    grid
     
-    subplot(4,1,2)
+    subplot(5,1,2)
     plotLine(T,timeRange,'AccelY')
     legend('Interpreter','none')
+    grid
     
-    subplot(4,1,3)
+    subplot(5,1,3)
     plotLine(T,timeRange,'SuspRoll')
     legend('Interpreter','none')
+    grid
 
-    subplot(4,1,4)
+    subplot(5,1,4)
     plotLine(T,timeRange,'Speed')
     yyaxis right
     plotLine(T,timeRange,'cornerRadius')
     legend('Interpreter','none')
+    grid
+
+    subplot(5,1,5)
+    plotLine(T,timeRange,'AccelY')
+    legend('Interpreter','none')
+    grid
 
     sgtitle('Lateral Plot')
 end
 
 if longitudinalPlot
     figure
-    subplot(4,1,1)
+    subplot(5,1,1)
     plotLine(T,timeRange,'BrakePres_F')
     hold on
     plotLine(T,timeRange,'BrakePres_R')
     legend('Interpreter','none')
+    grid
     
-    subplot(4,1,2)
+    subplot(5,1,2)
     plotLine(T,timeRange,'TPS')
     legend('Interpreter','none')
+    grid
     
-    subplot(4,1,3)
-    plotLine(T,timeRange,'AccelX')
+    subplot(5,1,3)
     plotLine(T,timeRange,'SuspPitch')
     legend('Interpreter','none')
+    grid
 
-    subplot(4,1,4)
+    subplot(5,1,4)
     plotLine(T,timeRange,'Speed')
     yyaxis right
     ylim([-20,20])
     plotLine(T,timeRange,'RPM')
     legend('Interpreter','none')
+    grid
 
-    subplot(4,1,1)
-    plotLine(T,timeRange,'StAngle')
+    subplot(5,1,5)
+    plotLine(T,timeRange,'AccelX')
     legend('Interpreter','none')
+    grid
 
-    sgtitle('Lockup Plot')
+    sgtitle('Longitudinal Plot')
 end
 
 if bodyMovementPlot
@@ -243,21 +275,60 @@ if bodyMovementPlot
     sgtitle('Body Movement')
 end
 
+if tireTemperaturePlot
+    figure
+    subplot(4,1,1)
+    hold on
+    plotLine(T,timeRange,'TireTmpLF2')
+    plotLine(T,timeRange,'TireTmpLF4')
+    plotLine(T,timeRange,'TireTmpLF6')
+    legend('Interpreter','none')
+    grid
+
+    subplot(4,1,2)
+    hold on
+    plotLine(T,timeRange,'TireTmpRF2')
+    plotLine(T,timeRange,'TireTmpRF4')
+    plotLine(T,timeRange,'TireTmpRF6')
+    legend('Interpreter','none')
+    grid
+
+    subplot(4,1,3)
+    hold on
+    plotLine(T,timeRange,'TireTmpLR2')
+    plotLine(T,timeRange,'TireTmpLR4')
+    plotLine(T,timeRange,'TireTmpLR6')
+    legend('Interpreter','none')
+    grid
+
+    subplot(4,1,4)
+    hold on
+    plotLine(T,timeRange,'TireTmpRR2')
+    plotLine(T,timeRange,'TireTmpRR4')
+    plotLine(T,timeRange,'TireTmpRR6')
+    legend('Interpreter','none')
+    grid
+
+    sgtitle('Tire Temperature')
+end
+
 %% damper velocity histogram
     
-if damperVelocityHistogram
+if damperVelocityHistogram   
+    select = (T.Speed > 0.1);
+
     figure
     subplot(3,2,1)
-    histogram(T.damperVelFL), xlim([-100,100])
+    histogram(T.damperVelFL(select)), xlim([-100,100])
     title('damperVelFL'), xlabel('velocity (mm/s)')
     subplot(3,2,2)
-    histogram(T.damperVelFR), xlim([-100,100])
+    histogram(T.damperVelFR(select)), xlim([-100,100])
     title('damperVelFR'), xlabel('velocity (mm/s)')
     subplot(3,2,3)
-    histogram(T.damperVelRL), xlim([-100,100])
+    histogram(T.damperVelRL(select)), xlim([-100,100])
     title('damperVelRL'), xlabel('velocity (mm/s)')
     subplot(3,2,4)
-    histogram(T.damperVelRR), xlim([-100,100])
+    histogram(T.damperVelRR(select)), xlim([-100,100])
     title('damperVelRR'), xlabel('velocity (mm/s)')
 
     subplot(3,1,3);
@@ -412,8 +483,8 @@ end
 
 if GGVPlot
     figure
-    scatter3(T.AccelY, T.AccelX, T.Speed), title('GG Plot')
-    xlabel('Lateral Gs'), ylabel('Longitudinal Gs'), zlabel('Speed (km/h)')
+    scatter3(T.AccelY, T.AccelX, T.Speed, '.'), title('GG Plot')
+    xlabel('Lateral Gs'), ylabel('Longitudinal Gs'), zlabel('Speed (m/s)')
     xlim([-2,2]), ylim([-2,2])
     hold on
     xline(0),yline(0)
@@ -423,6 +494,8 @@ end
 if aeroPlot
     include = ~or(isnan(T.Speed), isnan(T.SuspHeave));
     exclude =  T.Speed(include)<1; % m/s
+
+    T.speed = T.speed * 22/9;
         
     % calculate downforce
     totalHeaveStiffness = 2*(350*4.45*39.37)*car.MR_F^2 + ... 
@@ -453,7 +526,7 @@ if aeroPlot
     grid    
 
 
-    if any(strcmp(T.Properties.VariableNames,'SuspForceFL'))
+    if any(strcmp(T.Properties.VariableNames,'SuspForceFL')) %% TODO: add motion ratio calculation
         FzTotalLoadCells = (T.SuspForceFL + T.SuspForceFR + T.SuspForceRL + T.SuspForceRR)/4 * 9.8; % N
         FzTotalLoadCells = abs(movmean(FzTotalLoadCells, order));
 
@@ -476,6 +549,30 @@ end
 
 % CLA = 2*F/(rho v^2)
 % F = (CLA*rho/2)*v^2
+
+%% Power Estimation
+if powerPlot
+    power = (((abs(T.AccelX) * 9.8) .* car.M) + T.TheoreticalDrag)...
+        .* T.Speed; % W
+    engineRPM = T.RPM;
+
+    numZones = 10;
+
+    RPMbounds = linspace(0, max(engineRPM), numZones+1);
+
+    fittedCurve = zeros(2,numZones)
+
+    for i = 1:numZones
+        selectRPM = (engineRPM > RPMbounds(i)) & (engineRPM < RPMbounds(i+1));
+        fittedCurve(1, i) = mean(RPMbounds([i,i+1]));
+        fittedCurve(2, i) = prctile(power(selectRPM), 90);
+    end
+
+    figure
+    scatter(engineRPM, power * 0.00134102);
+    xlabel('Engine RPM');
+    ylabel('Power (hp)')
+end
 
 %% FUNctions :D 
 % this has to have been greg
