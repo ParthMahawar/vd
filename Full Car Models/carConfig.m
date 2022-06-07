@@ -33,7 +33,7 @@ eParams.shift_time = 0.050; % seconds FOR UPSHIFT ONLY; 150ms for downshift
 
 % drivetrain parameters (updated 5/1/19)
 DTparams = struct();
-DTparams.final_drive = 2.5:0.25:5;%40/11; % drivetrain sprocket ratio
+DTparams.final_drive = 2:1:5;%40/11; % drivetrain sprocket ratio
 DTparams.drivetrain_efficiency = 0.87; % scales torque value
 DTparams.G_d1 = 0; % differential torque transfer offset due to internal friction
 DTparams.G_d2_overrun = 0; % differential torque transfer gain in overrun (not used right now)

@@ -1,7 +1,7 @@
 %% settings
 %file_names = {'Lapsim18R25B_non_turbo.mat','Lapsim18R25B_turbo.mat'};
 %file_names = {'Lapsim_B22_no_undertray.mat','Lapsim_B22_with_undertray.mat'};
-file_names = {'TBR_sweep.mat'};
+file_names = {'FinalDriveSweep6-6-2022.mat'};
 
 % options
 display_point_values_above_bar_flag = true;
@@ -14,15 +14,16 @@ manual_car_labels = {'NA', 'Turbo'};
 
 %automatic car labeling
 automatic_label_name = 'Torque Bias Ratio';
-automatic_label = @(car) (1/2+car.powertrain.G_d2_driving)/(1/2-car.powertrain.G_d2_driving);%TBR
+%automatic_label = @(car) (1/2+car.powertrain.G_d2_driving)/(1/2-car.powertrain.G_d2_driving);%TBR
 %automatic_label = @(car) car.M;%Car mass
+automatic_label = @(car) car.powertrain.final_drive;%Car mass
 
 % 1 to select, 0 to exclude
 selected_categories = find([ ... 
-     0 ... %Accel
-     0 ... %Autocross
-     0 ... %Endurance
-     0 ... %Skidpad
+     1 ... %Accel
+     1 ... %Autocross
+     1 ... %Endurance
+     1 ... %Skidpad
      1 ... %Total
 ]);
 

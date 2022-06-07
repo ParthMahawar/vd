@@ -71,7 +71,7 @@ function plot_lapsim_points(carCell, display_point_values_above_bar_flag, label_
             ytips = b(i).YEndPoints;
             labels = string(round(b(i).YData,1));
             text(xtips,ytips,labels,'HorizontalAlignment','center',...
-                'VerticalAlignment','bottom')
+                'VerticalAlignment','bottom','FontSize',7)
         end
     end
 end

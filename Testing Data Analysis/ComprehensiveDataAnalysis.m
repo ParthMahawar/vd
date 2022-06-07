@@ -4,18 +4,21 @@ clc
 set(0,'DefaultTextInterpreter','none')
 %% Import Data
 
-%filename = '20220402-0011602.csv';
-%filename = 'braketests-alameda-09.csv';
+% filename = '20220402-0011602.csv';
+% filename = 'braketests-alameda-09.csv';
+
 filename = 'autocross_3.csv';
 
-%filename = 'full_skidpad1.csv';
-%filename = 'full_skidpad2.csv';
-%filename = 'skidpad2_50hz.csv'; % shows accel granularity - also good tire temp
+%filename = 'straighlinepullsm400.csv';
+
+% filename = 'full_skidpad1.csv';
+% filename = 'full_skidpad2.csv';
+% filename = 'skidpad2_50hz.csv'; % shows accel granularity - also good tire temp
 
 %filename = 'skippad_alex_5runs_with_start.csv';
 
-%filename = 'damper_testing_rebounds_50hz.csv';
-%filename = 'AllDay_DamperTuning.csv';
+% filename = 'damper_testing_rebounds_50hz.csv';
+% filename = 'AllDay_DamperTuning.csv';
 
 % include units
 opt = detectImportOptions(filename);
@@ -45,7 +48,7 @@ GGVPlot = 0;
 
 aeroPlot = 0;
 
-powerPlot = 1;
+powerPlot = 0;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -61,9 +64,9 @@ car.k = 200*4.45*39.37; % N/m ---add k front and k rear
 %% ADL vs Telemetry Unit
 
 if ~any(strcmp(T.Properties.VariableNames,'StAngle')) % if data is from ADL
-    T.StAngle = T.SteeringAngle;
+    %T.StAngle = T.SteeringAngle;
 
-    T.WheelSpdFL = T.GroundSpeedLeft;
+    T.WheelSpdFL = T.GroundSpeedLeft; % Km/h (?)
     T.WheelSpdFR = T.GroundSpeedRight;
     T.WheelSpdRL = T.DriveSpeedLeft;
     T.WheelSpdRR = T.DriveSpeedRight;
@@ -552,13 +555,17 @@ end
 
 %% Power Estimation
 if powerPlot
-
-    accelWheelCalc = T.speed ./ diff(T.time);
-    power = (((abs(accelWheelCalc) * 9.8) .* car.M) + T.TheoreticalDrag)...
-        .* T.Speed; % W
+    
+    accelWheelCalc = [0; diff(T.Speed) ./ diff(T.Time)];
+    select = (accelWheelCalc > 0.1) & (T.Time > 0) & (T.Time < Inf);
+    power = ((accelWheelCalc .* car.M) + T.TheoreticalDrag)...
+        .* T.Speed * 2.6; % W
 %     power = (((abs(T.AccelX) * 9.8) .* car.M) + T.TheoreticalDrag)...
 %         .* T.Speed; % W
     engineRPM = T.RPM;
+
+    power = power(select);
+    engineRPM = engineRPM(select);
 
     numZones = 30;
     percentilePower = 99.5;
@@ -574,14 +581,43 @@ if powerPlot
         fittedCurve(2, i) = prctile(power(selectRPM), percentilePower);
     end
 
+    fittedCurve(isnan(fittedCurve)) = 0;
+
+    fittedCurve(2,:) = movmean(fittedCurve(2,:), movmeanSmoothingOrder);
+
+    ft = fittype(@(a, b, c, d, x) a*x + b*x.^2 + c*x.^3 + d*x.^4); 
+    powerFittedCurve = fit(fittedCurve(1,:)', fittedCurve(2,:)' * 0.00134102, ft, 'start', [0.0026 -1.79*10^(-6) 4.99*10^(-10) -3.047*10^(-14)]);
+
     figure
-    scatter(engineRPM, power * 0.00134102, 'DisplayName', 'Instantaneous Power = (A_x \cdot M_{car} + F_{drag}) \cdot V_x');
+
+    select = power*0.00134102<50;
+    
     hold on
-    plot(fittedCurve(1,:),movmean(fittedCurve(2,:) * 0.00134102, movmeanSmoothingOrder), 'LineWidth', 3, ...
-        'DisplayName', [num2str(percentilePower) ' Percentile Power (WOT)']);
+    scatter(engineRPM(select), power(select) * 0.00134102, 'DisplayName', 'Instantaneous Power = (A_x \cdot M_{car} + F_{drag}) \cdot V_x');
+    plot(fittedCurve(1,:), powerFittedCurve(fittedCurve(1,:)), 'LineWidth', 3, ...
+         'DisplayName', [num2str(percentilePower) ' Percentile Power (WOT)']);
+
+     
+%     hold on
+%     plot(fittedCurve(1,:), fittedCurve(2,:) * 0.00134102, 'LineWidth', 3, ...
+%         'DisplayName', [num2str(percentilePower) ' Percentile Power (WOT)']);
+     ylabel('Power (hp)');
+     ylim([0 80])
+% 
+    % plot torque
+    %torque = fittedCurve(2,:) ./ (fittedCurve(1,:)/60*2*pi); % Nm
+    torque = powerFittedCurve(fittedCurve(1,:))' ./ (fittedCurve(1,:)/5252); % Ft-Lbs
+
+
+    % * 0.73756
+    yyaxis right
+    plot(fittedCurve(1,:), torque, 'LineWidth', 3, ...
+        'DisplayName', [num2str(percentilePower) ' Percentile Torque (WOT)']);
     legend();
     xlabel('Engine RPM');
-    ylabel('Power (hp)');
+    ylabel('Torque (Ft-Lbs)')
+    ylim([0 80])
+    xlim([2500 Inf])
     grid
     title('Engine Power Estimation');
 end
