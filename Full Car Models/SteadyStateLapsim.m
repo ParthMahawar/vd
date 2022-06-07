@@ -16,7 +16,7 @@ numCars = size(carCell,1);
 time = struct();time.prev = 0; time.curr = 0;
 tic
 % Set numWorkers to number of cores for better performance
-numWorkers = 0;
+numWorkers = 4;
 if numWorkers ~= 0
     disp('The parallel toolbox takes a few minutes to start.')
     disp('Set numWorkers to 0 for single-car runs')
@@ -43,7 +43,7 @@ end
 fprintf("done\n");
 
 %% Saving
-save('CDAsweep6-6-2022.mat','carCell');
+save('FinalDriveSweep6-6-2022.mat','carCell');
 
 %% Points Plotting
 
@@ -55,17 +55,17 @@ display_point_values_above_bar_flag = true;
 label_cars_automatically_flag = true;
 
 %automatic car labeling
-automatic_label_name = 'CDA (m^2)';
+automatic_label_name = 'Final Drive Ratio';
 %automatic_label = @(car) (1/2+car.powertrain.G_d2_driving)/(1/2-car.powertrain.G_d2_driving);%TBR
-automatic_label = @(car) car.aero.cda;%Car mass
+automatic_label = @(car) car.powertrain.final_drive;%Car mass
 %automatic_label = @(car) car.tire.gamma;%Car cda
 
 % 1 to select, 0 to exclude
 selected_categories = find([ ... 
-     0 ... %Accel
-     0 ... %Autocross
-     0 ... %Endurance
-     0 ... %Skidpad
+     1 ... %Accel
+     1 ... %Autocross
+     1 ... %Endurance
+     1 ... %Skidpad
      1 ... %Total
 ]);
 

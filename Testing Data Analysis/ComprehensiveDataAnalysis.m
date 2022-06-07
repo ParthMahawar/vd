@@ -4,13 +4,13 @@ clc
 set(0,'DefaultTextInterpreter','none')
 %% Import Data
 
-filename = '20220402-0011602.csv';
-filename = 'braketests-alameda-09.csv';
+%filename = '20220402-0011602.csv';
+%filename = 'braketests-alameda-09.csv';
 filename = 'autocross_3.csv';
 
 %filename = 'full_skidpad1.csv';
 %filename = 'full_skidpad2.csv';
-filename = 'skidpad2_50hz.csv'; % shows accel granularity - also good tire temp
+%filename = 'skidpad2_50hz.csv'; % shows accel granularity - also good tire temp
 
 %filename = 'skippad_alex_5runs_with_start.csv';
 
@@ -34,7 +34,7 @@ overviewPlot = 0;
 lateralPlot = 0;
 longitudinalPlot = 0;
 bodyMovementPlot = 0;
-tireTemperaturePlot = 1;
+tireTemperaturePlot = 0;
 damperVelocityHistogram = 0;
 
 understeerPlot = 0;
@@ -45,7 +45,7 @@ GGVPlot = 0;
 
 aeroPlot = 0;
 
-powerPlot = 0;
+powerPlot = 1;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -495,7 +495,7 @@ if aeroPlot
     include = ~or(isnan(T.Speed), isnan(T.SuspHeave));
     exclude =  T.Speed(include)<1; % m/s
 
-    T.speed = T.speed * 22/9;
+    T.Speed = T.Speed * 22/9;
         
     % calculate downforce
     totalHeaveStiffness = 2*(350*4.45*39.37)*car.MR_F^2 + ... 
@@ -552,26 +552,38 @@ end
 
 %% Power Estimation
 if powerPlot
-    power = (((abs(T.AccelX) * 9.8) .* car.M) + T.TheoreticalDrag)...
+
+    accelWheelCalc = T.speed ./ diff(T.time);
+    power = (((abs(accelWheelCalc) * 9.8) .* car.M) + T.TheoreticalDrag)...
         .* T.Speed; % W
+%     power = (((abs(T.AccelX) * 9.8) .* car.M) + T.TheoreticalDrag)...
+%         .* T.Speed; % W
     engineRPM = T.RPM;
 
-    numZones = 10;
+    numZones = 30;
+    percentilePower = 99.5;
+    movmeanSmoothingOrder = 7;
 
     RPMbounds = linspace(0, max(engineRPM), numZones+1);
 
-    fittedCurve = zeros(2,numZones)
+    fittedCurve = zeros(2,numZones);
 
     for i = 1:numZones
         selectRPM = (engineRPM > RPMbounds(i)) & (engineRPM < RPMbounds(i+1));
         fittedCurve(1, i) = mean(RPMbounds([i,i+1]));
-        fittedCurve(2, i) = prctile(power(selectRPM), 90);
+        fittedCurve(2, i) = prctile(power(selectRPM), percentilePower);
     end
 
     figure
-    scatter(engineRPM, power * 0.00134102);
+    scatter(engineRPM, power * 0.00134102, 'DisplayName', 'Instantaneous Power = (A_x \cdot M_{car} + F_{drag}) \cdot V_x');
+    hold on
+    plot(fittedCurve(1,:),movmean(fittedCurve(2,:) * 0.00134102, movmeanSmoothingOrder), 'LineWidth', 3, ...
+        'DisplayName', [num2str(percentilePower) ' Percentile Power (WOT)']);
+    legend();
     xlabel('Engine RPM');
-    ylabel('Power (hp)')
+    ylabel('Power (hp)');
+    grid
+    title('Engine Power Estimation');
 end
 
 %% FUNctions :D 

@@ -17,7 +17,7 @@ carParams.I_zz = 83.28; %kg-m^2
 
 % aero parameters (updated 6/6/22)
 aeroParams = struct();
-aeroParams.cda = 1.88 +[-0.5 -0.25 0 0.25 0.5]; % m^2
+aeroParams.cda = 1.88; % m^2
 aeroParams.cla = 9.73; % m^2
 aeroParams.distribution = 0.4; % proportion of downforce in front
 
@@ -33,7 +33,7 @@ eParams.shift_time = 0.050; % seconds FOR UPSHIFT ONLY; 150ms for downshift
 
 % drivetrain parameters (updated 5/1/19)
 DTparams = struct();
-DTparams.final_drive = 40/11; % drivetrain sprocket ratio
+DTparams.final_drive = 2.5:0.25:5;%40/11; % drivetrain sprocket ratio
 DTparams.drivetrain_efficiency = 0.87; % scales torque value
 DTparams.G_d1 = 0; % differential torque transfer offset due to internal friction
 DTparams.G_d2_overrun = 0; % differential torque transfer gain in overrun (not used right now)
