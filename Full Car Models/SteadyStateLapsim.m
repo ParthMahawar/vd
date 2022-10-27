@@ -33,7 +33,7 @@ for i = 1:numCars
     time.prev = time.curr;
 end
 
-carOut = {};
+carOut = carCell;
 
 parfor i = 1:numCars
     car = carCell{i, 1};
