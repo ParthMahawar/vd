@@ -12,43 +12,51 @@
 clear
 setup_paths
 carCell = carConfig(); %generate all cars to sim over
-carOut = {};
 numCars = size(carCell,1);
+time = struct();time.prev = 0; time.curr = 0;
+tic
 % Set numWorkers to number of cores for better performance
-numWorkers = 0;
+numWorkers = 4;
 if numWorkers ~= 0
     disp('The parallel toolbox takes a few minutes to start.')
     disp('Set numWorkers to 0 for single-car runs')
 end
 
-parfor i = 1:numCars
-    prevTime = floor(0);
-    tic
+for i = 1:numCars
     car = carCell{i,1};
     accelCar = carCell{i,2};
     fprintf("car %d of %d - starting g-g\n",[i numCars]);
     paramArr = gg2(car,numWorkers);
     fprintf("car %d of %d - g-g complete\n",[i numCars]);
-    currTime = floor(toc);
-    fprintf("Stage Time: %d s; Total time elapsed: %d s\n",[currTime - prevTime currTime]);
-    prevTime = currTime;
+    time.curr = floor(toc);
+    fprintf("Stage Time: %d s; Total time elapsed: %d s\n",[time.curr-time.prev time.curr]);
+    time.prev = time.curr;
+end
+
+carOut = {};
+
+parfor i = 1:numCars
+    car = carCell{i, 1};
+    accelCar = carCell{i, 2};
     car = makeGG(paramArr,car); %post-processes gg data and stores in car
     comp = Events2(car,accelCar); 
     comp.calcTimes();       %run events and calc points
     car.comp = comp;        %store in array
     carOut{i,1} = car; %put updated car back into array. Matlab is pass by value, not pass by reference
     fprintf("car %d of %d - points calculated\n",[i numCars]);
-    currTime = floor(toc);
-    fprintf("Stage Time: %d s; Total time elapsed: %d s\n",[currTime - prevTime currTime]);
 end
+
+time.curr = floor(toc);
+fprintf("Stage Time: %d s; Total time elapsed: %d s\n",[time.curr-time.prev time.curr]);
 fprintf("done\n");
+carCell = carOut;
 
 %% Saving
 save('FinalDriveSweep6-6-2022-num2.mat','carCell');
 
 %% Points Plotting
 
-disp("car 1 points: " + num2str(carOut{1,1}.comp.points.total));
+disp("car 1 points: " + num2str(carCell{1,1}.comp.points.total));
 
 % options
 display_point_values_above_bar_flag = true;
@@ -70,13 +78,13 @@ selected_categories = find([ ...
      1 ... %Total
 ]);
 
-plot_lapsim_points(carOut, display_point_values_above_bar_flag, true,...
+plot_lapsim_points(carCell, display_point_values_above_bar_flag, true,...
     [], automatic_label_name, automatic_label, selected_categories);
 %% Car Plotting
 
 % select desired car object
 desiredCarIndex = 1;
-car = carOut{desiredCarIndex,1};
+car = carCell{desiredCarIndex,1};
 
 % set desired plots to 1
 plot1 = 0; % velocity-dependent g-g diagram scatter plot
@@ -93,7 +101,7 @@ plotter(car,g_g_vel,plot_choice);
 %% Event Plotting
 
 % select desired comp object
-comp = carOut{1,1}.comp;
+comp = carCell{1,1}.comp;
 
 % set desired plots to 1
 plot1 = 0; % autocross track distance vs curvature
@@ -107,4 +115,3 @@ plot8 = 0; % autocross slip angle vs distance
 
 plot_choice = [plot1 plot2 plot3 plot4 plot5 plot6 plot7 plot8];
 event_plotter(comp,plot_choice);
-
