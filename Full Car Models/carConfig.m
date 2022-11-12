@@ -14,6 +14,7 @@ carParams.roll_center_height_front = 0.0254; % (1 in)
 carParams.roll_center_height_rear = 0.0889; % (3.5 in)
 carParams.R_sf = 0.4; % proportion of roll stiffness in front (not same as LLTD)
 carParams.I_zz = 83.28; %kg-m^2
+carParams.ackermann = [-20, 0, 20, 40];%BYU Formula: = ((inner-outer)/inner)*100
 
 % aero parameters (updated 6/6/22)
 aeroParams = struct();
@@ -33,7 +34,7 @@ eParams.shift_time = 0.050; % seconds FOR UPSHIFT ONLY; 150ms for downshift
 
 % drivetrain parameters (updated 5/1/19)
 DTparams = struct();
-DTparams.final_drive = 2:1:5;%40/11; % drivetrain sprocket ratio
+DTparams.final_drive = 37/11; % drivetrain sprocket ratio
 DTparams.drivetrain_efficiency = 0.87; % scales torque value
 DTparams.G_d1 = 0; % differential torque transfer offset due to internal friction
 DTparams.G_d2_overrun = 0; % differential torque transfer gain in overrun (not used right now)

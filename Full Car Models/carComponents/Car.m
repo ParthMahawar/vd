@@ -16,6 +16,7 @@ classdef Car
         h_g %cg height
         R_sf %roll stiffness in front
         I_zz %polar moment of inertia, z axis
+        ackermann
 
         aero
         powertrain
@@ -56,7 +57,7 @@ classdef Car
     
     methods
         function obj = Car(mass,wheelbase,weight_dist,track_width,wheel_radius,cg_height,...
-                roll_center_height_front,roll_center_height_rear,R_sf,I_zz,aero,powertrain,tire)
+                roll_center_height_front,roll_center_height_rear,R_sf,I_zz,ackermann,aero,powertrain,tire)
             obj.M = mass;
             obj.W_b = wheelbase;
             obj.l_f = wheelbase*weight_dist; % distance from cg to front
@@ -73,6 +74,7 @@ classdef Car
             obj.aero = aero;
             obj.powertrain = powertrain;
             obj.tire = tire;
+            obj.ackermann = ackermann;
         end
         
         function [engine_rpm,beta,lat_accel,long_accel,yaw_accel,wheel_accel,omega,current_gear,...
@@ -106,9 +108,19 @@ classdef Car
             
             % Tire Slips
             beta = atan(lat_vel/long_vel)*180/pi; % vehicle slip angle in deg
-            steer_angle_1 = steer_angle; % could be modified for ackermann steering 
-            steer_angle_2 = steer_angle;
+
+            outer_angle = steer_angle;
+            inner_angle = outer_angle/(1-(obj.ackermann/100));
             
+            if steer_angle > 0  
+                steer_angle_2 = inner_angle;
+                steer_angle_1 = outer_angle;
+            else
+                steer_angle_1 = inner_angle;
+                steer_angle_2 = outer_angle;
+            end
+
+
             % slip angles (small angle assumption)
             alpha(1) = -steer_angle_1+(lat_vel+obj.l_f*yaw_rate)/(long_vel+yaw_rate*obj.t_f/2)*180/pi; %deg
             alpha(2) = -steer_angle_2+(lat_vel+obj.l_f*yaw_rate)/(long_vel-yaw_rate*obj.t_f/2)*180/pi; %deg
@@ -116,8 +128,9 @@ classdef Car
             alpha(4) = (lat_vel-obj.l_r*yaw_rate)/(long_vel-yaw_rate*obj.t_r/2)*180/pi;
          
             % Tire Forces
-            steer_angle = steer_angle_1*pi/180;
-            [Fx,Fy,Fxw] = obj.tireForce(steer_angle,alpha,kappa,Fz);
+            steer_angle_1 = steer_angle_1*pi/180;
+            steer_angle_2 = steer_angle_2*pi/180;
+            [Fx,Fy,Fxw] = obj.tireForce(steer_angle_1, steer_angle_2,alpha,kappa,Fz);
                         
             % Equations of Motion
             lat_accel = sum(Fy)*(1/obj.M)-yaw_rate*long_vel;
@@ -132,7 +145,7 @@ classdef Car
             wheel_accel(4) = (T(4)-Fx(4)*obj.R); 
         end
         
-        function [Fx,Fy,F_xw] = tireForce(obj,steer_angle,alpha,kappa,Fz)
+        function [Fx,Fy,F_xw] = tireForce(obj,steer_angle_1, steer_angle_2,alpha,kappa,Fz)
             %radians
             
             % forces in tire frame of reference
@@ -143,10 +156,10 @@ classdef Car
             F_xw = [F_xw1; F_xw2];
 
             % forces in vehicle frame of reference
-            F_x1 = F_xw1*cos(steer_angle)-F_yw1*sin(steer_angle);
-            F_y1 = F_xw1*sin(steer_angle)+F_yw1*cos(steer_angle);
-            F_x2 = F_xw2*cos(steer_angle)-F_yw2*sin(steer_angle);
-            F_y2 = F_xw2*sin(steer_angle)+F_yw2*cos(steer_angle);
+            F_x1 = F_xw1*cos(steer_angle_1)-F_yw1*sin(steer_angle_1);
+            F_y1 = F_xw1*sin(steer_angle_1)+F_yw1*cos(steer_angle_1);
+            F_x2 = F_xw2*cos(steer_angle_2)-F_yw2*sin(steer_angle_2);
+            F_y2 = F_xw2*sin(steer_angle_2)+F_yw2*cos(steer_angle_2);
             
             F_x3 = obj.tire.F_x(alpha(3),kappa(3),Fz(3));
             F_y3 = obj.tire.F_y(alpha(3),kappa(3),Fz(3));
@@ -202,7 +215,7 @@ classdef Car
             kappa = [k1; k2; k3; k4];
             
             % calculate tire forces
-            [Fx,Fy,Fxw] = tireForce(obj,steerAngle,alphaD,kappa,Fz);
+            [Fx,Fy,Fxw] = tireForce(obj,steerAngle_1,steerAngle_2,alphaD,kappa,Fz);
             Rtire = [obj.l_f -obj.t_f/2 0;   %tire 1
                      obj.l_f obj.t_f/2 0;   %tire 2
                      -obj.l_r -obj.t_f/2 0;   %tire 3
