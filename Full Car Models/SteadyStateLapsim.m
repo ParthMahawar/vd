@@ -44,11 +44,13 @@ end
 fprintf("done\n");
 
 %% Saving
-save('FinalDriveSweep6-6-2022-num2.mat','carCell');
+save('PitchAeroTest11-12-2022-num2.mat','carCell');
 
 %% Points Plotting
 
-disp("car 1 points: " + num2str(carOut{1,1}.comp.points.total));
+for i = 1:numCars
+    disp(sprintf("car %s points: ", i) + num2str(carOut{i,1}.comp.points.total));
+end
 
 % options
 display_point_values_above_bar_flag = true;
@@ -56,9 +58,9 @@ display_point_values_above_bar_flag = true;
 label_cars_automatically_flag = true;
 
 %automatic car labeling
-automatic_label_name = 'Final Drive Ratio';
+automatic_label_name = 'd/deg pitch (cla, D)';
 %automatic_label = @(car) (1/2+car.powertrain.G_d2_driving)/(1/2-car.powertrain.G_d2_driving);%TBR
-automatic_label = @(car) car.powertrain.final_drive;%Car mass
+automatic_label = @(car) append(string(car.aero.cla_p_deg_p), ' ', string(car.aero.D_p_deg_p));%Car mass
 %automatic_label = @(car) car.tire.gamma;%Car cda
 
 % 1 to select, 0 to exclude
