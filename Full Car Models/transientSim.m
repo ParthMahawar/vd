@@ -44,6 +44,7 @@ steerDeg = 5;
 
 time = 0:car.TSmpc:car.TSmpc*(n-1);
 steer = (time>car.TSmpc*(n-1)/2)*deg2rad(steerDeg);
+% steer = sin(time)*deg2rad(steerDeg);
 % steer = steer.*sin((2*pi)*time);
 % steer(1:3000) = 0;
 % 
@@ -51,7 +52,8 @@ steer = (time>car.TSmpc*(n-1)/2)*deg2rad(steerDeg);
 %steer =  deg2rad(steerDeg)*[zeros(1,3000) steer(1:end-3000)];
 
 throttle = (time>car.TSmpc*(n-1)*3/4)*-1;
-%throttle = 0.1*ones(1,n);
+% throttle = 0.1*ones(1,n);
+% throttle = ones(1,n);
 %throttle = [0*ones(1,n/2) 1*ones(1,n/4) -0.3*ones(1,n/4)];
 % throttle = [zeros(1,n/4) ones(1,2*n/4) -ones(1,n/4)];
 uArr = [steer; throttle];
@@ -100,7 +102,8 @@ theta = yArr(3,:);
 
 ic = 3;
 figure(1);clf
-plot(xArr(5,:),xArr(6,:));
+plot(xArr(5,:),xArr(6,:),'-o','MarkerIndices', 1:int16(1/car.TSmpc/2):length(xArr(5, :)));
+axis equal
 hold on
 plot(xArr(5,ic),xArr(6,ic),'o');
 title('XY Pos');grid
@@ -176,8 +179,6 @@ plot(time, mean(yArr(4:7,:),1), 'DisplayName','Mean Wheel Positions')
 plot(time, mean(yArr(1,:),1), 'DisplayName','Heave')
 title('Wheel Positions')
 legend()
-
-
 
 
 
