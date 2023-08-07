@@ -31,17 +31,25 @@ for i = 1:numCars
     time.curr = floor(toc);
     fprintf("Stage Time: %d s; Total time elapsed: %d s\n",[time.curr-time.prev time.curr]);
     time.prev = time.curr;
+end
+
+carOut = carCell;
+
+parfor i = 1:numCars
+    car = carCell{i, 1};
+    accelCar = carCell{i, 2};
     car = makeGG(paramArr,car); %post-processes gg data and stores in car
     comp = Events2(car,accelCar); 
     comp.calcTimes();       %run events and calc points
     car.comp = comp;        %store in array
-    carCell{i,1} = car; %put updated car back into array. Matlab is pass by value, not pass by reference
+    carOut{i,1} = car; %put updated car back into array. Matlab is pass by value, not pass by reference
     fprintf("car %d of %d - points calculated\n",[i numCars]);
-    time.curr = floor(toc);
-    fprintf("Stage Time: %d s; Total time elapsed: %d s\n",[time.curr-time.prev time.curr]);
 end
-fprintf("done\n");
 
+time.curr = floor(toc);
+fprintf("Stage Time: %d s; Total time elapsed: %d s\n",[time.curr-time.prev time.curr]);
+fprintf("done\n");
+carCell = carOut;
 %% Saving
 save('FinalDriveSweep6-6-2022-num2.mat','carCell');
 
@@ -79,7 +87,7 @@ car = carCell{desiredCarIndex,1};
 
 % set desired plots to 1
 plot1 = 0; % velocity-dependent g-g diagram scatter plot
-plot2 = 0; % velocity-dependent g-g diagram surface
+plot2 = 1; % velocity-dependent g-g diagram surface
 plot3 = 0; % max accel for given velocity and lateral g w/ scattered interpolant
 plot4 = 0; % max braking for given velocity and lateral w/ scattered interpolant
 plot5 = 0; % 2D g-g diagram for velocity specified below (gg_vel)
@@ -95,14 +103,14 @@ plotter(car,g_g_vel,plot_choice);
 comp = carCell{1,1}.comp;
 
 % set desired plots to 1
-plot1 = 0; % autocross track distance vs curvature
+plot1 = 1; % autocross track distance vs curvature
 plot2 = 0; % endurance track distance vs curvature
-plot3 = 0; % max possible velocity for given radius
+plot3 = 1; % max possible velocity for given radius
 plot4 = 0; % max possible long accel for given velocity
 plot5 = 0; % accel event longitudinal velocity vs time
 plot6 = 0; % accel event longitudinal accel vs time
 plot7 = 0; % autocross gear shifts
-plot8 = 0; % autocross slip angle vs distance
+plot8 = 1; % autocross slip angle vs distance
 
 plot_choice = [plot1 plot2 plot3 plot4 plot5 plot6 plot7 plot8];
 event_plotter(comp,plot_choice);

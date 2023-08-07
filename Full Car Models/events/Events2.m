@@ -27,7 +27,7 @@ classdef Events2 < handle
             obj.accelCar = accelCar;
             
             % maps
-            load('track_autocross_2019.mat');
+            load('track_autocross_2023.mat');
             obj.autocross_track = [arclength; curvature];
             load('track_endurance_2019.mat');
             obj.endurance_track = [arclength; curvature];
@@ -208,6 +208,7 @@ classdef Events2 < handle
             time_final = time_1;
             time_final(indices_2) = time_2(indices_2);
             % final time result
+            time_final
             time_final = sum(time_final); 
         end
         
@@ -217,6 +218,7 @@ classdef Events2 < handle
             [long_vel_final,long_accel_final,lat_accel_final,time_final] = ...
                 Track_Solver(obj,arclength,curvature);
             obj.times.autocross = time_final*1.03; % scaling factor to reduce endurance points
+            time_final
             obj.autocross.time_vec = linspace(0,time_final,100000);
             obj.autocross.long_vel = long_vel_final;
             obj.autocross.long_accel = long_accel_final;

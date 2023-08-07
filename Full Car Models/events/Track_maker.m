@@ -33,9 +33,10 @@ nurbs = nrbmak(coefs,knots);
 % plotting
 subdivisions = 100002;
 p = nrbeval(nurbs,linspace(0.0,1.0,subdivisions)); 
-plot(p(1,:),p(2,:)); 
+plot(p(1,:)*3.281,p(2,:)); 
 hold on
-scatter(X,Y);
+scatter(X*3.281,Y);
+%axis equal;
 
 % evaluating curvature
 dY = diff(p(2,:))./diff(linspace(0,1,subdivisions));   % first derivative
@@ -59,4 +60,4 @@ xlabel('Distance','FontSize',15);
 ylabel('Curvature','FontSize',15);
 
 % when satisfied with results, save arclength and curvature data
-save('track_endurance_2019.mat','arclength','curvature');
+%save('track_autocross_2023C.mat','arclength','curvature');

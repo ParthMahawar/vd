@@ -2,11 +2,11 @@ function carCell = carConfig()
 
 % car parameters (updated 2/4/21)
 carParams = struct();
-carParams.mass = 179.2; % not including driver (395 lb)
+carParams.mass = 171.5; % not including driver (395 lb)
 carParams.driver_weight = 68; % (150 lb)
 carParams.accel_driver_weight = 68; % (150 lb)
 carParams.wheelbase = 1.5494; % 61 in
-carParams.weight_dist = 0.54; % percentage of weight in rear
+carParams.weight_dist = 0.512; % percentage of weight in rear
 carParams.track_width = 1.1938; % (47 in)
 carParams.wheel_radius = 0.1956; % loaded radius (7.7 in)
 carParams.cg_height = 0.3048; % (12 in)
@@ -28,12 +28,12 @@ eParams.shift_point = 8500; % approximate
 % these parameters are non-iterable
 eParams.gears = [32/16 30/18 28/20 26/22 24/24]; % updated KTM450
 eParams.primary_reduction = 76/32; % KTM450
-eParams.torque_fn = KTM450_RecaroTurbo();
+eParams.torque_fn = KTM450();
 eParams.shift_time = 0.050; % seconds FOR UPSHIFT ONLY; 150ms for downshift
 
 % drivetrain parameters (updated 5/1/19)
 DTparams = struct();
-DTparams.final_drive = 2:1:5;%40/11; % drivetrain sprocket ratio
+DTparams.final_drive = 35/11; % drivetrain sprocket ratio
 DTparams.drivetrain_efficiency = 0.87; % scales torque value
 DTparams.G_d1 = 0; % differential torque transfer offset due to internal friction
 DTparams.G_d2_overrun = 0; % differential torque transfer gain in overrun (not used right now)
