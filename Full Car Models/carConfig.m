@@ -15,11 +15,13 @@ carParams.roll_center_height_rear = 0.0889; % (3.5 in)
 carParams.R_sf = 0.4; % proportion of roll stiffness in front (not same as LLTD)
 carParams.I_zz = 83.28; %kg-m^2
 
-% aero parameters (updated 6/6/22)
+% aero parameters (updated 11/5/22)
 aeroParams = struct();
 aeroParams.cda = 1.88; % m^2
 aeroParams.cla = 9.73; % m^2
 aeroParams.distribution = 0.4; % proportion of downforce in front
+aeroParams.cla_p_deg_p = [0.5, 0]; % cla change per degree pitch
+aeroParams.D_p_deg_p = [0.0677, 0]; % D change per degree pitch
 
 % KTM engine parameters (updated 5/1/19)
 eParams = struct();
@@ -34,7 +36,7 @@ eParams.shift_time = 0.050; % seconds FOR UPSHIFT ONLY; 150ms for downshift
 
 % drivetrain parameters (updated 5/1/19)
 DTparams = struct();
-DTparams.final_drive = 40/11; % drivetrain sprocket ratio
+DTparams.final_drive = 35/11; % drivetrain sprocket ratio
 DTparams.drivetrain_efficiency = 0.87; % scales torque value
 DTparams.G_d1 = 0; % differential torque transfer offset due to internal friction
 DTparams.G_d2_overrun = 0; % differential torque transfer gain in overrun (not used right now)
