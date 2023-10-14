@@ -12,9 +12,8 @@
 clear
 setup_paths
 carCell = carConfig(); %generate all cars to sim over
+carOut = {};
 numCars = size(carCell,1);
-time = struct();time.prev = 0; time.curr = 0;
-tic
 % Set numWorkers to number of cores for better performance
 numWorkers = 0;
 if numWorkers ~= 0
@@ -22,7 +21,9 @@ if numWorkers ~= 0
     disp('Set numWorkers to 0 for single-car runs')
 end
 
-for i = 1:numCars
+parfor i = 1:numCars
+    prevTime = floor(0);
+    tic
     car = carCell{i,1};
     accelCar = carCell{i,2};
     fprintf("car %d of %d - starting g-g\n",[i numCars]);
@@ -51,11 +52,13 @@ fprintf("Stage Time: %d s; Total time elapsed: %d s\n",[time.curr-time.prev time
 fprintf("done\n");
 carCell = carOut;
 %% Saving
-save('FinalDriveSweep6-6-2022-num2.mat','carCell');
+save('PitchAeroTest11-12-2022-num2.mat','carCell');
 
 %% Points Plotting
 
-disp("car 1 points: " + num2str(carCell{1,1}.comp.points.total));
+for i = 1:numCars
+    disp(sprintf("car %s points: ", i) + num2str(carOut{i,1}.comp.points.total));
+end
 
 % options
 display_point_values_above_bar_flag = true;
@@ -63,9 +66,9 @@ display_point_values_above_bar_flag = true;
 label_cars_automatically_flag = true;
 
 %automatic car labeling
-automatic_label_name = 'Final Drive Ratio';
+automatic_label_name = 'd/deg pitch (cla, D)';
 %automatic_label = @(car) (1/2+car.powertrain.G_d2_driving)/(1/2-car.powertrain.G_d2_driving);%TBR
-automatic_label = @(car) car.powertrain.final_drive;%Car mass
+automatic_label = @(car) append(string(car.aero.cla_p_deg_p), ' ', string(car.aero.D_p_deg_p));%Car mass
 %automatic_label = @(car) car.tire.gamma;%Car cda
 
 % 1 to select, 0 to exclude
@@ -77,13 +80,13 @@ selected_categories = find([ ...
      1 ... %Total
 ]);
 
-plot_lapsim_points(carCell, display_point_values_above_bar_flag, true,...
+plot_lapsim_points(carOut, display_point_values_above_bar_flag, true,...
     [], automatic_label_name, automatic_label, selected_categories);
 %% Car Plotting
 
 % select desired car object
 desiredCarIndex = 1;
-car = carCell{desiredCarIndex,1};
+car = carOut{desiredCarIndex,1};
 
 % set desired plots to 1
 plot1 = 0; % velocity-dependent g-g diagram scatter plot
@@ -100,7 +103,7 @@ plotter(car,g_g_vel,plot_choice);
 %% Event Plotting
 
 % select desired comp object
-comp = carCell{1,1}.comp;
+comp = carOut{1,1}.comp;
 
 % set desired plots to 1
 plot1 = 1; % autocross track distance vs curvature
