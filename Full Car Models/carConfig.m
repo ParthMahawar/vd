@@ -30,12 +30,13 @@ eParams.shift_point = 8500; % approximate
 % these parameters are non-iterable
 eParams.gears = [32/16 30/18 28/20 26/22 24/24]; % updated KTM450
 eParams.primary_reduction = 76/32; % KTM450
-eParams.torque_fn = KTM450_RecaroTurbo();
+eParams.torque_fn = {KTM450() ; KTM450_RecaroTurbo()};
+eParams.torque_fn_index = [1, 2];
 eParams.shift_time = 0.050; % seconds FOR UPSHIFT ONLY; 150ms for downshift
 
 % drivetrain parameters (updated 5/1/19)
 DTparams = struct();
-DTparams.final_drive = 37/11; % drivetrain sprocket ratio
+DTparams.final_drive = 35/11; % drivetrain sprocket ratio
 DTparams.drivetrain_efficiency = 0.87; % scales torque value
 DTparams.G_d1 = 0; % differential torque transfer offset due to internal friction
 DTparams.G_d2_overrun = 0; % differential torque transfer gain in overrun (not used right now)
