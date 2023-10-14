@@ -21,7 +21,7 @@ if numWorkers ~= 0
     disp('Set numWorkers to 0 for single-car runs')
 end
 
-parfor i = 1:numCars
+for i = 1:numCars
     prevTime = floor(0);
     tic
     car = carCell{i,1};

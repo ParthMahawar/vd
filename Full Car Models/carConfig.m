@@ -30,7 +30,7 @@ eParams.shift_point = 10000; % approximate
 % these parameters are non-iterable
 eParams.gears = [32/16 30/18 28/20 26/22 24/24]; % updated KTM450
 eParams.primary_reduction = 76/32; % KTM450
-eParams.torque_fn = KTM450();
+eParams.torque_fn = {KTM450()};
 eParams.torque_fn_index = 1;
 eParams.shift_time = 0.050; % seconds FOR UPSHIFT ONLY; 150ms for downshift
 
