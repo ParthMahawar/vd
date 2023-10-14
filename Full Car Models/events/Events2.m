@@ -27,7 +27,7 @@ classdef Events2 < handle
             obj.accelCar = accelCar;
             
             % maps
-            load('track_autocross_2023.mat');
+            load('track_autocross_2023Fixed.mat');
             obj.autocross_track = [arclength; curvature];
             load('track_endurance_2019.mat');
             obj.endurance_track = [arclength; curvature];
@@ -73,16 +73,16 @@ classdef Events2 < handle
             % car starts 0.3 m behind starting line
             % accel is 75 m long
             
-            long_vel = 0;
+             long_vel = 0;
                       
-            long_vel_interp = obj.interp_info.long_vel_guess;
-            long_accel_interp = obj.interp_info.long_accel_matrix;
-            
-            [~,ending_vel,~,~] = straight(long_vel,0.3,long_vel_interp,...
-                long_accel_interp,obj.accelCar.max_vel,obj.accelCar);
-            
-            % starting velocity for accel is ending velocity of 0.3 straight
-            long_vel = ending_vel;
+             long_vel_interp = obj.interp_info.long_vel_guess;
+             long_accel_interp = obj.interp_info.long_accel_matrix;
+             
+              [~,ending_vel,~,~] = straight(long_vel,0.3,long_vel_interp,...
+                  long_accel_interp,obj.accelCar.max_vel,obj.accelCar);
+              
+              % starting velocity for accel is ending velocity of 0.3 straight
+              long_vel = ending_vel;
             
             [time_vec,ending_vel,long_accel_vector,long_vel_vector] = straight(long_vel,75,...
                 long_vel_interp,long_accel_interp,obj.accelCar.max_vel,obj.accelCar);
@@ -208,8 +208,7 @@ classdef Events2 < handle
             time_final = time_1;
             time_final(indices_2) = time_2(indices_2);
             % final time result
-            time_final
-            time_final = sum(time_final); 
+            time_final = sum(time_final);
         end
         
         function [long_vel_final,long_accel_final,lat_accel_final,time_final] = Autocross(obj)
@@ -251,13 +250,13 @@ classdef Events2 < handle
             % B19 points:
             % skidpad: 41.3, accel: 52.7, autocross: 104.9, enduro: 98.8
 
-            % winning time (based on 2017 Lincoln - 2019 skidpad raining)
-            skidpad_winning_time = 4.868; 
+            % winning time (Michigan 2016, no one faster since)
+            skidpad_winning_time = 4.714; 
             
             % winning times (based on 2019 Lincoln)
-            accel_winning_time = 3.993;
-            autocross_winning_time = 58.383;
-            endurance_winning_time = 1344.592;
+            accel_winning_time = 4.174;%Michigan 2023
+            autocross_winning_time = 45.886;%Michigan 2023
+            endurance_winning_time = 1286;%
 
             % skidpad
             t_your = obj.times.skidpad;
