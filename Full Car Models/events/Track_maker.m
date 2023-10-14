@@ -33,9 +33,37 @@ nurbs = nrbmak(coefs,knots);
 % plotting
 subdivisions = 100002;
 p = nrbeval(nurbs,linspace(0.0,1.0,subdivisions)); 
+p = p(1:2,1:end);
+
 plot(p(1,:),p(2,:)); 
 hold on
 scatter(X,Y);
+%{
+circlepoints = [0;
+                0;
+                0];
+
+
+
+for i = 1 : (length(p)-2)
+    p1 = p(:,i);
+    p2 = p(:,i+1);
+    p3 = p(:,i+2);
+    circlepoints(:,(i*2)-1) = [p1(1);
+                         p2(1);
+                         p3(1)];
+    circlepoints(:,(i*2)) = [p1(2);
+                         p2(2);
+                         p3(2)];
+end
+
+[Rs, centers] = fit_circle_through_3_points(circlepoints);
+Rs = 1./Rs;
+figure(3)
+plot(Rs);
+hold on
+%axis equal;
+%}
 
 % evaluating curvature
 dY = diff(p(2,:))./diff(linspace(0,1,subdivisions));   % first derivative
@@ -50,7 +78,7 @@ curvature = (dX.*ddY-ddX.*dY)./(dX.*dX+dY.*dY).^(3/2);
 % evaluating arclength
 seglength = sqrt(sum(diff(p,[],2).^2,1));
 total_arclength = sum(seglength);
-arclength = linspace(0,total_arclength,numel(curvature));
+arclength = cumsum(seglength(1:end-1));%linspace(0,total_arclength,numel(curvature));
 
 % plotting
 figure(2)
@@ -59,4 +87,4 @@ xlabel('Distance','FontSize',15);
 ylabel('Curvature','FontSize',15);
 
 % when satisfied with results, save arclength and curvature data
-save('track_endurance_2019.mat','arclength','curvature');
+save('SocalShootoutTrack.mat','arclength','curvature');
