@@ -2,7 +2,7 @@ function carCell = carConfig()
 
 % car parameters (updated 2/4/21)
 carParams = struct();
-carParams.mass = [171.5]; % not including driver (378 lb)
+carParams.mass = 171.5; % not including driver (378 lb)
 carParams.driver_weight = 68; % (150 lb)
 carParams.accel_driver_weight = 68; % (150 lb)
 carParams.wheelbase = 1.5494; % 61 in
@@ -20,8 +20,8 @@ aeroParams = struct();
 aeroParams.cda = 1.88; % m^2
 aeroParams.cla = 9.73; % m^2
 aeroParams.distribution = 0.4; % proportion of downforce in front
-aeroParams.cla_p_deg_p = [0.5, 0]; % cla change per degree pitch
-aeroParams.D_p_deg_p = [0.0677, 0]; % D change per degree pitch
+aeroParams.cla_p_deg_p = 0.5; % cla change per degree pitch
+aeroParams.D_p_deg_p = 0.0677; % D change per degree pitch
 
 % KTM engine parameters (updated 5/1/19)
 eParams = struct();
