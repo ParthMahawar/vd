@@ -53,7 +53,7 @@ classdef Events2 < handle
             obj.Skidpad();
             obj.Accel();
             obj.Autocross();
-            %obj.Endurance();
+            obj.Endurance();
             points = obj.computePoints();
         end
         
@@ -93,7 +93,7 @@ classdef Events2 < handle
         end
         
         function [long_vel_final,long_accel_final,lat_accel_final,time_final,...
-                    time_vec,num_upshifts] = Track_Solver(obj,arclength,curvature)
+                    time_vec,num_upshifts] = Track_Solver(obj,arclength,curvature, rollout, init_vel)
             % finds apexes in curvature profile (apex of corner) and finds
             %   max possible velocity at each apex
             % then max accel and max braking are calculated for each
@@ -117,13 +117,19 @@ classdef Events2 < handle
             % Maximum possible acceleration between apexes
             % calculating velocity and acceleration profiles as well as time
             
-            % car starts 6 m behind starting line 
-            long_vel_interp = obj.interp_info.long_vel_guess;
-            long_accel_interp = obj.interp_info.long_accel_matrix;
-            [~,ending_vel,~,~] = straight(0,6,long_vel_interp,long_accel_interp,obj.car.max_vel,obj.car);%TEMP 150 for socal
+            % car starts 6 m behind starting line
+            long_vel = 0;
 
-            % starting velocity is ending velocity of straight
-            long_vel = ending_vel; 
+            if rollout
+                long_vel_interp = obj.interp_info.long_vel_guess;
+                long_accel_interp = obj.interp_info.long_accel_matrix;
+                [~,ending_vel,~,~] = straight(0,6,long_vel_interp,long_accel_interp,obj.car.max_vel,obj.car);%TEMP 150 for socal
+    
+                % starting velocity is ending velocity of straight
+                long_vel = ending_vel;
+            else
+                long_vel = init_vel;
+            end
 
             lat_accel_vector_1 = [];
             long_accel_vector_1 = [];
@@ -246,7 +252,7 @@ classdef Events2 < handle
             arclength = obj.autocross_track(1,:);
             curvature = obj.autocross_track(2,:);
             [long_vel_final,long_accel_final,lat_accel_final,time_final,time_vec,num_upshifts] = ...
-                Track_Solver(obj,arclength,curvature);
+                Track_Solver(obj,arclength,curvature, true, 0);
             obj.times.autocross = time_final;
             obj.autocross.time_vec = time_vec;
             obj.autocross.num_upshifts = num_upshifts;
@@ -258,10 +264,15 @@ classdef Events2 < handle
         function [long_vel_final,long_accel_final,lat_accel_final,time_final] = Endurance(obj)
             arclength = obj.endurance_track(1,:);
             curvature = obj.endurance_track(2,:);
+            time_total = 0;
             [long_vel_final,long_accel_final,lat_accel_final,time_final,time_vec,num_upshifts] = ...
-                Track_Solver(obj,arclength,curvature);
-            time_final = time_final*15; % 15 laps in endurance
-            obj.times.endurance = time_final*1.05; % scaling factor due to driver conservatism during enduro
+                Track_Solver(obj,arclength,curvature, true, 0);
+            time_total = time_final;
+            end_vel = long_vel_final(end);
+            [long_vel_final,long_accel_final,lat_accel_final,time_final,time_vec,num_upshifts] = ...
+                Track_Solver(obj,arclength,curvature, true, 0);
+            time_total = time_total + (time_final*9); % 10 laps in endurance
+            %obj.times.endurance = time_final*1.05; % scaling factor due to driver conservatism during enduro
             obj.endurance.time_vec = time_vec;
             obj.endurance.num_upshifts = num_upshifts;
             obj.endurance.long_vel = long_vel_final;
@@ -322,7 +333,7 @@ classdef Events2 < handle
             end
 
             % endurance
-            %{
+            
             t_your = obj.times.endurance;
             t_min = min(endurance_winning_time, t_your);
             t_max = 1.45 * t_min;
@@ -331,16 +342,16 @@ classdef Events2 < handle
             else 
                 endurance_points = 200 * ((t_max / t_your) - 1.0) / ((t_max / t_min) - 1.0) + 25.0;
             end
-            %}
+            
             points = struct();
             points.skidpad = skidpad_points;
             points.accel = accel_points;
             points.autocross = autocross_points;
-            %points.endurance = endurance_points;
+            points.endurance = endurance_points;
             points.total = sum([skidpad_points; 
                                    accel_points;
                                    autocross_points]);
-                                   %endurance_points]);
+                                   endurance_points]);
             obj.points = points;
         end
     end
