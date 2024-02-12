@@ -8,18 +8,18 @@ classdef Tire2
     end
            
     methods
-        function obj = Tire2(gamma,p_i,Fx_parameters,Fy_parameters,friction_scaling_factor)
-            obj.gamma = gamma;
+        function obj = Tire2(p_i,Fx_parameters,Fy_parameters,friction_scaling_factor)
+            %obj.gamma = gamma;
             obj.p_i = p_i;
             obj.Fx_parameters = Fx_parameters;
             obj.Fy_parameters = Fy_parameters;      
             obj.friction_scaling_factor = friction_scaling_factor;
         end
         
-        function out = F_y(obj,alpha,kappa,F_z)
+        function out = F_y(obj,alpha,kappa,F_z,gamma)
                        
             % Inputs
-            gamma = obj.gamma*0.0174533; %degrees to radians
+            gamma = gamma*0.0174533; %degrees to radians
             alpha = alpha*0.0174533; %degrees to radians
             F_z = F_z*0.224809; %N to lbf
 
@@ -134,9 +134,9 @@ classdef Tire2
             out = F_y*4.44822*obj.friction_scaling_factor; %lbf to N, scaled
         end        
         
-        function out = F_x(obj,alpha,kappa,F_z)
+        function out = F_x(obj,alpha,kappa,F_z, gamma)
             
-            gamma = obj.gamma*0.0174533; %degrees to radians
+            gamma = gamma*0.0174533; %degrees to radians
             alpha_f = alpha*0.0174533; %degrees to radians
             F_z = F_z*0.224809; %N to lbf
 

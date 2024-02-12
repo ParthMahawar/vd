@@ -54,8 +54,10 @@ carCell = carOut;
 save('FinalDriveSweep6-6-2022-num2.mat','carCell');
 
 %% Points Plotting
-
-disp("car 1 points: " + num2str(carCell{1,1}.comp.points.total));
+for i = numCars
+    car = carCell{i,1};
+    disp("car " + i + "points: " + num2str(carCell{i,1}.comp.points.total));
+end
 
 % options
 display_point_values_above_bar_flag = true;
@@ -63,10 +65,12 @@ display_point_values_above_bar_flag = true;
 label_cars_automatically_flag = true;
 
 %automatic car labeling
-automatic_label_name = 'Final Drive Ratio';
+
 %automatic_label = @(car) (1/2+car.powertrain.G_d2_driving)/(1/2-car.powertrain.G_d2_driving);%TBR
-automatic_label = @(car) car.powertrain.final_drive;%Car mass
-%automatic_label = @(car) car.tire.gamma;%Car cda
+
+automatic_label = @(car) car.tire.gamma;
+
+automatic_label_name = 'camber';
 
 % 1 to select, 0 to exclude
 selected_categories = find([ ... 
@@ -74,11 +78,11 @@ selected_categories = find([ ...
      1 ... %Autocross
      1 ... %Endurance
      1 ... %Skidpad
-     1 ... %Total
+     1 ... %Total  
 ]);
 
-plot_lapsim_points(carCell, display_point_values_above_bar_flag, true,...
-    [], automatic_label_name, automatic_label, selected_categories);
+%plot_lapsim_points(carCell, display_point_values_above_bar_flag, true,...
+%    [], automatic_label_name, automatic_label, selected_categories);
 %% Car Plotting
 
 % select desired car object
@@ -86,7 +90,7 @@ desiredCarIndex = 1;
 car = carCell{desiredCarIndex,1};
 
 % set desired plots to 1
-plot1 = 0; % velocity-dependent g-g diagram scatter plot
+plot1 = 1; % velocity-dependent g-g diagram scatter plot
 plot2 = 1; % velocity-dependent g-g diagram surface
 plot3 = 0; % max accel for given velocity and lateral g w/ scattered interpolant
 plot4 = 0; % max braking for given velocity and lateral w/ scattered interpolant
@@ -103,14 +107,14 @@ plotter(car,g_g_vel,plot_choice);
 comp = carCell{1,1}.comp;
 
 % set desired plots to 1
-plot1 = 1; % autocross track distance vs curvature
+plot1 = 0; % autocross track distance vs curvature
 plot2 = 0; % endurance track distance vs curvature
-plot3 = 1; % max possible velocity for given radius
+plot3 = 0; % max possible velocity for given radius
 plot4 = 0; % max possible long accel for given velocity
 plot5 = 0; % accel event longitudinal velocity vs time
 plot6 = 0; % accel event longitudinal accel vs time
 plot7 = 0; % autocross gear shifts
-plot8 = 1; % autocross slip angle vs distance
+plot8 = 0; % autocross slip angle vs distance
 
 plot_choice = [plot1 plot2 plot3 plot4 plot5 plot6 plot7 plot8];
 event_plotter(comp,plot_choice);
