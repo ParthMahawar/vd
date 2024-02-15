@@ -89,7 +89,6 @@ classdef Car
             lat_vel = P(4); % m/s
             yaw_rate = P(5); % equal to long_vel/radius (v/r)            
             kappa = P(6:9);
-            gamma = Camber_Evaluation(long_vel, yaw_rate, steer_angle, obj.static_gamma);
             % note: 1 = front left tire, 2 = front right tire
             %       3 = rear left tire, 4 = rear right tire
             
@@ -106,6 +105,7 @@ classdef Car
             
             [Fz, Fzvirtual] = ssForces(obj,long_vel,yaw_rate,T,steer_angle*pi/180);
             
+
             % Tire Slips
             beta = atan(lat_vel/long_vel)*180/pi; % vehicle slip angle in deg
             steer_angle_1 = steer_angle; % could be modified for ackermann steering 
@@ -117,6 +117,19 @@ classdef Car
             alpha(3) = (lat_vel-obj.l_r*yaw_rate)/(long_vel+yaw_rate*obj.t_r/2)*180/pi;
             alpha(4) = (lat_vel-obj.l_r*yaw_rate)/(long_vel-yaw_rate*obj.t_r/2)*180/pi;
          
+            %tire camber using tire.Fy with static camber 
+            % (kind of stupid, very inneficient, but it will work for now
+            % maybe?)
+            %maybe theres a more efficient way to approximate Fy with slip
+            %angle? We have lat vel, long vel, yaw rate, slip angles
+            fyApprox = zeros(4);
+            fyApprox(1) = obj.tire.F_y(alpha(1),kappa(1),Fz(1),obj.static_gamma)/(obj.M*9.8);
+            fyApprox(2) = obj.tire.F_y(alpha(2),kappa(2),Fz(2),obj.static_gamma)/(obj.M*9.8);
+            fyApprox(3) = obj.tire.F_y(alpha(3),kappa(3),Fz(3),obj.static_gamma)/(obj.M*9.8);
+            fyApprox(4) = obj.tire.F_y(alpha(4),kappa(4),Fz(4),obj.static_gamma)/(obj.M*9.8);
+
+            gamma = Camber_Evaluation(long_vel, yaw_rate, steer_angle, obj.static_gamma, fyApprox);
+        
             % Tire Forces
             steer_angle = steer_angle_1*pi/180;
             [Fx,Fy,Fxw] = obj.tireForce(steer_angle,alpha,kappa,Fz, gamma);
