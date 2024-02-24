@@ -4,7 +4,8 @@ steer_camber = 1.564; % deg at full steer
 roll_gradient = 0.67; %[0.62 1.33]; %0.67; % deg/g range (min to max)
 %static_camber = 0; % deg
 
-camber_compliance_outside = 0.5; % deg/g (outside wheel)
+camber_compliance_outside = 0.2 / 338.9; % 
+% 0.2deg / 250 ft lbs = 0.2deg / 338.9 NM
 
 cornering_g = abs(yaw_rate*long_vel)/9.8; % g
 
@@ -227,15 +228,15 @@ camber = zeros(4);
 % note: 1 = front left tire, 2 = front right tire
 %       3 = rear left tire, 4 = rear right tire
 
-roll = roll_gradient*cornering_g*(-dir);
+roll = roll_gradient*cornering_g*(-dir); %cornering g always pos. 
 camber_fromroll_1 = lininterp1(rc_Fn(1,:), rc_Fn(4,:), roll); %outer for right turn (pos dir)
 camber_fromroll_2 = lininterp1(rc_Fn(1,:), rc_Fn(2,:), roll);%inner for right turn
 camber_fromroll_3 = lininterp1(rc_Fn(1,:), rc_Fn(5,:), roll);
 camber_fromroll_4 = lininterp1(rc_Fn(1,:), rc_Fn(3,:), roll);
-camber_fromcompliance_1 = fyApprox(1)*camber_compliance_outside;
-camber_fromcompliance_2 = fyApprox(2)*camber_compliance_outside;
-camber_fromcompliance_3 = fyApprox(3)*camber_compliance_outside;
-camber_fromcompliance_4 = fyApprox(4)*camber_compliance_outside;
+camber_fromcompliance_1 = fyApprox(1)*camber_compliance_outside*dir;
+camber_fromcompliance_2 = fyApprox(2)*camber_compliance_outside*-dir;
+camber_fromcompliance_3 = fyApprox(3)*camber_compliance_outside*dir;
+camber_fromcompliance_4 = fyApprox(4)*camber_compliance_outside*-dir;
 camber_fromsteer = steer_angle*steer_camber;
 
 %calculation of camber for each tire
@@ -244,14 +245,22 @@ camber_fromsteer = steer_angle*steer_camber;
 camber(1) = static_camber+camber_fromroll_1+(camber_fromsteer*(-dir))+camber_fromcompliance_1;
 camber(2) = static_camber+camber_fromroll_2+(camber_fromsteer*(dir))+camber_fromcompliance_2;
 camber(3) = static_camber+camber_fromroll_3+camber_fromcompliance_3;
-camber(4) = static_camber+camber_fromroll_4+camber_fromcompliance_4;
+camber(4) = static_camber+camber_fromroll_4+camber_fromcompliance_4; 
 
-
-
+%Testing Values
 %{
-camber(1) = static_camber;
-camber(2) = static_camber;
-camber(3) = static_camber;
-camber(4) = static_camber;
-%}
+compliance = zeros(4);
+compliance(1) = camber_fromcompliance_1;
+compliance(2) = camber_fromcompliance_2;
+compliance(3) = camber_fromcompliance_3;
+compliance(4) = camber_fromcompliance_4;
 
+cRoll = zeros(4);
+cRoll(1) = camber_fromroll_1;
+cRoll(2) = camber_fromroll_2;
+cRoll(3) = camber_fromroll_3;
+cRoll(4) = camber_fromroll_4;
+yaw_rate 
+
+[fyApprox(:,1)/1000, camber(:,1), compliance(:,1), cRoll(:,1),transpose([-camber_fromsteer,camber_fromsteer,0,0])]
+%}

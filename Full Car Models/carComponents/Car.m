@@ -77,7 +77,7 @@ classdef Car
         end
         
         function [engine_rpm,beta,lat_accel,long_accel,yaw_accel,wheel_accel,omega,current_gear,...
-                Fzvirtual,Fz,alpha,T,Fy] = equations(obj,P)           
+                Fzvirtual,Fz,alpha,T,Fy, gamma] = equations(obj,P)           
             
             % inputs: vehicle parameters
             % outputs: vehicle accelerations and other properties
@@ -123,13 +123,13 @@ classdef Car
             %maybe theres a more efficient way to approximate Fy with slip
             %angle? We have lat vel, long vel, yaw rate, slip angles
             fyApprox = zeros(4);
-            fyApprox(1) = obj.tire.F_y(alpha(1),kappa(1),Fz(1),obj.static_gamma)/(obj.M*9.8);
-            fyApprox(2) = obj.tire.F_y(alpha(2),kappa(2),Fz(2),obj.static_gamma)/(obj.M*9.8);
-            fyApprox(3) = obj.tire.F_y(alpha(3),kappa(3),Fz(3),obj.static_gamma)/(obj.M*9.8);
-            fyApprox(4) = obj.tire.F_y(alpha(4),kappa(4),Fz(4),obj.static_gamma)/(obj.M*9.8);
+            fyApprox(1) = obj.tire.F_y(alpha(1),kappa(1),Fz(1),obj.static_gamma); 
+            fyApprox(2) = obj.tire.F_y(alpha(2),kappa(2),Fz(2),obj.static_gamma);
+            fyApprox(3) = obj.tire.F_y(alpha(3),kappa(3),Fz(3),obj.static_gamma);
+            fyApprox(4) = obj.tire.F_y(alpha(4),kappa(4),Fz(4),obj.static_gamma);
 
             gamma = Camber_Evaluation(long_vel, yaw_rate, steer_angle, obj.static_gamma, fyApprox);
-        
+            
             % Tire Forces
             steer_angle = steer_angle_1*pi/180;
             [Fx,Fy,Fxw] = obj.tireForce(steer_angle,alpha,kappa,Fz, gamma);
