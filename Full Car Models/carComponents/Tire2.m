@@ -5,6 +5,12 @@ classdef Tire2
         Fx_parameters
         Fy_parameters       
         friction_scaling_factor
+
+        camber2indices
+        camber4indices
+        camber2ratio
+        camber4ratio
+        
     end
            
     methods
@@ -14,12 +20,26 @@ classdef Tire2
             obj.Fx_parameters = Fx_parameters;
             obj.Fy_parameters = Fy_parameters;      
             obj.friction_scaling_factor = friction_scaling_factor;
+            load("camberratiossmoothed.mat");
+            obj.camber2indices = camber2indices;
+            obj.camber4indices = camber4indices;
+            obj.camber2ratio = camber2ratio;
+            obj.camber4ratio = camber4ratio;
         end
         
         function out = F_y(obj,alpha,kappa,F_z)
-                       
             % Inputs
-            gamma = obj.gamma*0.0174533; %degrees to radians
+            cambershiftMod = 16.125*obj.gamma;
+            cambermultiplier4 = interp1(obj.camber4indices, obj.camber4ratio, alpha);
+            cambermultiplier2 = interp1(obj.camber2indices, obj.camber2ratio, alpha);
+            cambermultiplier0 = 1;
+            cambermultiplierminus2 = interp1(-obj.camber2indices, obj.camber2ratio, alpha);
+            cambermultiplierminus4 = interp1(-obj.camber4indices, obj.camber4ratio, alpha);
+
+            cambermultiplier = interp1([4,2,0,-2,-4], [cambermultiplier4, cambermultiplier2, cambermultiplier0, cambermultiplierminus2, cambermultiplierminus4], obj.gamma);
+                        
+            gamma = 0;%obj.gamma*0.0174533; %degrees to radians
+
             alpha = alpha*0.0174533; %degrees to radians
             F_z = F_z*0.224809; %N to lbf
 
@@ -131,7 +151,8 @@ classdef Tire2
 
             F_y(F_z==0) = 0; %zero load
             
-            out = F_y*4.44822*obj.friction_scaling_factor; %lbf to N, scaled
+            F_y2 = F_y*4.44822*obj.friction_scaling_factor; %lbf to N, scaled
+            out = F_y2*cambermultiplier + cambershiftMod;
         end        
         
         function out = F_x(obj,alpha,kappa,F_z)
@@ -219,7 +240,6 @@ classdef Tire2
             F_x(F_z==0) = 0; %zero load
             
             out = F_x*4.44822*obj.friction_scaling_factor; %lbf to N, scaled
-
 
         end
         

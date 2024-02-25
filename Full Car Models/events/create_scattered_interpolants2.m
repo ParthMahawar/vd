@@ -16,7 +16,7 @@ x = lat_g_accel;
 y = vel_accel;
 z = long_g_accel;
 
-F_accel = scatteredInterpolant([x y],z);
+F_accel = scatteredInterpolant([x y],z, 'linear', 'linear');
 
 x = lat_g_braking;
 y = vel_braking;
