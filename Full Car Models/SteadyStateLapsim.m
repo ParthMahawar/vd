@@ -58,8 +58,10 @@ carCell = carOut;
 save('FinalDriveSweep6-6-2022-num2.mat','carCell');
 
 %% Points Plotting
-
-disp("car 1 points: " + num2str(carCell{1,1}.comp.points.total));
+for i = numCars
+    car = carCell{i,1};
+    disp("car " + i + "points: " + num2str(carCell{i,1}.comp.points.total));
+end
 
 % options
 display_point_values_above_bar_flag = true;
@@ -73,17 +75,18 @@ automatic_label_name = 'Sprocket size';
 automatic_label = @(car) car.powertrain.final_drive*11;%Sprocket teeth
 %automatic_label = @(car) car.tire.gamma;%Car cda
 
+
 % 1 to select, 0 to exclude
 selected_categories = find([ ...
      1 ... %Accel
      1 ... %Autocross
      1 ... %Endurance
      1 ... %Skidpad
-     1 ... %Total
+     1 ... %Total  
 ]);
 
-plot_lapsim_points(carCell, display_point_values_above_bar_flag, true,...
-    [], automatic_label_name, automatic_label, selected_categories);
+%plot_lapsim_points(carCell, display_point_values_above_bar_flag, true,...
+%    [], automatic_label_name, automatic_label, selected_categories);
 %% Car Plotting
 
 % select desired car object
@@ -119,4 +122,3 @@ plot8 = 0; % autocross slip angle vs distance
 
 plot_choice = [plot1 plot2 plot3 plot4 plot5 plot6 plot7 plot8];
 event_plotter(comp,plot_choice);
-

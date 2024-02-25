@@ -14,8 +14,8 @@ classdef Tire2
     end
            
     methods
-        function obj = Tire2(gamma,p_i,Fx_parameters,Fy_parameters,friction_scaling_factor)
-            obj.gamma = gamma;
+        function obj = Tire2(p_i,Fx_parameters,Fy_parameters,friction_scaling_factor)
+            %obj.gamma = gamma;
             obj.p_i = p_i;
             obj.Fx_parameters = Fx_parameters;
             obj.Fy_parameters = Fy_parameters;      
@@ -27,8 +27,9 @@ classdef Tire2
             obj.camber4ratio = camber4ratio;
         end
         
-        function out = F_y(obj,alpha,kappa,F_z)
-            % Inputs
+        function out = F_y(obj,alpha,kappa,F_z,gamma)
+            gamma = gamma*0.0174533; %degrees to radians
+            
             cambershiftMod = 16.125*obj.gamma;
             cambermultiplier4 = interp1(obj.camber4indices, obj.camber4ratio, alpha);
             cambermultiplier2 = interp1(obj.camber2indices, obj.camber2ratio, alpha);
@@ -155,9 +156,9 @@ classdef Tire2
             out = F_y2*cambermultiplier + cambershiftMod;
         end        
         
-        function out = F_x(obj,alpha,kappa,F_z)
+        function out = F_x(obj,alpha,kappa,F_z, gamma)
             
-            gamma = obj.gamma*0.0174533; %degrees to radians
+            gamma = gamma*0.0174533; %degrees to radians
             alpha_f = alpha*0.0174533; %degrees to radians
             F_z = F_z*0.224809; %N to lbf
 

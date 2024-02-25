@@ -333,7 +333,7 @@ classdef Events2 < handle
             end
 
             % endurance
-            
+            %{
             t_your = obj.times.endurance;
             t_min = min(endurance_winning_time, t_your);
             t_max = 1.45 * t_min;
@@ -342,16 +342,16 @@ classdef Events2 < handle
             else 
                 endurance_points = 200 * ((t_max / t_your) - 1.0) / ((t_max / t_min) - 1.0) + 25.0;
             end
-            
+            %}
             points = struct();
             points.skidpad = skidpad_points;
             points.accel = accel_points;
             points.autocross = autocross_points;
-            points.endurance = endurance_points;
+            %points.endurance = endurance_points;
             points.total = sum([skidpad_points; 
                                    accel_points;
                                    autocross_points]);
-                                   endurance_points]);
+                                   %endurance_points]);
             obj.points = points;
         end
     end
