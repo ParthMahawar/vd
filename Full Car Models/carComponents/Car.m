@@ -122,16 +122,24 @@ classdef Car
             % maybe?)
             %maybe theres a more efficient way to approximate Fy with slip
             %angle? We have lat vel, long vel, yaw rate, slip angles
-            fyApprox = zeros(4);
-            fyApprox(1) = obj.tire.F_y(alpha(1),kappa(1),Fz(1),obj.static_gamma); 
-            fyApprox(2) = obj.tire.F_y(alpha(2),kappa(2),Fz(2),obj.static_gamma);
-            fyApprox(3) = obj.tire.F_y(alpha(3),kappa(3),Fz(3),obj.static_gamma);
-            fyApprox(4) = obj.tire.F_y(alpha(4),kappa(4),Fz(4),obj.static_gamma);
+            fyApprox = zeros(1,4);
+            
+            %{
+            fyApprox(1) = obj.tire.F_y(alpha(1),kappa(1),Fz(1),-obj.static_gamma); 
 
-            gamma = Camber_Evaluation(long_vel, yaw_rate, steer_angle, obj.static_gamma, fyApprox);
+            fyApprox(2) = obj.tire.F_y(alpha(2),kappa(2),Fz(2),obj.static_gamma);
+            fyApprox(3) = obj.tire.F_y(alpha(3),kappa(3),Fz(3),-obj.static_gamma);
+            fyApprox(4) = obj.tire.F_y(alpha(4),kappa(4),Fz(4),obj.static_gamma);
+            %}
+
+            %gamma = [obj.static_gamma obj.static_gamma obj.static_gamma obj.static_gamma];
+            gamma = Camber_Evaluation(long_vel, yaw_rate, steer_angle, obj.static_gamma, fyApprox).';
+            %disp(gamma);
+            %disp("------------");
             
             % Tire Forces
             steer_angle = steer_angle_1*pi/180;
+            %disp(gamma);
             [Fx,Fy,Fxw] = obj.tireForce(steer_angle,alpha,kappa,Fz, gamma);
                         
             % Equations of Motion
@@ -151,8 +159,8 @@ classdef Car
             %radians
             
             % forces in tire frame of reference
-            F_xw1 = obj.tire.F_x(alpha(1),kappa(1),Fz(1),gamma(1)); 
-            F_yw1 = obj.tire.F_y(alpha(1),kappa(1),Fz(1),gamma(1));
+            F_xw1 = obj.tire.F_x(alpha(1),kappa(1),Fz(1),-gamma(1)); 
+            F_yw1 = obj.tire.F_y(alpha(1),kappa(1),Fz(1),-gamma(1));
             F_xw2 = obj.tire.F_x(alpha(2),kappa(2),Fz(2),gamma(2));
             F_yw2 = obj.tire.F_y(alpha(2),kappa(2),Fz(2),gamma(2));
             F_xw = [F_xw1; F_xw2];
@@ -163,10 +171,11 @@ classdef Car
             F_x2 = F_xw2*cos(steer_angle)-F_yw2*sin(steer_angle);
             F_y2 = F_xw2*sin(steer_angle)+F_yw2*cos(steer_angle);
             
-            F_x3 = obj.tire.F_x(alpha(3),kappa(3),Fz(3),gamma(3));
-            F_y3 = obj.tire.F_y(alpha(3),kappa(3),Fz(3),gamma(3));
+            F_x3 = obj.tire.F_x(alpha(3),kappa(3),Fz(3),-gamma(3));
+            F_y3 = obj.tire.F_y(alpha(3),kappa(3),Fz(3),-gamma(3));
             F_x4 = obj.tire.F_x(alpha(4),kappa(4),Fz(4),gamma(4));
             F_y4 = obj.tire.F_y(alpha(4),kappa(4),Fz(4),gamma(4));
+
             Fx = [F_x1; F_x2; F_x3; F_x4];
             Fy = [F_y1; F_y2; F_y3; F_y4];
         end

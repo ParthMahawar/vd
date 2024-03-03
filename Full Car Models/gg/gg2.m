@@ -15,18 +15,21 @@ longVelArr = [minV:longVinterval:maxV maxV];
 paramArr(numel(longVelArr),latAgrid) = ParamSet();
 
 % iterate through velocities
-parfor (c1 = 1:numel(longVelArr),numWorkers)
+parfor (c1 = 1:numel(longVelArr),numWorkers) %parfor
     longVel = longVelArr(c1);
     [maxLatx,maxLatLatAccel,maxLatLongAccel,maxLatx0] = max_lat_accel(longVel,car);
     latAccelArr = linspace(0.1,maxLatLatAccel-0.1,latAgrid);
     row = ParamSet();
     row(numel(latAccelArr)) = ParamSet();
-        
     % iterate through lateral accelerations
     for c2 = 1:numel(latAccelArr)
         latAccel = latAccelArr(c2);
+        %disp([longVel, latAccel]);
+        %disp('here1')
         [xAccel,longAccel,longAccelx0] = max_long_accel_cornering(longVel,latAccel,car);
-        [xBraking,longDecel,brakingDecelx0] = max_braking_decel_cornering(longVel,latAccel,car);       
+        %disp('here2')
+        [xBraking,longDecel,brakingDecelx0] = max_braking_decel_cornering(longVel,latAccel,car);
+        %disp('here3');
         carParams = ParamSet(car,longVel); 
         carParams = carParams.setMaxLatParams(maxLatx,maxLatLatAccel,maxLatLongAccel,maxLatx0);
         carParams = carParams.setMaxAccelParams(xAccel,longAccel,latAccel,longAccelx0);

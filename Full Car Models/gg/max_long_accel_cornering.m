@@ -9,9 +9,9 @@ C.car = car;
 % disp('max_long_accel_corner');
 if nargin == 3 % no initial guess supplied
     % initial guesses
-    steer_angle_guess = -2;%1
-    throttle_guess = 1;%0.1
-    lat_vel_guess = -0.1;
+    steer_angle_guess = 0;
+    throttle_guess = 0;
+    lat_vel_guess = 0;
     yaw_rate_guess = lat_accel_value/long_vel_guess;
 
     kappa_1_guess = 0;
@@ -69,6 +69,7 @@ options = setOptimoptions(1000);
 %options = optimoptions('fmincon','MaxFunctionEvaluations',5000,'ConstraintTolerance',1e-2,...
 %    'StepTolerance',1e-10,'Display','notify-detailed');
 % fval: objective function value (v^2/r) 
+
 [x,fval,exitflag] = fmincon(f,x0,A,b,Aeq,beq,lb,ub,constraint,options);
 
 [engine_rpm,beta,lat_accel,long_accel,yaw_accel,wheel_accel,omega,current_gear,...

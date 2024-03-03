@@ -28,16 +28,16 @@ classdef Tire2
         end
         
         function out = F_y(obj,alpha,kappa,F_z,gamma)
-            gamma = gamma*0.0174533; %degrees to radians
-            
-            cambershiftMod = 16.125*obj.gamma;
-            cambermultiplier4 = interp1(obj.camber4indices, obj.camber4ratio, alpha);
-            cambermultiplier2 = interp1(obj.camber2indices, obj.camber2ratio, alpha);
+            %gamma
+            %gamma
+            cambershiftMod = 16.125*gamma;
+            [cambermultiplier4] = interp1(obj.camber4indices, obj.camber4ratio, alpha, "linear", "extrap");
+            [cambermultiplier2] = interp1(obj.camber2indices, obj.camber2ratio, alpha, "linear", "extrap");
             cambermultiplier0 = 1;
-            cambermultiplierminus2 = interp1(-obj.camber2indices, obj.camber2ratio, alpha);
-            cambermultiplierminus4 = interp1(-obj.camber4indices, obj.camber4ratio, alpha);
+            [cambermultiplierminus2] = interp1(-obj.camber2indices, obj.camber2ratio, alpha, "linear", "extrap");
+            [cambermultiplierminus4] = interp1(-obj.camber4indices, obj.camber4ratio, alpha, "linear", "extrap");
 
-            cambermultiplier = interp1([4,2,0,-2,-4], [cambermultiplier4, cambermultiplier2, cambermultiplier0, cambermultiplierminus2, cambermultiplierminus4], obj.gamma);
+            [cambermultiplier] = interp1([4,2,0,-2,-4], [cambermultiplier4, cambermultiplier2, cambermultiplier0, cambermultiplierminus2, cambermultiplierminus4], gamma, "linear", "extrap");
                         
             gamma = 0;%obj.gamma*0.0174533; %degrees to radians
 
@@ -152,8 +152,13 @@ classdef Tire2
 
             F_y(F_z==0) = 0; %zero load
             
-            F_y2 = F_y*4.44822*obj.friction_scaling_factor; %lbf to N, scaled
-            out = F_y2*cambermultiplier + cambershiftMod;
+            F_y2 = F_y.*4.44822.*obj.friction_scaling_factor; %lbf to N, scaled
+            out = F_y2.*cambermultiplier + cambershiftMod;
+            if isnan(out)
+                disp("outFY")
+                disp(F_y2)
+                disp(out)
+            end
         end        
         
         function out = F_x(obj,alpha,kappa,F_z, gamma)

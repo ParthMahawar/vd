@@ -4,10 +4,11 @@ steer_camber = 1.564; % deg at full steer
 roll_gradient = 0.67; %[0.62 1.33]; %0.67; % deg/g range (min to max)
 %static_camber = 0; % deg
 
-camber_compliance_outside = 0.2 / 338.9; % 
+camber_compliance_outside = 0.25 / 1334; % 
 % 0.2deg / 250 ft lbs = 0.2deg / 338.9 NM
 
 cornering_g = abs(yaw_rate*long_vel)/9.8; % g
+%cornering_g
 
 dir = sign(yaw_rate);
 
@@ -222,7 +223,7 @@ camber_change_r_r = transpose(roll_camber(:,3));
 camber_change_f_l = transpose(roll_camber(:,4));
 camber_change_r_l = transpose(roll_camber(:,5));
 rc_Fn = [roll_list; camber_change_f_r; camber_change_r_r; camber_change_f_l; camber_change_r_l];
-camber = zeros(4);
+camber = zeros(4,1);
 
 %% Calculations
 % note: 1 = front left tire, 2 = front right tire
@@ -233,19 +234,30 @@ camber_fromroll_1 = lininterp1(rc_Fn(1,:), rc_Fn(4,:), roll); %outer for right t
 camber_fromroll_2 = lininterp1(rc_Fn(1,:), rc_Fn(2,:), roll);%inner for right turn
 camber_fromroll_3 = lininterp1(rc_Fn(1,:), rc_Fn(5,:), roll);
 camber_fromroll_4 = lininterp1(rc_Fn(1,:), rc_Fn(3,:), roll);
-camber_fromcompliance_1 = fyApprox(1)*camber_compliance_outside*dir;
-camber_fromcompliance_2 = fyApprox(2)*camber_compliance_outside*-dir;
-camber_fromcompliance_3 = fyApprox(3)*camber_compliance_outside*dir;
-camber_fromcompliance_4 = fyApprox(4)*camber_compliance_outside*-dir;
+camber_fromcompliance_1 = fyApprox(1)*camber_compliance_outside*1;
+camber_fromcompliance_2 = fyApprox(2)*camber_compliance_outside*-1;
+%camber_fromcompliance_3 = fyApprox(3)*camber_compliance_outside*1;
+%camber_fromcompliance_4 = fyApprox(4)*camber_compliance_outside*-1;
 camber_fromsteer = steer_angle*steer_camber;
 
 %calculation of camber for each tire
 %comment out whichever part needs to be commented out
 
-camber(1) = static_camber+camber_fromroll_1+(camber_fromsteer*(-dir))+camber_fromcompliance_1;
-camber(2) = static_camber+camber_fromroll_2+(camber_fromsteer*(dir))+camber_fromcompliance_2;
-camber(3) = static_camber+camber_fromroll_3+camber_fromcompliance_3;
-camber(4) = static_camber+camber_fromroll_4+camber_fromcompliance_4; 
+camber(1) = static_camber +camber_fromroll_1 +(camber_fromsteer*-1) - static_camber;%+camber_fromcompliance_1;
+camber(2) = static_camber +camber_fromroll_2 +(camber_fromsteer*1) - static_camber;%+camber_fromcompliance_2;
+
+if static_camber < -64
+    camber(3) = 0;
+    camber(4) = 0;
+    return;
+end
+
+camber(3) = static_camber +camber_fromroll_3;% +camber_fromcompliance_3;
+camber(4) = static_camber +camber_fromroll_4;% +camber_fromcompliance_4; 
+%disp(camber)
+
+%disp(camber)
+%camber
 
 %Testing Values
 %{
