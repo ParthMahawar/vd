@@ -30,7 +30,7 @@ classdef Tire2
         function out = F_y(obj,alpha,kappa,F_z,gamma)
             %gamma
             %gamma
-            cambershiftMod = 16.125*gamma;
+            cambershiftMod = 16.125*gamma*(F_z/250);
             [cambermultiplier4] = interp1(obj.camber4indices, obj.camber4ratio, alpha, "linear", "extrap");
             [cambermultiplier2] = interp1(obj.camber2indices, obj.camber2ratio, alpha, "linear", "extrap");
             cambermultiplier0 = 1;

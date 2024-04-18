@@ -19,7 +19,7 @@ if nargin == 4 % no initial guess supplied
 end
 
 % bounds
-steer_angle_bounds = [-25,25];
+steer_angle_bounds = [-22,22];
 throttle_bounds = [-1,1]; 
 long_vel_bounds = [velocity,velocity];
 lat_vel_bounds = [velocity*tand(beta),velocity*tand(beta)];

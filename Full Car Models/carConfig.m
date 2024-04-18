@@ -2,18 +2,21 @@ function carCell = carConfig()
 
 % car parameters (updated 2/4/21)
 carParams = struct();
-carParams.mass = [171.4]; % not including driver (378 lb)
+carParams.mass = [165.56 165.832]; % not including driver (378 lb)
 carParams.driver_weight = 68; % (150 lb)
-carParams.accel_driver_weight = 68; % (150 lb)
+carParams.accel_driver_weight = 52; % (150 lb)
 carParams.wheelbase = [62] * 0.0254; % 62 in
-carParams.weight_dist = 0.512; % percentage of weight in rear
+carParams.weight_dist = [0.512]; % percentage of weight in rear
 carParams.track_width = 1.1938; % (47 in)
-carParams.wheel_radius = 0.1956; % loaded radius (7.7 in)
-carParams.cg_height = [0.30269]; % (12 in)
+carParams.wheel_radius = 0.1956; % loaded 
+% radius (7.7 in)
+carParams.cg_height = [0.3048 0.30269] % (12 in)
 carParams.roll_center_height_front = 0.0254; % (1 in)
 carParams.roll_center_height_rear = 0.0889; % (3.5 in)
-carParams.R_sf = 0.4; % proportion of roll stiffness in front (not same as LLTD)
-carParams.I_zz = 83.28; %kg-m^2
+carParams.R_sf = [0.385]; % proportion of roll stiffness in front (not same as LLTD)
+carParams.I_zz = [83.28];%, 82.28]; %kg-m^2
+carParams.ackermann = [1]; %expressed as exponent for current ackermann curve
+carParams.camber_compliance = [0.125/1334];
 
 % aero parameters (updated 6/6/22)
 aeroParams = struct();
@@ -33,7 +36,7 @@ eParams.shift_time = 0.050; % seconds FOR UPSHIFT ONLY; 150ms for downshift
 
 % drivetrain parameters (updated 10/14/23)
 DTparams = struct();
-DTparams.final_drive = [35/11];%[25/11, 43/11, 50/11]; % drivetrain sprocket ratio
+DTparams.final_drive = [37/11];%[25/11, 43/11, 50/11]; % drivetrain sprocket ratio
 DTparams.drivetrain_efficiency = 0.87; % scales torque value
 DTparams.G_d1 = 0; % differential torque transfer offset due to internal friction
 DTparams.G_d2_overrun = 0; % differential torque transfer gain in overrun (not used right now)
@@ -47,7 +50,7 @@ Bparams.max_braking_torque = 840; % total braking torque (Nm)
 
 % tire parameters (updated 5/1/19)
 tireParams = struct();
-tireParams.gamma = [-0.5, 0, 0.5]; % camber angle
+tireParams.gamma = [0]; % camber angle
 tireParams.p_i = [12]; % pressure
 % these parameters are non-iterable
 load('Fx_combined_parameters_run38_30.mat'); % F_x combined magic formula parameters

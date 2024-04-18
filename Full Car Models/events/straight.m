@@ -44,7 +44,7 @@ for i = 1:10000
     long_vel_vector(i) = long_vel_initial;
     long_vel = sqrt(long_vel^2+2*long_accel*(distance(i+1)-distance(i)));
     % limit top speed to max velocity
-    long_vel = min(long_vel,max_vel);
+    %long_vel = min(long_vel,max_vel);
     time(i) = 2*(distance(i+1)-distance(i))/(long_vel+long_vel_initial);
     
 end

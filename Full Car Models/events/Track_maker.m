@@ -87,4 +87,4 @@ xlabel('Distance','FontSize',15);
 ylabel('Curvature','FontSize',15);
 
 % when satisfied with results, save arclength and curvature data
-save('SocalShootoutTrack.mat','arclength','curvature');
+save('endurancetrack.mat','arclength','curvature');

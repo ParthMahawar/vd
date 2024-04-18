@@ -27,9 +27,9 @@ classdef Events2 < handle
             obj.accelCar = accelCar;
             
             % maps
-            load('michigantrack2023.mat');
+            load('michigantrack.mat');
             obj.autocross_track = [arclength; curvature];
-            load('track_endurance_2019.mat');
+            load('endurancetrack.mat');
             obj.endurance_track = [arclength; curvature];
             
             % sweep for max velocity for given radius
@@ -78,7 +78,7 @@ classdef Events2 < handle
              long_vel_interp = obj.interp_info.long_vel_guess;
              long_accel_interp = obj.interp_info.long_accel_matrix;
              
-              [~,ending_vel,~,~] = straight(long_vel,0.3,long_vel_interp,...
+              [~,ending_vel,~,~] = straight(long_vel,2.19,long_vel_interp,...
                   long_accel_interp,obj.accelCar.max_vel,obj.accelCar);
               
               % starting velocity for accel is ending velocity of 0.3 straight
@@ -270,9 +270,9 @@ classdef Events2 < handle
             time_total = time_final;
             end_vel = long_vel_final(end);
             [long_vel_final,long_accel_final,lat_accel_final,time_final,time_vec,num_upshifts] = ...
-                Track_Solver(obj,arclength,curvature, true, 0);
+                Track_Solver(obj,arclength,curvature, false, end_vel);
             time_total = time_total + (time_final*9); % 10 laps in endurance
-            %obj.times.endurance = time_final*1.05; % scaling factor due to driver conservatism during enduro
+            obj.times.endurance = time_total*1.05; % scaling factor due to driver conservatism during enduro
             obj.endurance.time_vec = time_vec;
             obj.endurance.num_upshifts = num_upshifts;
             obj.endurance.long_vel = long_vel_final;
@@ -298,8 +298,8 @@ classdef Events2 < handle
             
             % winning times (based on 2019 Lincoln)
             accel_winning_time = 4.174;%Michigan 2023
-            autocross_winning_time = 45;%US!! 2023
-            endurance_winning_time = 1286;%
+            autocross_winning_time = 42.5; %This is sorta fudged. %43.8;%Michigan 2023
+            endurance_winning_time = 1310;%
 
             % skidpad
             t_your = obj.times.skidpad;
@@ -333,7 +333,7 @@ classdef Events2 < handle
             end
 
             % endurance
-            %{
+            
             t_your = obj.times.endurance;
             t_min = min(endurance_winning_time, t_your);
             t_max = 1.45 * t_min;
@@ -342,16 +342,16 @@ classdef Events2 < handle
             else 
                 endurance_points = 200 * ((t_max / t_your) - 1.0) / ((t_max / t_min) - 1.0) + 25.0;
             end
-            %}
+            
             points = struct();
             points.skidpad = skidpad_points;
             points.accel = accel_points;
             points.autocross = autocross_points;
-            %points.endurance = endurance_points;
+            points.endurance = endurance_points;
             points.total = sum([skidpad_points; 
                                    accel_points;
-                                   autocross_points]);
-                                   %endurance_points]);
+                                   autocross_points;
+                                   endurance_points]);
             obj.points = points;
         end
     end

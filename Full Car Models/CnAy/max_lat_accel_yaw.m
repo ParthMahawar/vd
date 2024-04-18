@@ -20,7 +20,7 @@ end
 x0(3) = long_vel_guess;
 
 % bounds
-steer_angle_bounds = [0,25];
+steer_angle_bounds = [0,22];
 throttle_bounds = [-1,1]; 
 long_vel_bounds = [long_vel_guess,long_vel_guess];
 lat_vel_bounds = [-3,3];

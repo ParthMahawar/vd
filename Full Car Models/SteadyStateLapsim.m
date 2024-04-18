@@ -55,7 +55,7 @@ fprintf("Stage Time: %d s; Total time elapsed: %d s\n",[time.curr-time.prev time
 fprintf("done\n");
 carCell = carOut;
 %% Saving
-save('FinalDriveSweep6-6-2022-num2.mat','carCell');
+save('DesignBinderFinalDriveSweep2.mat','carCell');
 
 %% Points Plotting
 for i = numCars
@@ -69,11 +69,12 @@ display_point_values_above_bar_flag = true;
 label_cars_automatically_flag = true;
 
 %automatic car labeling
-automatic_label_name = 'Sprocket size';
+automatic_label_name = 'Mass (kg), Cg height (m)';
 %automatic_label = @(car) (1/2+car.powertrain.G_d2_driving)/(1/2-car.powertrain.G_d2_driving);%TBR
 %automatic_label = @(car) max(car.powertrain.torque_fn(2,:).*car.powertrain.torque_fn(1,:))/5252;%Car mass
-automatic_label = @(car) car.powertrain.final_drive*11;%Sprocket teeth
+%automatic_label = @(car) num2str(car.powertrain.final_drive * 11) + "/11" ;%Sprocket teeth
 %automatic_label = @(car) car.tire.gamma;%Car cda
+automatic_label = @(car) num2str(car.M-68) + ", " + num2str(car.h_g);
 
 
 % 1 to select, 0 to exclude
@@ -85,17 +86,17 @@ selected_categories = find([ ...
      1 ... %Total  
 ]);
 
-%plot_lapsim_points(carCell, display_point_values_above_bar_flag, true,...
-%    [], automatic_label_name, automatic_label, selected_categories);
+plot_lapsim_points(carCell, display_point_values_above_bar_flag, true,...
+    [], automatic_label_name, automatic_label, selected_categories);
 %% Car Plotting
 
 % select desired car object
-desiredCarIndex = 3;
+desiredCarIndex = 2;
 car = carCell{desiredCarIndex,1};
 
 % set desired plots to 1
-plot1 = 1; % velocity-dependent g-g diagram scatter plot
-plot2 = 0; % velocity-dependnt g-g diagram surface
+plot1 = 0; % velocity-dependent g-g diagram scatter plot
+plot2 = 1; % velocity-dependnt g-g diagram surface
 plot3 = 0; % max accel for given velocity and lateral g w/ scattered interpolant
 plot4 = 0; % max braking for given velocity and lateral w/ scattered interpolant
 plot5 = 0; % 2D g-g diagram for velocity specified below (gg_vel)

@@ -21,7 +21,7 @@ if nargin == 3 % no initial guess supplied
 end
 
 % bounds
-steer_angle_bounds = [0,25];
+steer_angle_bounds = [0,22];
 throttle_bounds = [0,0]; 
 long_vel_bounds = [0,max_vel];
 lat_vel_bounds = [-3,3];

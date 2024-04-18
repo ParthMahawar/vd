@@ -49,16 +49,16 @@ end
 
 if plot_choice(7)
     figure
-    plot(comp.endurance.time_vec,comp.endurance.long_vel);
+    plot(comp.autocross.time_vec,comp.autocross.long_vel);
     xlabel('Time (s)')
     ylabel('Longitudinal Velocity (m/s)')
     title('Autocross Longitudinal Velocity')
     
     hold on
     for i = 1:numel(comp.car.powertrain.switch_gear_velocities)
-        plot(comp.endurance.time_vec,...
-            comp.car.powertrain.switch_gear_velocities(i)*ones(size(comp.endurance.time_vec)),'b--');
-        gear_shifts(i) = numel(find(diff(sign(comp.endurance.long_vel-comp.car.powertrain.switch_gear_velocities(i)))~=0));
+        plot(comp.autocross.time_vec,...
+            comp.car.powertrain.switch_gear_velocities(i)*ones(size(comp.autocross.time_vec)),'b--');
+        gear_shifts(i) = numel(find(diff(sign(comp.autocross.long_vel-comp.car.powertrain.switch_gear_velocities(i)))~=0));
     end
     
     legend(['Number of gear shifts: = ' num2str(gear_shifts)])
