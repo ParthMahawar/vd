@@ -2,7 +2,7 @@ function carCell = carConfig()
 
 % car parameters (updated 2/4/21)
 carParams = struct();
-carParams.mass = [165.56 165.832]; % not including driver (378 lb)
+carParams.mass = [165.832]; % not including driver (378 lb)
 carParams.driver_weight = 68; % (150 lb)
 carParams.accel_driver_weight = 52; % (150 lb)
 carParams.wheelbase = [62] * 0.0254; % 62 in
@@ -10,7 +10,7 @@ carParams.weight_dist = [0.512]; % percentage of weight in rear
 carParams.track_width = 1.1938; % (47 in)
 carParams.wheel_radius = 0.1956; % loaded 
 % radius (7.7 in)
-carParams.cg_height = [0.3048 0.30269] % (12 in)
+carParams.cg_height = [0.30269] % (12 in)
 carParams.roll_center_height_front = 0.0254; % (1 in)
 carParams.roll_center_height_rear = 0.0889; % (3.5 in)
 carParams.R_sf = [0.385]; % proportion of roll stiffness in front (not same as LLTD)
@@ -21,8 +21,8 @@ carParams.camber_compliance = [0.125/1334];
 % aero parameters (updated 6/6/22)
 aeroParams = struct();
 aeroParams.cda = 1.88; % m^2
-aeroParams.cla = 9.73; % m^2
-aeroParams.distribution = 0.4; % proportion of downforce in front
+aeroParams.cla = 3.45; % m^2
+aeroParams.distribution = 0.42; % proportion of downforce in front
 
 % KTM engine parameters (updated 5/1/19)
 eParams = struct();
@@ -31,7 +31,7 @@ eParams.shift_point = 10000; % approximate
 % these parameters are non-iterable
 eParams.gears = [32/16 30/18 28/20 26/22 24/24]; % updated KTM450
 eParams.primary_reduction = 76/32; % KTM450
-eParams.torque_fn = KTM450() ;
+eParams.torque_fn = KTM450();
 eParams.shift_time = 0.050; % seconds FOR UPSHIFT ONLY; 150ms for downshift
 
 % drivetrain parameters (updated 10/14/23)

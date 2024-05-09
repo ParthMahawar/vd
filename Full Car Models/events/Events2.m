@@ -298,7 +298,7 @@ classdef Events2 < handle
             
             % winning times (based on 2019 Lincoln)
             accel_winning_time = 4.174;%Michigan 2023
-            autocross_winning_time = 42.5; %This is sorta fudged. %43.8;%Michigan 2023
+            autocross_winning_time = 44; %This is sorta fudged. %43.8;%Michigan 2023
             endurance_winning_time = 1310;%
 
             % skidpad
