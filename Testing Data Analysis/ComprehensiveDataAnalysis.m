@@ -7,7 +7,7 @@ set(0,'DefaultTextInterpreter','none')
 % filename = '20220402-0011602.csv';
 % filename = 'braketests-alameda-09.csv';
 
-filename = 'autocross_3.csv';
+filename = "C:\Users\johny\Downloads\0021.csv";
 
 %filename = 'straighlinepullsm400.csv';
 
@@ -33,22 +33,22 @@ T = T(2:end,:); % remove first row
 timeRange = [0,Inf]; %time range to be plotted
 
 % plot selection
-overviewPlot = 0;
-lateralPlot = 0;
-longitudinalPlot = 0;
-bodyMovementPlot = 0;
-tireTemperaturePlot = 0;
-damperVelocityHistogram = 0;
+overviewPlot = 1;
+lateralPlot = 1;
+longitudinalPlot = 1;
+bodyMovementPlot = 1;
+tireTemperaturePlot = 1;
+damperVelocityHistogram = 1;
 
-understeerPlot = 0;
-understeerPlotRadiusDependent = 0;
+understeerPlot = 1;
+understeerPlotRadiusDependent = 1;
 
-GGPlot = 0;
-GGVPlot = 0;
+GGPlot = 1;
+GGVPlot = 1;
 
-aeroPlot = 0;
+aeroPlot = 1;
 
-powerPlot = 0;
+powerPlot = 1;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -66,10 +66,10 @@ car.k = 200*4.45*39.37; % N/m ---add k front and k rear
 if ~any(strcmp(T.Properties.VariableNames,'StAngle')) % if data is from ADL
     %T.StAngle = T.SteeringAngle;
 
-    T.WheelSpdFL = T.GroundSpeedLeft; % Km/h (?)
-    T.WheelSpdFR = T.GroundSpeedRight;
-    T.WheelSpdRL = T.DriveSpeedLeft;
-    T.WheelSpdRR = T.DriveSpeedRight;
+    T.WheelSpdFL = T.WheelSpeedFrontLeft; % Km/h (?)
+    T.WheelSpdFR = T.WheelSpeedFrontRight;
+    T.WheelSpdRL = T.WheelSpeedRearLeft;
+    T.WheelSpdRR = T.WheelSpeedRearRight;
     
     T.AccelX = 0*T.Time;
     T.AccelY = 0*T.Time;
@@ -79,12 +79,12 @@ if ~any(strcmp(T.Properties.VariableNames,'StAngle')) % if data is from ADL
     T.BrakePres_R = 0*T.Time;
     
     T.TPS = 0*T.Time;
-    T.RPM = T.EngineRPM;
+    T.RPM = T.EngineSpeed;
 end
 
 %% Filter Data
 
-T.StAngle = T.StAngle * 20/45; % max steering angle is 20 deg, sensors read -45 -> 45 deg
+T.StAngle = T.STEERINGANGLE * 20/45; % max steering angle is 20 deg, sensors read -45 -> 45 deg
 T.AccelX = -T.AccelX; % long acceleration reverse (+ should be increasing forward speed)
 
 % moving mean filter on selected data values
