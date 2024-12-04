@@ -7,7 +7,7 @@ radius = 4.5;
 x_matrix = x_corner_vel;
 
 % iterate through increasing radii
-radius = 4.5:0.15:50;
+radius = 4.5:0.1:60;
 max_vel_corner_vector = zeros(size(radius));
 for i = 1:numel(radius)
     x0 = vel_corner_guess; % use previous solution as initial guess

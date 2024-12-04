@@ -11,17 +11,27 @@ long_g_braking = car.longDecelLookup(:,1)'/9.81;
 lat_g_braking = car.longDecelLookup(:,2)'/9.81;
 vel_braking = car.longDecelLookup(:,3)';
     
+
+real_long_g_accel = car.comp.autocross.long_accel'/9.81;
+real_lat_g_accel = car.comp.autocross.lat_accel'/9.81;
+real_long_vel = car.comp.autocross.long_vel';
+
+
 if plot_choice(1)
     % g-g diagram for different velocities, scatter plot    
     figure
     
+    
     scatter3([lat_g_accel -lat_g_accel -lat_g_braking lat_g_braking],...
         [long_g_accel long_g_accel long_g_braking long_g_braking],...
         [vel_accel vel_accel vel_braking vel_braking],'b');
+    hold on
+    scatter3([real_lat_g_accel], [real_long_g_accel], [real_long_vel], 'red')
     title('Velocity-Dependent G-G diagram Scatter Plot','FontSize',18)
     xlabel('Lat G','FontSize',15)
     ylabel('Long G','FontSize',15)
     zlabel('Velocity','FontSize',15)
+    hold off
 end
 
 if plot_choice(2) 

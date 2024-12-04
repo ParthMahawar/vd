@@ -27,9 +27,9 @@ classdef Events2 < handle
             obj.accelCar = accelCar;
             
             % maps
-            load('michigantrack.mat');
+            load('michigantrack2024.mat');
             obj.autocross_track = [arclength; curvature];
-            load('endurancetrack.mat');
+            load('2024endurancetrack.mat');
             obj.endurance_track = [arclength; curvature];
             
             % sweep for max velocity for given radius
@@ -113,6 +113,12 @@ classdef Events2 < handle
             % F_accel/braking(lat_accel,long_vel) returns the max possible accel/braking
             [F_accel,F_braking] = create_scattered_interpolants2(obj.car.longAccelLookup,...
                 obj.car.longDecelLookup);
+
+            obj.interp_info.extrema = extrema;
+            obj.interp_info.extrema_indices = extrema_indices;
+            obj.interp_info.max_apex_velocities = apex_velocity;
+            obj.interp_info.max_F_accel = F_accel;
+            obj.interp_info.max_F_braking = F_braking;
 
             % Maximum possible acceleration between apexes
             % calculating velocity and acceleration profiles as well as time
@@ -259,6 +265,10 @@ classdef Events2 < handle
             obj.autocross.long_vel = long_vel_final;
             obj.autocross.long_accel = long_accel_final;
             obj.autocross.lat_accel = lat_accel_final;
+            obj.interp_info.auto_max_apex_velocities = obj.interp_info.max_apex_velocities;
+            obj.interp_info.auto_extrema = obj.interp_info.extrema;
+            obj.interp_info.auto_extrema_indices = obj.interp_info.extrema_indices;
+
         end
         
         function [long_vel_final,long_accel_final,lat_accel_final,time_final] = Endurance(obj)
@@ -268,6 +278,11 @@ classdef Events2 < handle
             [long_vel_final,long_accel_final,lat_accel_final,time_final,time_vec,num_upshifts] = ...
                 Track_Solver(obj,arclength,curvature, true, 0);
             time_total = time_final;
+
+            obj.interp_info.end_max_apex_velocities = obj.interp_info.max_apex_velocities;
+            obj.interp_info.end_extrema = obj.interp_info.extrema;
+            obj.interp_info.end_extrema_indices = obj.interp_info.extrema_indices;
+
             end_vel = long_vel_final(end);
             [long_vel_final,long_accel_final,lat_accel_final,time_final,time_vec,num_upshifts] = ...
                 Track_Solver(obj,arclength,curvature, false, end_vel);
@@ -278,6 +293,7 @@ classdef Events2 < handle
             obj.endurance.long_vel = long_vel_final;
             obj.endurance.long_accel = long_accel_final;
             obj.endurance.lat_accel = lat_accel_final;
+            obj.endurance.lap_time = time_final;
         end
         
         function points = computePoints(obj)
@@ -293,13 +309,16 @@ classdef Events2 < handle
             % B19 points:
             % skidpad: 41.3, accel: 52.7, autocross: 104.9, enduro: 98.8
 
+            % B24 points
+            % skidpad: 58.9, accel: 54.9, autocross: 113.1, enduro: 262.3
+
             % winning time (Michigan 2016, no one faster since)
             skidpad_winning_time = 4.714; 
             
             % winning times (based on 2019 Lincoln)
-            accel_winning_time = 4.174;%Michigan 2023
-            autocross_winning_time = 44; %This is sorta fudged. %43.8;%Michigan 2023
-            endurance_winning_time = 1310;%
+            accel_winning_time = 4.206;% Michigan 2023 (4.174) // Michigan 2024 (4.206)
+            autocross_winning_time = 46.911; % This is sorta fudged. Michigan 2023 (45.886) // Michigan 2024 (46.911)
+            endurance_winning_time = 1389.891;% Michigan 2023 (1310.978) // Michigan 2024 (1389.891)
 
             % skidpad
             t_your = obj.times.skidpad;

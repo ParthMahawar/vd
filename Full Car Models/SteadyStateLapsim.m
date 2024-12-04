@@ -11,6 +11,20 @@
 % comp object.
 clear
 setup_paths
+
+carCells = [];
+givenTorque = 150;
+
+%{
+for i = 1:1
+    carHelper = carConfig();
+    carHelper{1, 1}.powertrain.torque_fn = [0 100 12000 16000 20000; 0 givenTorque givenTorque givenTorque - 15 givenTorque - 30];
+    carHelper{1, 2}.powertrain.torque_fn = [0 100 12000 16000 20000; 0 givenTorque givenTorque givenTorque - 15 givenTorque - 30];
+    carCells = [carCells; carHelper];
+    givenTorque = givenTorque + 10;
+end
+%}
+
 carCell = carConfig(); %generate all cars to sim over
 numCars = size(carCell,1);
 time = struct();time.prev = 0; time.curr = 0;
@@ -54,6 +68,7 @@ time.curr = floor(toc);
 fprintf("Stage Time: %d s; Total time elapsed: %d s\n",[time.curr-time.prev time.curr]);
 fprintf("done\n");
 carCell = carOut;
+
 %% Saving
 save('DesignBinderFinalDriveSweep2.mat','carCell');
 
@@ -86,17 +101,17 @@ selected_categories = find([ ...
      1 ... %Total  
 ]);
 
-plot_lapsim_points(carCell, display_point_values_above_bar_flag, true,...
-    [], automatic_label_name, automatic_label, selected_categories);
+%plot_lapsim_points(carCell, display_point_values_above_bar_flag, true,...
+%    [], automatic_label_name, automatic_label, selected_categories);
 %% Car Plotting
 
 % select desired car object
-desiredCarIndex = 2;
+desiredCarIndex = 1;
 car = carCell{desiredCarIndex,1};
 
 % set desired plots to 1
 plot1 = 0; % velocity-dependent g-g diagram scatter plot
-plot2 = 1; % velocity-dependnt g-g diagram surface
+plot2 = 0; % velocity-dependnt g-g diagram surface
 plot3 = 0; % max accel for given velocity and lateral g w/ scattered interpolant
 plot4 = 0; % max braking for given velocity and lateral w/ scattered interpolant
 plot5 = 0; % 2D g-g diagram for velocity specified below (gg_vel)
@@ -109,7 +124,7 @@ plotter(car,g_g_vel,plot_choice);
 %% Event Plotting
 
 % select desired comp object
-comp = carCell{4,1}.comp;
+comp = carCell{1,1}.comp;
 
 % set desired plots to 1
 plot1 = 0; % autocross track distance vs curvature
@@ -118,8 +133,18 @@ plot3 = 0; % max possible velocity for given radius
 plot4 = 0; % max possible long accel for given velocity
 plot5 = 0; % accel event longitudinal velocity vs time
 plot6 = 0; % accel event longitudinal accel vs time
-plot7 = 1; % autocross gear shifts
+plot7 = 0; % autocross gear shifts
 plot8 = 0; % autocross slip angle vs distance
 
 plot_choice = [plot1 plot2 plot3 plot4 plot5 plot6 plot7 plot8];
-event_plotter(comp,plot_choice);
+
+for i=1: numCars
+    event_plotter(carCell{i,1}.comp,[0, 0, 0, 0, 0, 0, 0, 0]);
+end
+figure
+hold on
+for i = 1 : numCars
+    scatter(carCell{i, 1}.powertrain.final_drive * 11, carCell{i,1}.comp.times.autocross);
+end
+%engine_sweep(carCell, numCars)
+%tesla_plots(carCell)

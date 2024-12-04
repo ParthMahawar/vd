@@ -2,16 +2,20 @@ function [] = event_plotter(comp,plot_choice)
 
 if plot_choice(1)
     figure
+    hold on
     title('Autocross Track')
     plot(comp.autocross_track(1,:),comp.autocross_track(2,:))
+    scatter(comp.autocross_track)
     xlabel('Distance (m)')
     ylabel('Curvature (1/m)')
 end
 
 if plot_choice(2)
     figure
+    
     title('Endurance Track')
     plot(comp.endurance_track(1,:),comp.endurance_track(2,:))
+
     xlabel('Distance (m)')
     ylabel('Curvature (1/m)')
 end
